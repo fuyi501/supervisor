@@ -1,0 +1,732 @@
+<!--note.ui-->
+<template>
+  <ui-page page-load="{{ pageLoad }}">
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-text class="nav_title">添加项目</ui-text>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view>
+          
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="form_content">
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
+          <ui-view>项目名称</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-input type="text"
+          placeholder="请输入项目名称"
+          placeholder-style="color:#999B9E"
+          show-clear="{{false}}"
+          ui:model="{{ itemName }}"
+          bindinput="inputChange"
+           ></ui-input>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
+          <ui-view>开始时间</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            <ui-picker mode="date" start="2018-09-01" end="2020-01-01" value="{{ sDataValue }}" bindchange="choiceSDate"></ui-picker>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
+          <ui-view>结束时间</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            <ui-picker mode="date" start="2018-09-01" end="2030-01-01" title="请选择" value="{{ eDataValue }}" bindchange="choiceEDate"></ui-picker>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
+          <ui-view>预计周期</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+           {{ period }} 天
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="80" space-left="10">
+          <ui-view>上下班时间</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="4">
+          <ui-view class="">
+            <ui-picker title="选择出发时间" mode="time" value="{{ stime }}" bindchange="choiceSTime"></ui-picker>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="30" space="10">
+          <ui-view class="">
+            至
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" width="50" space-right="10" >
+          <ui-view class="">
+            <ui-picker title="选择出发时间" mode="time" value="{{ etime }}" bindchange="choiceETime"></ui-picker>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
+          <ui-view>部门</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            <ui-picker mode="multiSelector" is-chain value="{{ departmentValue }}" range="{{ departments }}" range-key="text" bindchange="choiceDptm"></ui-picker>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <!-- 项目参与人 -->
+      <ui-view class="recipients">
+        <ui-view class="title">添加项目管理者</ui-view>
+        <ui-view class="recipients_content">
+          <ui-view class="recipients_list" ui:for="{{ approverList }}" ui:for-item="item">
+            <ui-view class="list_content" bindtap="deleteApprovers(index)">
+              <ui-view class="close">x</ui-view>
+              <ui-image
+              src="{{ item.head }}"
+              ></ui-image>
+              <ui-text>{{ item.userName }}</ui-text>
+            </ui-view>
+          </ui-view>
+          <ui-view class="recipients_list" bindtap="addApprovers">
+            <ui-view class="add_recipients">
+              <ui-icon type="add" size="20" color="#B3B5B5"></ui-icon>
+            </ui-view>
+          </ui-view>
+        </ui-view>
+      </ui-view>
+
+      <ui-row height="50" class="amap_list2" bindtap="setAMAP">
+        <ui-col vertical-align="middle" space-left="15">
+          地理围栏
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-view class="active2" ui:if=" isamap === '' "> 未设置 
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
+          <ui-view class="active" ui:else> 编辑 
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <!-- <ui-fixed-view bottom="0" left="0" right="0" bindtap="submit"> -->
+        <ui-row height="50" class="fixed_bottom" bindtap="submit">
+          <ui-col vertical-align="middle">
+            <ui-view class="form_list">确认提交</ui-view>
+          </ui-col>
+        </ui-row>
+      <!-- </ui-fixed-view> -->
+
+    </ui-view>
+  </ui-page>
+</template>
+
+<script>
+const getDoubleNumber = function (num) {
+  return num < 10 ? '0' + num : '' + num
+}
+const sourceType = [['camera'], ['album'], ['camera', 'album']]
+const sizeType = [['compressed'], ['original'], ['compressed', 'original']]
+export default {
+  config: {
+    navigationStyle: 'custom',
+    backgroundColor: '#F6F6F6',
+    disableIosGesture: true,
+    navigationBarTextStyle: 'white',
+    delay: true,
+    cache: true
+  },
+  data () {
+    return {
+      pageLoad: {// 进入页面先判断是否有地理数据保存在 本地存储中
+        trigger: 'always',
+        handle: () => {
+          console.log("添加项目 pageLoad")
+          let aMapInfo = ui.getStorageSync('aMapInfo')
+          console.log("添加项目 aMapInfo:",aMapInfo)
+          if (aMapInfo !== null) {
+            this.isamap = aMapInfo.isamap
+            this.geoInfo = aMapInfo.polyPoints
+            this.polyArea = aMapInfo.polyArea
+          }else {
+            this.isamap = ''
+          }
+        }
+      },
+      //项目名称
+      itemName: '',
+      // 日期选择
+      sDataValue: '', // 项目开始时间
+      eDataValue: '', // 项目结束时间
+      period: '', // 项目周期
+      stime: '09:00', // 上班时间
+      etime: '18:00', // 下班时间
+      create_at: '',
+      departmentValue: null, // 选择部门
+      departments: [{
+        text: '施工部',
+        value: 'DP_01',
+        children: [
+          { text: '工程一队', value: 'DP_0101' },
+          { text: '工程二队', value: 'DP_0102' },
+          { text: '工程三队', value: 'DP_0103' }
+        ]
+      }, {
+        text: '其他',
+        value: 'DP_02',
+        children: [
+          { text: '其他一队', value: 'DP_0201' },
+          { text: '其他一队', value: 'DP_0202' },
+          { text: '其他一队', value: 'DP_0203' }
+        ]
+      }],
+      monthrange: [], // 三个月周期
+      // 管理人
+      isApprover: false,
+      addroverHead: '',
+      approverName: '',
+      approverList: [],
+      approvalUserId: null,
+      approvalUserId2: null,
+      // 地理围栏
+      isamap: '',
+      geoInfo: [],
+      polyArea: 0,
+
+      // cid
+      clientid: ''
+
+    }
+  },
+  methods: {
+    // 返回按钮
+    navigateBack () {
+      ui.showConfirm({
+        content: '表单尚未提交，你要离开么？',
+        confirmButtonText: '离开',
+        cancelButtonText: '继续填写',
+        success: (result) => {
+          if (result.confirm) {
+            ui.offBackButtonClick({
+              listener: this.navigateBack
+            })
+            ui.navigateBack()
+          }
+        }
+      })
+    },
+    // 选择项目开始日期
+    choiceSDate (val) {
+      console.log(val,this.eDataValue,val > this.eDataValue)
+      if(val > this.eDataValue){
+        ui.showToast({ title: '项目开始日期不应大于结束日期' })
+      }else{
+        this.sDataValue = val
+        this.period = this.dateDiff(this.sDataValue, this.eDataValue)
+      }
+    },
+    // 项目结束日期
+    choiceEDate (val) {
+      if(val < this.sDataValue){
+        ui.showToast({ title: '项目结束日期不应小于开始日期' })
+      }else{
+        this.eDataValue = val
+        this.period = this.dateDiff(this.sDataValue, this.eDataValue)
+      }
+    },
+    // 上班时间
+    choiceSTime (val) {
+      console.log(val)
+      this.stime = val
+    },
+    // 下班时间
+    choiceETime (val) {
+      console.log(val)
+      this.etime = val
+    },
+    // 选择部门
+    choiceDptm (val) {
+      console.log(val)
+    },
+    // 添加项目管理者
+    addApprovers () {
+      if (this.itemName === '') {
+        ui.showToast({ title: '请先输入项目名称' })
+      }else if (this.approverList.length > 0) {
+        ui.showToast({ title: '项目经理只能为一人,请删除后添加' })
+      }else {
+        import(`#/pages/contacts/workers.ui`).then((content) => {
+          console.log("进来了",content)
+          ui.showDialog({
+            content: content,
+            statusBarColor: 'black',
+            data: {
+              dayNumber: this.dayNumber
+            },
+            // 接收ui.hideDialog回传的数据
+            onHide: (data) => {
+              console.log('接收返回的参数', data)
+              if (data && data.approvers) {
+                this.approverList = []
+                data.approvers.forEach((item, index) => {
+                  this.approverList.push(item)
+                  this.approvalUserId = item.userId
+                })
+              }
+              if (data && data.approvers2) {
+                this.approvalUserId2 = null
+                data.approvers2.forEach((item, index) => {
+                  this.approvalUserId2 = item.userId
+                })
+              }
+            }
+          })
+        })
+      }
+    },
+    // 删除项目管理者
+    deleteApprovers (index) {
+      // console.log(index)
+      this.approverList.splice(index, 1)
+      this.approvalUserId = null
+    },
+    inputChange (e) {
+      console.log(e)
+      if (e < 0) {
+        this.dayNumber = 0
+      } else {
+        this.dayNumber = e
+      }
+      this.approverList = []
+    },
+    // 设置地理围栏
+    setAMAP () {
+      ui.showActionSheet({
+        itemList: [
+          '绘制地图',
+          '手动确定位置',
+          '自动绘制轨迹'
+        ],
+        success: (index) => {
+          if(index === 0){
+            ui.navigateTo({
+              url: '/pages/items/drawAMap'
+            })
+          }else if(index === 1){
+            ui.navigateTo({
+              url: '/pages/items/stopDrawMap'
+              // url: '/pages/test/testMap'
+            })
+          }else if(index === 2){
+            ui.navigateTo({
+              url: '/pages/items/autoDrawMap'
+            })
+          }
+        }
+      })
+    },
+    // 提交按钮
+    submit () {
+      if (this.itemName === '') {
+        ui.showToast({ title: '请输入项目名称' })
+      } else if (this.approvalUserId === null) {
+        ui.showToast({ title: '请选择项目管理者' })
+      } else {
+        this.paySubmit()
+      }
+    },
+    paySubmit () {
+      let that = this
+      this.create_at = this.getNowTime(2)
+      // 添加项目请求
+        ui.request({
+          url: "http://119.23.30.32:9999/tram/additems",
+          data: {
+            projectName: this.itemName,
+            geoInfo: this.geoInfo,
+            startTime: this.sDataValue,
+            endTime: this.eDataValue,
+            checkinStartTime: this.stime,
+            checkinEndTime: this.etime,
+            create_at: this.create_at,
+            update_time: "",
+            mgrs: [
+              {
+                "userName": "傅毅",
+                "tel": "13412341234"
+              }
+            ],
+            workers: [
+              {
+                "userName": "李思成",
+                "tel": "13512341234"
+              }
+            ]
+          },
+          method: 'POST',
+          // dataType: 'jsonp',
+          header: {
+            'Content-Type': 'application/json'
+          },
+          success: function (result) {
+            console.log("添加项目返回的数据:", result)
+            if (result.data.code === 2000) {
+              ui.showToast({ title: '提交成功', icon: 'success' })
+              that.getCid() // 推送消息
+              setTimeout(() => {
+                ui.navigateBack()
+              }, 1000)
+            } else {
+              ui.showToast({ title: '添加失败', icon: 'success' })
+            }
+          },
+          fail: function ({ errMsg }) {
+            ui.showToast({ title: '添加失败' + errMsg })
+          }
+        })
+    },
+    format (obj) {
+      var date = new Date(obj)
+      var y = 1900 + date.getYear()
+      var m = '0' + (date.getMonth() + 1)
+      var d = '0' + date.getDate()
+      return y + '/' + m.substring(m.length - 2, m.length) + '/' + d.substring(d.length - 2, d.length)
+    },
+    dateDiff (sDate, eDate) {
+      let aDate = sDate.split("-")
+      let oDate1 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])
+      aDate = eDate.split("-")
+      let oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])
+      let iDays = parseInt((oDate2 - oDate1) / 1000 / 60 / 60 / 24) //把相差的毫秒数转换为天数 
+      return iDays + 1
+    },
+    getNowTime (type) {
+      // 获取当前日期
+      let now = new Date()
+      let year = now.getFullYear()
+      let month = now.getMonth() + 1 
+      month = (month < 10 ? '0' + month : month)
+      let day = now.getDate()
+
+      if(type === 1){
+        return year + '-' + month + '-' + day
+      }else if (type === 2) {
+        let hour = now.getHours(); // 时
+        hour = (hour < 10 ? '0' + hour : hour)
+        let minutes = now.getMinutes(); // 分
+        minutes = (minutes < 10 ? '0' + minutes : minutes)
+        let seconds = now.getSeconds() //秒
+        seconds = (seconds < 10 ? '0' + seconds : seconds)
+
+        let currentTime = year+'-'+month+'-'+day+' '+hour+':'+minutes+':'+seconds
+        return currentTime
+      }
+    },
+    // 获取cid 
+    getCid () {
+      let that = this
+      // 请求cid
+        ui.request({
+          url: "http://119.23.30.32:9999/tram/getcid",
+          data: {
+            tel: "13512341234" // 这里的手机号注意下
+          },
+          method: 'GET',
+          dataType: 'jsonp',
+          success: function (result) {
+            console.log("请求cid返回的数据:", result)
+            if (result.statusCode === 200) {
+              ui.showToast({ title: '获取cid成功', icon: 'success' })
+              that.clientid = result.data[0].cid
+              that.pushInfo()
+              
+            } else {
+              ui.showToast({ title: '获取cid失败', icon: 'success' })
+            }
+          },
+          fail: function ({ errMsg }) {
+            ui.showToast({ title: '获取cid失败' + errMsg })
+          }
+        })
+    },
+    // 发送推送
+    pushInfo () {
+
+      var that = this
+
+      ui.request({
+        url: "http://www.uileader.com/touchui-backstage/push.do",
+        data: {
+          clientId: that.clientid,
+          title: "傅毅添加您到新的项目",
+          content: "点击查看详情",
+          payload: "projectName:" + that.itemName
+        },
+        success: function (result) {
+          console.log("result.data",result.data)
+          ui.showToast({ title: '推送成功', icon: 'success' })
+        },
+        fail: function ({ errMsg }) {
+        }
+      })
+    }
+  },
+  // 日期组件计算
+  created () {
+    // 计算时间范围
+    let radiodate = new Date()
+    let rangedate = new Date()
+    this.radioDate = this.format(Date.parse(radiodate))
+    let start, end
+    console.log('时间', radiodate)
+    // start = this.format(rangedate.setMonth(new Date().getMonth()))
+
+    radiodate.setMonth(radiodate.getMonth())
+    let year = radiodate.getFullYear()
+    let month = radiodate.getMonth() + 1
+    month = (month < 10 ? '0' + month : month)
+    start = (year.toString() + '/' + month.toString())
+
+    end = this.format(rangedate.setMonth(new Date().getMonth() + 2))
+    // start = start.substring(0, 7)
+    end = end.substring(0, 7)
+
+    console.log('前三个月', start, end)
+    this.monthrange.push(start, end)
+  },
+  mounted () {
+    console.log("添加项目 mounted")
+    
+    this.sDataValue = this.getNowTime(1)
+    this.eDataValue = this.getNowTime(1)
+    this.period = this.dateDiff(this.sDataValue, this.eDataValue)
+    //监听安卓返回
+    ui.onBackButtonClick(this.navigateBack)
+  }
+}
+</script>
+
+<style lang="less">
+  .ui-actionsheet-menu-cell {
+    font-size: 14px;
+    color: #666;
+  }
+.nav_bar {
+  background: linear-gradient(to right, #1F97FE, #126DFE);
+  .ui-view{
+    color: #fff;
+    font-size: 14px;
+  }
+  .ui-text{
+    color: #fff;
+    font-size: 16px;
+  }
+}
+
+.form_content{
+  // padding: 15px 0;
+  .ui-row{
+    background: #fff;
+    .mix-1px(0, 0, 1, 0, #ccc);
+    .ui-view{
+      font-size: 14px;
+      color: #1A1E23;
+      &.right_column{
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+      }
+    }
+    .ui-row{
+      width: 100%;
+      .right_column{
+        width: 95%;
+        font-size: 12px;
+      }
+      .ui-textarea-wrapper{
+        padding: 10px;
+      }
+    }
+    .weui-cell{
+      padding: 0;
+      .ui-picker-select{
+        font-size: 14px;
+      }
+    }
+    .ui-input{
+      border:0px;
+      padding: 0px;
+      .ui-input-inner{
+        height: 33px;
+        width: 100%;
+        text-align: right;
+      }
+    }
+    &.payee{
+      &:before{
+        border-bottom-width: 0px;
+      }
+      .ui-button{
+        line-height: 30px;
+      }
+    }
+
+  }
+  .payee_content{
+    margin-bottom: 10px;
+    // width: 95%;
+    // margin: 0 auto;
+    // border-radius: 5px;
+    // overflow: hidden;
+    // box-shadow: 0px 0px 13px 0px #d6d7d8;
+  }
+}
+.weui-cell__hd{
+  display: none;
+}
+.money_tip{
+  text-align: right;
+  padding-right: 10px;
+  font-size: 12px;
+  color:#999B9E;
+  line-height: 30px;
+  background-color: #fff;
+  .mix-1px(0, 0, 1, 0, #ccc);
+  .ui-text{
+    color:red;
+  }
+}
+.detail_description{
+  margin-bottom: 10px;
+  background: #fff;
+  .ui-text{
+    // width: 70px;
+    text-align: left;
+    line-height: 30px;
+    color: #1A1E23;
+    padding-left: 10px;
+  }
+  .ui-textarea-wrapper{
+    border: 0;
+    padding: 10px;
+  }
+}
+.recipients{
+  margin-top: 10px;
+  background-color: #fff;
+  .title{
+    text-align: left;
+    padding-left: 10px;
+    line-height: 40px;
+    .ui-text{
+      font-size: 12px;
+      color: #ccc;
+    }
+  }
+  .recipients_content{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    padding-bottom: 20px;
+    .recipients_list{
+      display: inline-flex;
+      text-align: center;
+      padding: 5px 15px;
+      .list_content{
+        position: relative;
+        .close{
+          position: absolute;
+          top: -3px;
+          right: -3px;
+          width: 13px;
+          height: 13px;
+          border-radius: 50%;
+          z-index: 9;
+          background-color: #14171B;
+          line-height:13px;
+          font-size: 12px;
+          color: #fff;
+        }
+        .ui-image{
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          margin-bottom: 10px;
+        }
+        .ui-text{
+          color: #060606;
+          font-size: 12px;
+        }
+      }
+      .add_recipients{
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #F4F4F4;
+        line-height: 40px;
+        text-align: center;
+      }
+    }
+
+  }
+}
+
+//弹窗
+.ui-confirm-content{
+  text-align: center;
+}
+// 地理围栏
+.amap_list2{
+  background-color: #fff;
+  margin-top: 10px;
+  .mix-1px(1, 0, 1, 0, #ccc);
+  .active{
+    font-size: 14px;
+    color: #8C8C8C;
+  }
+  .active2{
+    font-size: 14px;
+    color: #1F95FF;
+  }
+}
+//提交按钮
+.fixed_bottom{
+  background: #fff;
+  // box-shadow: 0 -8px 10px 0 #eaeaea;
+  .form_list{
+    background: #1F97FE;
+    color: #fff !important;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 18px;
+  }
+}
+</style>

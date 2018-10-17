@@ -1,0 +1,172 @@
+<!---->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-text class="nav_title">人脸照片</ui-text>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view style="{{  {height:faceHeight + 'px'} }}" class="preview">
+      <ui-image src="{{imageSrc}}"  mode="aspectFit"></ui-image>
+    </ui-view>
+
+    <ui-view class="sample_content">
+      <ui-button form-type="submit" type="primary" class="submit" bindtap="uploadFace">上传人脸照片</ui-button>
+    </ui-view>
+
+  </ui-page>
+</template>
+
+<script>
+
+const uploadFaceUrl = 'https://api.estech.xyz:8533/face/upload/base64' // 上传用户基准照片
+import lrz from '#/static/utils/lrz' // 压缩图片库
+
+export default {
+  config: {
+    navigationStyle: "custom"
+  },
+  data() {
+    return {
+      imageSrc: '',
+      faceHeight: ui.DEFAULT_CONTENT_HEIGHT * 0.7,
+      tokenid: '',
+      isHasFaceImg: false
+    }
+  },
+  methods: {
+    navigateBack () {
+      ui.navigateBack()
+    },
+    uploadFace () {
+      this.chooseImage()
+    },
+    chooseImage () {
+      var self = this
+      ui.chooseImage({
+        count: 1,
+        sizeType: ['compressed'],
+        sourceType: ['album','camera'],
+        success: function (res) {
+          var imagePath = res.tempFilePaths[0]
+          console.log("图片路径：", imagePath)
+          console.log("上传token：",self.tokenid)
+          // 开始压缩
+          lrz(imagePath)
+            .then(function (rst) {
+                // 处理成功会执行
+                console.log("压缩成功",rst)
+                self.imageSrc = rst.base64
+                var imageH = self.imageSrc.split(',')[1]
+                console.log("去掉头部的长度：",imageH.length," 去掉头部：",imageH)
+
+                // 获取 userinfo 数据，再添加一个值
+                let userinfo = ui.getStorageSync('userinfo')
+                userinfo.faceImgBase64 = rst.base64
+                ui.setStorageSync('userinfo',userinfo)
+
+                ui.request({
+                  url: uploadFaceUrl,
+                  data: {
+                    'img': imageH,
+                    // 'base64Len': base64Len
+                  },
+                  method: 'POST',
+                  header: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + self.tokenid
+                  },
+                  success: (result) => {
+                    console.log("上传base64编码成功 result:",result)
+                    ui.showToast({ title: '上传成功' , icon: 'success' })
+
+                    self.isHasFaceImg = true
+                    // 添加是否有 人脸照片 
+                    let userinfo = ui.getStorageSync('userinfo')
+                    userinfo.isHasFaceImg = self.isHasFaceImg
+                    ui.setStorageSync('userinfo', userinfo)
+
+                    console.log("修改后的 userinfo :" , userinfo)
+
+                  },
+                  fail: function ({ errMsg }) {
+                    ui.showToast({ title: '上传失败' })
+                    console.log("上传失败：",errMsg)
+                  }
+                })
+
+            })
+            .catch(function (err){
+                // 处理失败会执行
+                console.log("压缩失败",err)
+                ui.showToast({ title: '图片压缩失败' })
+            })
+            .always(function () {
+                // 不管是成功失败，都会执行
+                console.log("执行压缩")
+            });
+        },
+        fail: function ({ errMsg }) {
+          console.log("选择照片失败")
+          ui.showToast({ title: '选择照片失败' })
+        }
+      })
+    },
+  },
+  mounted() {
+    console.log('上传人脸照片 mounted')
+    let userinfo = ui.getStorageSync('userinfo')
+    console.log("人脸照片上传 mounted userinfo:",userinfo)
+    if (userinfo !== null){
+      if(userinfo.tokenId !== '') {
+        this.tokenid = userinfo.tokenId
+      }else{
+        console.log("token 错误")
+      }
+      if(userinfo.faceImgBase64 !== ''){
+        this.imageSrc = userinfo.faceImgBase64 
+      }
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.nav_bar {
+  background: #126DFE;
+  .ui-view{
+    color: #fff;
+    font-size: 14px;
+  }
+  .ui-text{
+    color: #fff;
+    font-size: 16px;
+  }
+}
+.sample_content{
+  padding: 10px 20px 0 20px;
+  .ui-input{
+    border: 0;
+  }
+  .submit{
+    margin-top: 10px;
+  }
+}
+
+.preview{
+  margin-top: 10px;
+  .mix-flex-x-center();
+}
+</style>

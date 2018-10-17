@@ -1,0 +1,436 @@
+<!--note.ui-->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-text class="nav_title">项目详情</ui-text>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view>
+          
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="form_content">
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
+          <ui-view>项目名称</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ itemName }}
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
+          <ui-view>开始时间</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ sDataValue }}
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
+          <ui-view>结束时间</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ eDataValue }}
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
+          <ui-view>预计周期</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+           {{ period }} 天
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="80" space-left="10">
+          <ui-view>上下班时间</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="4">
+          <ui-view class="">
+            {{ stime }}
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="30" space="10">
+          <ui-view class="">
+            至
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" width="50" space-right="10" >
+          <ui-view class="">
+            {{ etime }}
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <!-- <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
+          <ui-view>部门</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            <ui-picker mode="multiSelector" is-chain value="{{ departmentValue }}" range="{{ departments }}" range-key="text" ></ui-picker>
+          </ui-view>
+        </ui-col>
+      </ui-row> -->
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="80" space-left="10">
+          <ui-view>项目管理者</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ mgrs }}
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50" class="amap_list2">
+        <ui-col vertical-align="middle" space-left="15">
+          地理围栏
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15" bindtap="shuaxinMap" ui:if=" ismap === '' ">
+          <ui-view class="active2" > 加载地图
+            <ui-icon type="map" size="14" color="#1F95FF"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15" ui:else>
+          <ui-view class="active"> 
+          </ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-view class="map-content">
+        <div id="detailMap" style="{{  {height:400 + 'px'} }}">
+        </div>
+      </ui-view>
+
+    </ui-view>
+  </ui-page>
+</template>
+
+<script>
+
+export default {
+  config: {
+    navigationStyle: 'custom',
+    backgroundColor: '#F6F6F6',
+    disableIosGesture: true,
+    navigationBarTextStyle: 'white',
+    delay: true,
+    cache: true
+  },
+  data () {
+    return {
+      //项目名称
+      itemName: '',
+      // 日期选择
+      sDataValue: '', // 项目开始时间
+      eDataValue: '', // 项目结束时间
+      period: '', // 项目周期
+      stime: '09:00', // 上班时间
+      etime: '18:00', // 下班时间
+      departmentValue: null, // 选择部门
+      // 管理人
+      mgrs: '',
+      // 地理围栏
+      script: '',
+      geoInfo: [],
+      polyArea: 0,
+      map: '',
+      toolbar: '',
+      polygon: '',
+      ismap: '' // 地图是否加载成功
+    }
+  },
+  methods: {
+    // 返回按钮
+    navigateBack () {
+      ui.navigateBack()
+    },
+    dateDiff (sDate, eDate) {
+      let aDate = sDate.split("-")
+      let oDate1 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])
+      aDate = eDate.split("-")
+      let oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])
+      let iDays = parseInt((oDate2 - oDate1) / 1000 / 60 / 60 / 24) //把相差的毫秒数转换为天数 
+      return iDays + 1
+    },
+    mapInit () {
+      this.script = document.createElement("script")
+      this.script.type = "text/javascript"
+      this.script.src="https://webapi.amap.com/maps?v=1.4.8&key=df579385937f9b125094f73fb9be7ff2&plugin=AMap.ToolBar&callback=onLoad"
+      document.head.appendChild(this.script)
+
+      let that = this
+      window.onLoad = () => {
+        console.log("进来了")
+          //基本地图加载
+          that.map = new AMap.Map("detailMap", {
+              resizeEnable: true,
+              center: [103,30],//地图中心点
+              // zoom: 12 //地图显示的缩放级别
+          });
+          // console.log("111111")
+          // 地图加载完成后执行
+          that.map.on('complete', function(e) {
+              console.log("这是啥：",e)
+              try {
+                that.polygon = new AMap.Polygon({
+                    map: that.map,
+                    fillOpacity:0.3,
+                    path: that.geoInfo
+                });
+                that.map.setFitView() 
+                that.ismap = true
+              } catch(e1){
+                console.log("错误11111111",e1)
+              }
+          });
+
+          console.log("地图初始化完成")
+          // console.log("script:",that.script,"this.map:",that.map)
+          // console.log("that.polygon:",that.polygon)
+      }
+    },
+    shuaxinMap(){
+      console.log("刷新")
+      this.mapInit()
+    }
+  },
+  mounted () {
+    console.log("项目详情 mounted")
+    
+    let itemInfo = ui.getStorageSync('itemInfo')
+
+    if(itemInfo !== null){
+      console.log(itemInfo)
+      this.itemName = itemInfo.projectName
+      this.sDataValue = itemInfo.startTime
+      this.eDataValue = itemInfo.endTime
+      this.period = this.dateDiff(this.sDataValue, this.eDataValue)
+      this.stime = itemInfo.checkinStartTime
+      this.etime = itemInfo.checkinEndTime
+      this.mgrs = itemInfo.mgrs[0].userName
+      var points = itemInfo.geoInfo
+      for(let i = 0; i < points.length; i++){
+        this.geoInfo.push([points[i].lon, points[i].lat])
+      }
+      console.log("this.geoInfo",this.geoInfo)
+    }
+    // this.mapInit()
+  }
+}
+</script>
+
+<style lang="less">
+  .ui-actionsheet-menu-cell {
+    font-size: 14px;
+    color: #666;
+  }
+.nav_bar {
+  background: linear-gradient(to right, #1F97FE, #126DFE);
+  .ui-view{
+    color: #fff;
+    font-size: 14px;
+  }
+  .ui-text{
+    color: #fff;
+    font-size: 16px;
+  }
+}
+
+.form_content{
+  // padding: 15px 0;
+  .ui-row{
+    background: #fff;
+    .mix-1px(0, 0, 1, 0, #ccc);
+    .ui-view{
+      font-size: 14px;
+      color: #1A1E23;
+      &.right_column{
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+      }
+    }
+    .ui-row{
+      width: 100%;
+      .right_column{
+        width: 95%;
+        font-size: 12px;
+      }
+      .ui-textarea-wrapper{
+        padding: 10px;
+      }
+    }
+    .weui-cell{
+      padding: 0;
+      .ui-picker-select{
+        font-size: 14px;
+      }
+    }
+    .ui-input{
+      border:0px;
+      padding: 0px;
+      .ui-input-inner{
+        height: 33px;
+        width: 100%;
+        text-align: right;
+      }
+    }
+    &.payee{
+      &:before{
+        border-bottom-width: 0px;
+      }
+      .ui-button{
+        line-height: 30px;
+      }
+    }
+
+  }
+  .payee_content{
+    margin-bottom: 10px;
+    // width: 95%;
+    // margin: 0 auto;
+    // border-radius: 5px;
+    // overflow: hidden;
+    // box-shadow: 0px 0px 13px 0px #d6d7d8;
+  }
+}
+.weui-cell__hd{
+  display: none;
+}
+.money_tip{
+  text-align: right;
+  padding-right: 10px;
+  font-size: 12px;
+  color:#999B9E;
+  line-height: 30px;
+  background-color: #fff;
+  .mix-1px(0, 0, 1, 0, #ccc);
+  .ui-text{
+    color:red;
+  }
+}
+.detail_description{
+  margin-bottom: 10px;
+  background: #fff;
+  .ui-text{
+    // width: 70px;
+    text-align: left;
+    line-height: 30px;
+    color: #1A1E23;
+    padding-left: 10px;
+  }
+  .ui-textarea-wrapper{
+    border: 0;
+    padding: 10px;
+  }
+}
+.recipients{
+  margin-top: 10px;
+  background-color: #fff;
+  .title{
+    text-align: left;
+    padding-left: 10px;
+    line-height: 40px;
+    .ui-text{
+      font-size: 12px;
+      color: #ccc;
+    }
+  }
+  .recipients_content{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    padding-bottom: 20px;
+    .recipients_list{
+      display: inline-flex;
+      text-align: center;
+      padding: 5px 15px;
+      .list_content{
+        position: relative;
+        .close{
+          position: absolute;
+          top: -3px;
+          right: -3px;
+          width: 13px;
+          height: 13px;
+          border-radius: 50%;
+          z-index: 9;
+          background-color: #14171B;
+          line-height:13px;
+          font-size: 12px;
+          color: #fff;
+        }
+        .ui-image{
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          margin-bottom: 10px;
+        }
+        .ui-text{
+          color: #060606;
+          font-size: 12px;
+        }
+      }
+      .add_recipients{
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #F4F4F4;
+        line-height: 40px;
+        text-align: center;
+      }
+    }
+
+  }
+}
+
+//弹窗
+.ui-confirm-content{
+  text-align: center;
+}
+// 地理围栏
+// .map-content {
+//   background-color: #fff; 
+//   width: 100%;
+//   // height: 400px;
+//   // .mix-flex-center();
+// }
+.amap-logo {
+  bottom:-100px;
+  // display: none;
+} 
+.amap-copyright {
+  bottom:-100px;
+  // display: none;
+}  
+.active2{
+  font-size: 14px;
+  color: #1F95FF !important;
+}
+</style>

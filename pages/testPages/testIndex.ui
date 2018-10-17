@@ -1,0 +1,83 @@
+<!--tabList.ui-->
+<template>
+  <ui-page>
+    <ui-view ui:for="{{ groups }}" ui:for-item="group" ui:for-index="groupIndex" class="sample_list">
+      <ui-view class="group-title">
+        <ui-row >
+          <ui-col width="5" align="center" vertical-align="middle">
+            <ui-view class="sign"></ui-view>
+          </ui-col>
+          <ui-col align="left" vertical-align="middle" space-left="10">
+            <ui-view >{{ group.title }}</ui-view>
+          </ui-col>
+        </ui-row>
+      </ui-view>
+      <ui-row-list bordered>
+          <ui-row class="row_list" url="{{ item.link }}" ui:for="{{ group.items }}" hover-class="touchui-hover">
+            <ui-col>{{ item.title }}</ui-col>
+            <ui-col align="right" width="30">
+                <ui-icon type="arrow-right" size="18" color="#C5C5C5"></ui-icon>
+            </ui-col>
+          </ui-row>
+          <!-- <ui-row class="row_list" hover-class="touchui-hover" bindtap="cleanQianDao">
+            <ui-col> 清除签到记录 </ui-col>
+            <ui-col align="right" width="30">
+                <ui-icon type="arrow-right" size="18" color="#C5C5C5"></ui-icon>
+            </ui-col>
+          </ui-row> -->
+      </ui-row-list>
+  </ui-page>
+</template>
+
+
+<script>
+// tabList.js
+export default {
+  config: {
+    "navigationBarTitleText": "测试案例"
+  },
+  data () {
+    return {
+      groups: [
+        {
+          title: '测试代码',
+          items: [
+            { title: '推送', link: '/pages/test/pushInfo' },
+            { title: '上传cid', link: '/pages/test/setCid' },
+            { title: '停留绘制地图', link: '/pages/items/stopDrawMap' },
+            { title: '自动绘制轨迹', link: '/pages/items/autoDrawMap' }
+          ]
+        }
+      ]
+    }
+  },
+  methods: {
+    cleanQianDao() {
+      console.log('清除签到数据')
+      ui.removeStorageSync('qianDaoInfo')
+      ui.showToast({ title: '清除成功', icon: 'success' })
+    }
+  }
+}
+
+</script>
+
+<style lang="less">
+.group-title{
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 18px;
+  color: #126DFE;
+  font-weight: bold;
+  
+}
+.row_list{
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  padding-left: 10px;
+  padding-right: 10px;
+
+}
+</style>
