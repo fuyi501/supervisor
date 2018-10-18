@@ -19,7 +19,7 @@ export default {
       "pages/application/askOff/askoff",
       "pages/application/supplement/buqian",
       "pages/application/approval/approval"
-    ],
+    ,"pages/testPages/example/indexTest"],
     "theme": {
       "theme-color": "#3399ff"
     },
@@ -38,7 +38,17 @@ export default {
         {
           "pagePath": "pages/index",
           "iconName": "home",
-          "text": "首页"
+          "text": "工作"
+        },
+        {
+          "pagePath": "pages/application/application",
+          "iconName": "home",
+          "text": "应用"
+        },
+        {
+          "pagePath": "pages/contacts/workers",
+          "iconName": "home",
+          "text": "通讯录"
         },
         {
           "pagePath": "pages/userCenter/userIndex",
@@ -53,6 +63,7 @@ export default {
     return {
       //全局变量
       globalData: {
+        isLogin: false
       },
       WIN_WIDTH:ui.WIN_WIDTH,
       tabIndex: 0,
@@ -142,7 +153,7 @@ export default {
       this.initBodyStyle()
     }
   },
-    // 初始化
+  // 初始化
   created () {
     this.initTab()
     this.initPaths()
@@ -211,7 +222,6 @@ export default {
       }
       return {}
     }
-
   },
   mounted () {
 

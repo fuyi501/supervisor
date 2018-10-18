@@ -42,7 +42,7 @@ export default {
         {
           title: '测试代码',
           items: [
-            { title: '推送', link: '/pages/test/pushInfo' },
+            { title: '首页', link: '/pages/testPages/example/indexTest' },
             { title: '上传cid', link: '/pages/test/setCid' },
             { title: '停留绘制地图', link: '/pages/items/stopDrawMap' },
             { title: '自动绘制轨迹', link: '/pages/items/autoDrawMap' }

@@ -1,106 +1,138 @@
 <!---->
 <template>
-  <ui-page>
+  <ui-page class="global_page">
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
-        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
-          <ui-view>
-            <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <ui-text class="nav_title">考勤</ui-text>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="50">
-          <ui-view>
-          </ui-view>
+        <ui-col vertical-align="middle" align="left">
+          <ui-view  class="nav_title">应用</ui-view>
         </ui-col>
       </ui-row>
     </ui-nav-bar>
 
-    <!-- <ui-swiper id="swiperdotsstyle" indicator-dots circular>
-      <ui-swiper-item ui:for="{{swiperItem}}" ui:for-item="item" ui:for-index="index">
-        <ui-image src="{{ item.src }}" mode="simple"></ui-image>
-      </ui-swiper-item>
-    </ui-swiper> -->
-    <ui-view class="circular1" >
-      <ui-circular
-          radius="80"
-          top="80"
-          left="80"
-          color="#1F97FE"
-          value="70"
-          line-width="10"
-          line-cap="round"
-          ></ui-circular>
-      <ui-view class="text">
-        <ui-text>打卡人数/应到人数</ui-text>
-        <ui-view>123/200</ui-view>
-        <ui-text>打卡详情</ui-text>
-      </ui-view>
+    <!-- 轮播图 -->
+    <ui-view class="swiper_img">
+      <ui-swiper id="swiperdotsstyle" indicator-dots circular>
+        <ui-swiper-item ui:for="{{swiperItem}}" ui:for-item="item" ui:for-index="index">
+          <ui-image src="{{ item.src }}" mode="simple"></ui-image>
+        </ui-swiper-item>
+      </ui-swiper>
     </ui-view>
 
-    <ui-view class="box">
-      <ui-row space-top=0>
+    <ui-view class="roller_content">
+      <ui-row height="50" border-bottom	>
+        <ui-col span="1" vertical-align="middle">
+          <ui-icon type="bell" size="20" color="#000"></ui-icon>
+        </ui-col>
+        <ui-col span="11">
+          <ui-roller autoplay="5000" height="50">
+            <ui-roller-item>
+              <ui-row>
+                <ui-col vertical-align="middle">
+                  <ui-text block class="roller-text">置顶公告在这里显示。</ui-text>
+                </ui-col>
+              </ui-row>
+            </ui-roller-item>
+          </ui-roller>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+    
+    <!-- 应用 -->
+    <ui-view class="app_box">
+      <ui-row space-top=5>
+        <ui-col class="centerInfo" space-left=10>
+          智能内外勤
+        </ui-col>
+      </ui-row>
+      <ui-row space-top=0 >
         <ui-col span=12>
-          <ui-row border-bottom space-top=10>
-            <ui-col span=5 class="right2" align="center" bindtap="">
-                <ui-view class="number1">3</ui-view>
-                <ui-view class="numText">未打卡</ui-view>       
+          <ui-row>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="items" color="#28aa91" size="40"></ui-icon>    
+                <ui-view class="app_text">项目详情</ui-view>       
             </ui-col>
-            <ui-col span=2 class="right2" align="center" bindtap="">
-                <ui-view class="number1">5</ui-view>
-                <ui-view class="numText">迟到</ui-view>           
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="conference" color="#ff525d" size="40"></ui-icon>    
+                <ui-view class="app_text">会议记录</ui-view>           
             </ui-col>
-            <ui-col span=5 class="right2" align="center" bindtap="">
-                <ui-view class="number1">6</ui-view>
-                <ui-view class="numText">外勤</ui-view>             
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="conference" color="#ff525d" size="40"></ui-icon>    
+                <ui-view class="app_text">会议记录</ui-view>           
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="shenpi" color="#8bb93f" size="40"></ui-icon>    
+                <ui-view class="app_text">我的审批</ui-view>             
+            </ui-col>
+          </ui-row>
+
+          <ui-row>
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="signin" color="#fc9153" size="40"></ui-icon>    
+                <ui-view class="app_text">签到统计</ui-view>             
+            </ui-col>
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="buqian" color="#28aa91" size="40"></ui-icon> 
+                <ui-view class="app_text" >补签</ui-view> 
+            </ui-col>
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="conference" color="#ff525d" size="40"></ui-icon>    
+                <ui-view class="app_text">会议记录</ui-view>           
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="askoff" color="red" size="40"></ui-icon>    
+                <ui-view class="app_text">请假</ui-view>              
             </ui-col>
           </ui-row>
         </ui-col>
       </ui-row>
     </ui-view>
 
-    <ui-view class="centerInfo" >
-      早上好 管理员
-    </ui-view>
-
-    <ui-view class="box">
-      <ui-row space-top=0 style="box-shadow: 0 0 1px #d0d0d0;" >
+    <ui-view class="app_box">
+      <ui-row space-top=5>
+        <ui-col class="centerInfo" space-left=10>
+          智能内外勤
+        </ui-col>
+      </ui-row>
+      <ui-row space-top=0 >
         <ui-col span=12>
-          <ui-row border-bottom>
-            <ui-col border-right class="right2" vertical-align="middle" align="center" bindtap="">
+          <ui-row>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
                 <ui-icon type="items" color="#28aa91" size="40"></ui-icon>    
-                <ui-view class="p">项目详情</ui-view>       
+                <ui-view class="app_text">项目详情</ui-view>       
             </ui-col>
-            <ui-col border-right class="right2" vertical-align="middle" align="center" bindtap="">
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
                 <ui-icon type="conference" color="#ff525d" size="40"></ui-icon>    
-                <ui-view class="p">会议记录</ui-view>           
+                <ui-view class="app_text">会议记录</ui-view>           
             </ui-col>
-            <ui-col class="right2" vertical-align="middle" align="center" bindtap="">
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="conference" color="#ff525d" size="40"></ui-icon>    
+                <ui-view class="app_text">会议记录</ui-view>           
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
                 <ui-icon type="shenpi" color="#8bb93f" size="40"></ui-icon>    
-                <ui-view class="p">我的审批</ui-view>             
+                <ui-view class="app_text">我的审批</ui-view>             
             </ui-col>
           </ui-row>
 
           <ui-row>
-            <ui-col border-right class="right2" vertical-align="middle" align="center" bindtap="">
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
                 <ui-icon type="signin" color="#fc9153" size="40"></ui-icon>    
-                <ui-view class="p">签到统计</ui-view>             
+                <ui-view class="app_text">签到统计</ui-view>             
             </ui-col>
-            
-              <ui-col border-right class="right2" vertical-align="middle" align="center" bindtap="">
-                  <ui-icon type="buqian" color="#28aa91" size="40"></ui-icon> 
-                  <ui-navigator url="/pages/attend/shenpi">   
-                  <ui-view class="p" >补签</ui-view>    
-                  </ui-navigator>          
-              </ui-col>
-            
-            <ui-col class="right2" vertical-align="middle" align="center" bindtap="">
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="buqian" color="#28aa91" size="40"></ui-icon> 
+                <ui-view class="app_text" >补签</ui-view> 
+            </ui-col>
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="conference" color="#ff525d" size="40"></ui-icon>    
+                <ui-view class="app_text">会议记录</ui-view>           
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
                 <ui-icon type="askoff" color="red" size="40"></ui-icon>    
-                <ui-view class="p">请假</ui-view>              
+                <ui-view class="app_text">请假</ui-view>              
             </ui-col>
           </ui-row>
+          
         </ui-col>
       </ui-row>
     </ui-view>
@@ -112,7 +144,7 @@
 export default {
   config: {
     navigationStyle: 'custom',
-    backgroundColor: '#F6F6F6',
+    backgroundColor: '#fff',
   },
   data() {
     return {
@@ -123,10 +155,6 @@ export default {
       {
         src: 'http://images.uileader.com/20171103/34795a1c-1365-4256-b9c1-6fb4af1de3da.jpg',
         title: '高温保护，一路驰骋'
-      },
-      {
-        src: 'http://images.uileader.com/20171103/926a6fdc-80f6-4244-8354-860627c88115.jpg',
-        title: '七夕好货，独家礼赠'
       }],
     }
   },
@@ -141,59 +169,52 @@ export default {
 </script>
 
 <style lang="less">
-.nav_bar {
-  background: linear-gradient(to right, #1F97FE, #126DFE);
-  .ui-view{
-    color: #fff;
-    font-size: 14px;
-  }
-  .ui-text{
-    color: #fff;
-    font-size: 16px;
-  }
-}
-.circular1{
-  background-color: #fff;
-  .mix-flex-center();
-  position: relative;
-  padding-top: 20px;
-  padding-bottom: 10px;
-  // padding: 10px 0;
-  .text{
-    position: absolute;
-    text-align: center;
-    line-height: 30px;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-    .ui-text{
-      font-size: 12px;
-      color: #a5a5a5;
-    }
-    .ui-view{
-      font-size: 30px;
-      font-weight: bold;
-      color: #000;
-      &.count{
-        color:#FF9900;
-      }
-    }
-  }
-}
-.box {
-  background-color: #fff;
-}
-.centerInfo {
-  height: 40px;
-  line-height: 40px;
-  font-size: 16px;
+.global_page {
   padding-left: 10px;
+  padding-right: 10px;
 }
-.number1{
-  font-size: 30px;
+.nav_bar {
+  background: #fff;
+  .nav_title {
+    color: #000;
+    padding-left: 10px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+}
+.swiper_img {
+  margin-top: 10px;
+  .ui-image {
+    border-radius:5px;
+  }
+}
+.roller_content {
+  .ui-roller-item {
+    line-height: 50px;
+  }
+  .roller-text {
+    /* 文字超出部分出省略号 */
+    .mix-text-overflow();
+  }
+}
+.app_box {
+  background-color: #fff;
+  padding-bottom: 15px;
+  .mix-1px(0, 0, 1, 0, #ccc); /* 下边1像素细线 */
+  .centerInfo {
+    height: 30px;
+    line-height: 30px;
+      .ui-col-content {
+        font-weight: bold;
+        font-size: 14px;
+      }
+  }
+  .app_list {
+    height:80px;
+  }
+  .app_text {
+    font-size: 12px;
+  }
+}
 
-}
-.right2{
-  height:100px;
-}
 </style>

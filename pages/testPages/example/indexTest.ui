@@ -2,7 +2,7 @@
 <template>
   <ui-page pull-down="{{ pullDown }}"> 
 
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {'background-color':'#1981FF'} }}">
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {'background-color':'#fff'} }}">
       <ui-row height="46">
         
         <ui-col vertical-align="middle" align="center" width="40">
@@ -87,7 +87,6 @@ export default {
   },
   data () {
     return {
-      isLogin: false,
       listIndex: null,
       nav_title: "项目管理",
       show10: false,
@@ -103,9 +102,6 @@ export default {
         // onAfter: this.handleAfter
       }
     }
-  },
-  created () {
-    console.log('isLogin:', this.isLogin)
   },
   methods: {
     addItems () {
@@ -221,48 +217,10 @@ export default {
             ui.showToast({ title: '删除失败' + errMsg })
           }
         })
-    },
-    loginPage () {
-      import(`#/pages/userCenter/login/loginInterface.ui`).then((content) => {
-        ui.showDialog({
-          content: content, // dialog 内容
-          statusBarColor: 'black', // 打开窗体时，设置状态栏的字体颜色，有white和black两种可选
-          // 向loginInterface.ui传入数据
-          data: {
-            currentNum: this.currentNum
-          },
-          // 接收ui.hideDialog回传的数据，隐藏 dialog 时调用
-          onHide: (data) => {
-            console.log("登录页面关闭返回的数据：", data)
-            if (data && data.userinfo) {
-              this.isLogin = data.userinfo.isLogin
-              if(data.userinfo.userName === null){
-                this.userName = data.userinfo.tel // 用户名改电话
-              }else{
-                this.userName = data.userinfo.userName // 用户名
-              }
-              this.userTel = data.userinfo.tel // 用户电话
-              this.userId = data.userinfo.userId // 用户工号
-              if(data.userinfo.head === null || data.userinfo.head === ''){
-                this.portraitUrl = require('#/images/portrait_bg.png')
-              }else{
-                // this.portraitUrl = data.userinfo.data.head // 有头像应该请求头像，这里先注释掉
-                this.portraitUrl = require('#/images/portrait_bg.png')
-              }
-            } else {
-              this.isLogin = false
-              console.log('没有接收到数据')
-            }
-          }
-        })
-      })
     }
   },
   mounted () {
     this.getItems()
-    // if(!this.isLogin){
-    //   this.loginPage()
-    // }
     window.setTimeout(() => {
       ui.closeSplashscreen()
     }, 1000)

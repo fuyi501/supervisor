@@ -324,7 +324,7 @@ export default {
     //测试页面
     testIndex () {
       ui.navigateTo({
-        url: '/pages/test/testIndex'
+        url: '/pages/testPages/testIndex'
       })
     }
   },
