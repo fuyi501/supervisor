@@ -37,12 +37,12 @@ export default {
       "list": [
         {
           "pagePath": "pages/index",
-          "iconName": "home",
+          "iconName": "items3",
           "text": "工作"
         },
         {
           "pagePath": "pages/application/application",
-          "iconName": "home",
+          "iconName": "yingyong2",
           "text": "应用"
         },
         {

@@ -1,78 +1,60 @@
 <!--userCenter.ui-->
 <template>
   <ui-view>
-    <ui-view class="bg_blue"></ui-view> 
-    <ui-page 
-    pull-down="{{ pullDown }}"
-    page-load="{{ pageLoad }}"
-    >
-      <ui-view slot="pull-down"></ui-view>
-      <ui-nav-bar slot="nav-bar"  class="nav_bar">
+    <ui-page page-load="{{ pageLoad }}">
+      <ui-nav-bar slot="nav-bar" class="nav_bar">
         <ui-row height="46">
-          <ui-col vertical-align="middle" align="center" width="50" bindtap="openMessage">
-            <ui-icon type="info" size="22" color="#fff"></ui-icon>
-          </ui-col>
-          <ui-col vertical-align="middle" align="center">
+          <ui-col vertical-align="middle" align="left">
             <ui-view class="nav_title">我的</ui-view>
           </ui-col>
           <ui-col vertical-align="middle" align="center" width="50" bindtap="setting">
-            <ui-icon type="setting" size="24" color="#fff"></ui-icon>
+            <ui-icon type="setting" size="24" color="#000"></ui-icon>
           </ui-col>
         </ui-row>
       </ui-nav-bar>
+
       <ui-view class="user_content">
-        <ui-row height="90" class="header_top" bindtap="login">
-          <ui-col vertical-align="middle" align="center" width="90">
-            <ui-view class="head_portrait">
-              <!-- <ui-icon type="user_portrait" color="#D0EDFF" size="50"></ui-icon> -->
-            </ui-view>
-            <!-- 头像 -->
-            <ui-image
-            src="{{ portraitUrl }}"
-            mode='aspectFill'
-            width="60"
-            height="60"
-            class="head_portrait"
-            ></ui-image>
-          </ui-col>
-          <ui-col vertical-align="middle" align="left">
-            <ui-view class="login">{{ isLogin ? userName : '立即登录' }}</ui-view>
-            <ui-view class="login_after" ui:if="{{isLogin}}">
-              <ui-icon type="phone" size="14" color="#fff"></ui-icon>
-              {{ userTel }}
-            </ui-view>
-            <ui-view class="login_after" ui:else>登录后可享受更多特权</ui-view>
-          </ui-col>
-          <ui-col vertical-align="middle" align="right" width="50" space-right="15">
-            <ui-icon type="arrow-right" size="18" color="#fff"></ui-icon>
-          </ui-col>
-        </ui-row>
-        <ui-row height="90" class="money_wrap">
-          <ui-col vertical-align="middle" align="center">
-            <ui-view class="money_list01" ui:if="{{ isLogin }}">
-              <ui-text>0.00</ui-text>
-              <ui-text>元</ui-text>
-            </ui-view>
-            <ui-icon type="user_money01" color="#1981FF" size="30" ui:else></ui-icon>
-            <ui-view>钱包</ui-view>
-          </ui-col>
-          <ui-col vertical-align="middle" align="center">
-            <ui-view class="money_list01 money_list02" ui:if="{{ isLogin }}">
-              <ui-text>4</ui-text>
-              <ui-text>个</ui-text>
-            </ui-view>
-            <ui-icon type="user_money02" color="#F53808" size="30" ui:else></ui-icon>
-            <ui-view>优惠</ui-view>
-          </ui-col>
-          <ui-col vertical-align="middle" align="center">
-            <ui-view class="money_list01 money_list03" ui:if="{{ isLogin }}">
-              <ui-text>10</ui-text>
-              <ui-text>个</ui-text>
-            </ui-view>
-            <ui-icon type="user_money03" color="#FAAA08" size="30" ui:else></ui-icon>
-            <ui-view>金币</ui-view>
-          </ui-col>
-        </ui-row>
+
+        <ui-view class="user_info">
+          <ui-row height="90" class="header_top" bindtap="login">
+            
+            <ui-col vertical-align="middle" align="left" width="90" space-left=15>
+              <ui-view class="head_portrait">
+                <!-- <ui-icon type="user_portrait" color="#D0EDFF" size="50"></ui-icon> -->
+              </ui-view>
+              <!-- 头像 -->
+              <ui-image
+              src="{{ portraitUrl }}"
+              mode='aspectFill'
+              width="60"
+              height="60"
+              class="head_portrait"
+              ></ui-image>
+            </ui-col>
+            <ui-col vertical-align="middle" align="right" space-right=15>
+              <ui-view class="login">{{ isLogin ? userName : '傅毅' }}</ui-view>
+              <ui-view class="login_after" >
+                <ui-icon type="phone" size="14" color="#fff"></ui-icon>
+                {{ userTel }}13408468876
+              </ui-view>
+            </ui-col>
+          </ui-row>
+
+          <ui-row height="50" class="money_wrap">
+            <ui-col span=8 vertical-align="middle" align="right">
+            </ui-col>
+            <ui-col span=1 vertical-align="middle" align="right">
+              <ui-icon type="gonggao3" color="#F66542" size="24"></ui-icon>
+            </ui-col>
+            <ui-col span=3 vertical-align="middle" align="right" space-right=15>
+              我的收藏
+            </ui-col>
+          </ui-row>
+
+
+        </ui-view>
+        
+
         <ui-view class="user_content_list_wrapper">
         
         <ui-row height="50" class="user_content_list" space-bottom="10" bindtap="collect">
@@ -158,9 +140,9 @@
 export default {
   config: {
     navigationStyle: "custom",
-    navigationBarTextStyle: 'white',
-    backgroundColor:"transparent",
-    navigationBarBorderColor:"#39f" 
+    // navigationBarTextStyle: 'white',
+    // backgroundColor:"transparent",
+    // navigationBarBorderColor:"#39f" 
   },
   data () {
     return {
@@ -336,31 +318,31 @@ export default {
 </script>
 
 <style lang="less">
-  // userCenter.less
+
 .nav_bar {
-    background: linear-gradient(to right, #1F97FE, #126DFE);
-    border: 1px solid transparent;
-    .nav_title {
-      color: #fff;
-    }
+  background: #fff;
+  border: 1px solid transparent;
+  .nav_title {
+    color: #000;
+    padding-left: 20rpx;
+    font-size: 36rpx;
+    font-weight: bold;
+  }
+}
+.user_info{
+  background-color: #2987FE;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  box-shadow: 0px 0px 20px #cccccc;
+  border-radius: 50px;
+  border: #000;
 }
 
-.ui-navigator {
-    width: 100%;
-    height: 100%;
-}
 
-.bg_blue {
-    position: absolute;
-    width: 100%;
-    height: 240px;
-    background: linear-gradient(to right, #1F97FE, #126DFE);
-}
-// .user_content {
-//     // background: #F2F2F2;
-// }
 .header_top {
-    background: linear-gradient(to right, #1F97FE, #126DFE);
+    background: #fff;
     .head_portrait {
       //width: 60px;
       //height: 60px;
@@ -372,11 +354,11 @@ export default {
       //text-align: center;
     }
     .login {
-        color: #fff;
+        color: #000;
         font-size: 18px;
     }
     .login_after {
-        color: #fff;
+        color: #000;
         font-size: 14px;
     }
 }
@@ -386,21 +368,6 @@ export default {
     .ui-view {
         font-size: 14px;
         color: #4F4F4F;
-    }
-    .money_list01 {
-        color: #2987FE;
-        font-size: 12px;
-        height: 48px;
-        line-height: 48px;
-         :first-child {
-            font-size: 24px;
-        }
-    }
-    .money_list02 {
-        color: #F5402A;
-    }
-    .money_list03 {
-        color: #F88E09;
     }
 }
 

@@ -1,0 +1,92 @@
+@font-face {
+  font-family: "ui-icon";
+  src: url('iconfont.ttf?t=1502549776894') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1502549776894#ui-icon') format('svg');
+  /* iOS 4.1- */
+}
+
+.ui-icon {
+  font-family: "ui-icon" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-home:before { content: "\e6a9"; }
+
+.icon-signin:before { content: "\e606"; }
+
+.icon-attendance:before { content: "\e682"; }
+
+.icon-finance:before { content: "\e7d1"; }
+
+.icon-user:before { content: "\e663"; }
+
+
+.icon-arrow-left:before { content: "\e679"; }
+
+
+.icon-setting:before { content: "\e655"; }
+
+.icon-info:before { content: "\e6a4"; }
+
+.icon-phone:before { content: "\e631"; }
+
+.icon-customer:before { content: "\e614"; }
+
+.icon-about:before { content: "\e629"; }
+
+.icon-wenti:before { content: "\e609"; }
+
+.icon-life:before { content: "\e60e"; }
+
+.icon-user_money01:before { content: "\e608"; }
+
+.icon-user_money02:before { content: "\e665"; }
+
+.icon-user_money03:before { content: "\e60d"; }
+
+.icon-user_money0301:before { content: "\e60c"; }
+
+.icon-map2:before { content: "\e613"; }
+
+.icon-map:before { content: "\e60f"; }
+
+.icon-arrow-right:before { content: "\e636"; }
+
+.icon-add:before { content: "\e61a"; }
+
+.icon-close:before { content: "\e617"; }
+
+.icon-user-img:before { content: "\e699"; }
+
+
+.icon-wodeshenpi:before { content: "\e646"; }
+
+.icon-shenpi:before { content: "\e65e"; }
+
+.icon-buqian:before { content: "\e64b"; }
+
+.icon-askoff:before { content: "\e62a"; }
+
+.icon-collect:before { content: "\e60a"; }
+
+.icon-qq:before { content: "\e612"; }
+
+.icon-weixin:before { content: "\e715"; }
+
+
+.icon-bell:before { content: "\e632"; }
+
+.icon-scan:before { content: "\e637"; }
+
+.icon-success:before { content: "\e604"; }
+
+.icon-conference:before { content: "\e60b"; }
+
+.icon-items:before { content: "\e64c"; }
+
+.icon-shuaxin:before { content: "\e63d"; }
+
+.icon-API:before { content: "\e669"; }

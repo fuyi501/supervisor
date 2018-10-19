@@ -21,7 +21,7 @@
     <ui-view class="roller_content">
       <ui-row height="50" border-bottom	>
         <ui-col span="1" vertical-align="middle">
-          <ui-icon type="bell" size="20" color="#000"></ui-icon>
+          <ui-icon type="gonggao3" size="20" color="#8c8c8c"></ui-icon>
         </ui-col>
         <ui-col span="11">
           <ui-roller autoplay="5000" height="50">
@@ -40,47 +40,31 @@
     <!-- 应用 -->
     <ui-view class="app_box">
       <ui-row space-top=5>
+        <ui-col width="5" align="center" vertical-align="middle">
+          <ui-view class="front_line"></ui-view>
+        </ui-col>
         <ui-col class="centerInfo" space-left=10>
-          智能内外勤
+          智慧办公
         </ui-col>
       </ui-row>
       <ui-row space-top=0 >
         <ui-col span=12>
           <ui-row>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="items" color="#28aa91" size="40"></ui-icon>    
-                <ui-view class="app_text">项目详情</ui-view>       
+                <ui-icon type="daka2" color="#28aa91" size="30"></ui-icon>    
+                <ui-view class="app_text">考勤打卡</ui-view>       
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="conference" color="#ff525d" size="40"></ui-icon>    
-                <ui-view class="app_text">会议记录</ui-view>           
+                <ui-icon type="daka2" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">签到</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="conference" color="#ff525d" size="40"></ui-icon>    
-                <ui-view class="app_text">会议记录</ui-view>           
+                <ui-icon type="daka2" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">请假</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="shenpi" color="#8bb93f" size="40"></ui-icon>    
-                <ui-view class="app_text">我的审批</ui-view>             
-            </ui-col>
-          </ui-row>
-
-          <ui-row>
-            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="signin" color="#fc9153" size="40"></ui-icon>    
-                <ui-view class="app_text">签到统计</ui-view>             
-            </ui-col>
-            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="buqian" color="#28aa91" size="40"></ui-icon> 
-                <ui-view class="app_text" >补签</ui-view> 
-            </ui-col>
-            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="conference" color="#ff525d" size="40"></ui-icon>    
-                <ui-view class="app_text">会议记录</ui-view>           
-            </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="askoff" color="red" size="40"></ui-icon>    
-                <ui-view class="app_text">请假</ui-view>              
+                <ui-icon type="daka2" color="#8bb93f" size="30"></ui-icon>    
+                <ui-view class="app_text">补卡</ui-view>             
             </ui-col>
           </ui-row>
         </ui-col>
@@ -89,50 +73,105 @@
 
     <ui-view class="app_box">
       <ui-row space-top=5>
+        <ui-col width="5" align="center" vertical-align="middle">
+          <ui-view class="front_line"></ui-view>
+        </ui-col>
         <ui-col class="centerInfo" space-left=10>
-          智能内外勤
+          项目管理
         </ui-col>
       </ui-row>
       <ui-row space-top=0 >
         <ui-col span=12>
           <ui-row>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="items" color="#28aa91" size="40"></ui-icon>    
-                <ui-view class="app_text">项目详情</ui-view>       
+                <ui-icon type="daka2" color="#28aa91" size="30"></ui-icon>    
+                <ui-view class="app_text">公告</ui-view>       
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="conference" color="#ff525d" size="40"></ui-icon>    
-                <ui-view class="app_text">会议记录</ui-view>           
+                <ui-icon type="daka2" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">日志</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="conference" color="#ff525d" size="40"></ui-icon>    
-                <ui-view class="app_text">会议记录</ui-view>           
+                <ui-icon type="daka2" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">审批</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="shenpi" color="#8bb93f" size="40"></ui-icon>    
-                <ui-view class="app_text">我的审批</ui-view>             
+                <ui-icon type="daka2" color="#8bb93f" size="30"></ui-icon>    
+                <ui-view class="app_text">通知单</ui-view>             
             </ui-col>
           </ui-row>
 
           <ui-row>
             <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="signin" color="#fc9153" size="40"></ui-icon>    
-                <ui-view class="app_text">签到统计</ui-view>             
+                <ui-icon type="daka2" color="#fc9153" size="30"></ui-icon>    
+                <ui-view class="app_text">巡视</ui-view>             
             </ui-col>
             <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="buqian" color="#28aa91" size="40"></ui-icon> 
-                <ui-view class="app_text" >补签</ui-view> 
+                <ui-icon type="daka2" color="#28aa91" size="30"></ui-icon> 
+                <ui-view class="app_text">旁站</ui-view> 
             </ui-col>
             <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="conference" color="#ff525d" size="40"></ui-icon>    
-                <ui-view class="app_text">会议记录</ui-view>           
+                <ui-icon type="daka2" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">验收</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="askoff" color="red" size="40"></ui-icon>    
-                <ui-view class="app_text">请假</ui-view>              
+                <ui-icon type="daka2" color="red" size="30"></ui-icon>    
+                <ui-view class="app_text">汇报</ui-view>              
             </ui-col>
           </ui-row>
-          
+
+          <ui-row>
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="daka2" color="#fc9153" size="30"></ui-icon>    
+                <ui-view class="app_text">安全</ui-view>             
+            </ui-col>
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="daka2" color="#28aa91" size="30"></ui-icon> 
+                <ui-view class="app_text">质量</ui-view> 
+            </ui-col>
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="daka2" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">周报</ui-view>           
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="daka2" color="red" size="30"></ui-icon>    
+                <ui-view class="app_text">月报</ui-view>              
+            </ui-col>
+          </ui-row>
+
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+    <ui-view class="app_box">
+      <ui-row space-top=5>
+        <ui-col width="5" align="center" vertical-align="middle">
+          <ui-view class="front_line"></ui-view>
+        </ui-col>
+        <ui-col class="centerInfo" space-left=10>
+          高效统计
+        </ui-col>
+      </ui-row>
+      <ui-row space-top=0 >
+        <ui-col span=12>
+          <ui-row>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="daka2" color="#28aa91" size="30"></ui-icon>    
+                <ui-view class="app_text">考勤统计</ui-view>       
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="daka2" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">签到统计</ui-view>           
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="daka2" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">安全统计</ui-view>           
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="daka2" color="#8bb93f" size="30"></ui-icon>    
+                <ui-view class="app_text">进度统计</ui-view>             
+            </ui-col>
+          </ui-row>
         </ui-col>
       </ui-row>
     </ui-view>
@@ -159,10 +198,7 @@ export default {
     }
   },
   methods: {
-    // 返回按钮
-    navigateBack () {
-      ui.navigateBack()
-    }
+   
   },
   mounted() {}
 }
@@ -170,8 +206,8 @@ export default {
 
 <style lang="less">
 .global_page {
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 30rpx;
+  padding-right: 30rpx;
 }
 .nav_bar {
   background: #fff;
@@ -201,6 +237,12 @@ export default {
   background-color: #fff;
   padding-bottom: 15px;
   .mix-1px(0, 0, 1, 0, #ccc); /* 下边1像素细线 */
+  .front_line {
+    background-color: #40a9ff;
+    width: 5px;
+    height: 16px;
+    border-radius: 5px;
+  }
   .centerInfo {
     height: 30px;
     line-height: 30px;
