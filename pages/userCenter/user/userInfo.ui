@@ -1,10 +1,11 @@
 <!--userinfo.ui-->
 <template>
   <ui-page page-load="{{ pageLoad }}">
+
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
-        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
-          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="20" color="#126DFE"></ui-icon>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
           <ui-view class="nav_title">账户信息</ui-view>
@@ -19,12 +20,8 @@
       </ui-col>
       <ui-col vertical-align="middle" align="right" space-right="15">
         <ui-view class="portrait">
-        <ui-image
-        src="{{ portraitUrl }}"
-        width="40"
-        height="40"
-        ></ui-image>
-        <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          <ui-image src="{{ portraitUrl }}" width="40" height="40"></ui-image>
+          <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
         </ui-view>
       </ui-col>
     </ui-row>
@@ -54,20 +51,18 @@
         <ui-view class="active"> {{ userId }} </ui-view>
       </ui-col>
     </ui-row>
-    
-
 
     <ui-view class="list_title">账号绑定</ui-view>
     <ui-row height="50" class="userInfo_list2">
       <ui-col width="50" vertical-align="middle" align="center">
-        <ui-icon type="phone" color="#1E94FF" size="20"></ui-icon>
+        <ui-icon type="phone1" color="#1E94FF" size="20"></ui-icon>
       </ui-col>
       <ui-col vertical-align="middle">
         手机
       </ui-col>
       <ui-col vertical-align="middle" align="right" space-right="15">
         <ui-view class="active">{{ tel }}
-        <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
         </ui-view>
       </ui-col>
     </ui-row>
@@ -80,7 +75,7 @@
       </ui-col>
       <ui-col vertical-align="middle" align="right" space-right="15">
         <ui-view class="active">已绑定
-        <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
         </ui-view>
       </ui-col>
     </ui-row>
@@ -93,7 +88,7 @@
       </ui-col>
       <ui-col vertical-align="middle" align="right" space-right="15">
         <ui-view class="active2">未绑定
-        <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
         </ui-view>
       </ui-col>
     </ui-row>
@@ -109,25 +104,19 @@
         </ui-view>
       </ui-col>
     </ui-row>
-    <ui-row height="50" class="userInfo_list2">
-      <ui-col vertical-align="middle" space-left="15">
-        支付密码
-      </ui-col>
-      <ui-col vertical-align="middle" align="right" space-right="15">
-        <ui-view class="active2">未设置
-          <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-        </ui-view>
-      </ui-col>
-    </ui-row>
     <ui-row height="50" class="userInfo_list2" bindtap="faceUpload">
       <ui-col vertical-align="middle" space-left="15">
         人脸签到
       </ui-col>
       <ui-col vertical-align="middle" align="right" space-right="15">
-        <ui-view style="color:red" class="active2" ui:if=" isface === '' ">请上传人脸照片
+        <ui-view style="color:red" class="active2" ui:if=" isface === '' ">
+          <ui-icon type="setting2" size="16" color="red"></ui-icon>
+          请上传人脸照片
           <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
         </ui-view>
-        <ui-view class="active" ui:else>已上传
+        <ui-view class="active" ui:else>
+          <ui-icon type="renlian2" size="16" color="green"></ui-icon>
+          已上传
           <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
         </ui-view>
       </ui-col>
@@ -147,106 +136,111 @@
 
 
 <script>
-// userinfo.js
-const sourceType = [['camera'], ['album'], ['camera', 'album']]
-const sizeType = [['compressed'], ['original'], ['compressed', 'original']]
-// const uploadFileUrl = 'https://www.uileader.com/touchui-backstage/uploadImgSubmit.do'
-// const updataHeadUrl = 'https://www.uileader.com/touchui-backstage/updateHead.do'
+  // userinfo.js
+  const sourceType = [
+    ['camera'],
+    ['album'],
+    ['camera', 'album']
+  ]
+  const sizeType = [
+    ['compressed'],
+    ['original'],
+    ['compressed', 'original']
+  ]
+  const uploadAvatarUrl = 'https://api.estech.xyz:8533/user/avatar/base64' // 上传用户头像照片
+  import lrz from '#/static/utils/lrz' // 压缩图片库
 
-const uploadAvatarUrl = 'https://api.estech.xyz:8533/user/avatar/base64' // 上传用户头像照片
-import lrz from '#/static/utils/lrz' // 压缩图片库
-
-export default {
-  config: {
-    backgroundColor: '#F2F2F2',
-    delay:false
-  },
-  data () {
-    return {
-      portraitUrl: require('#/images/portrait_bg.png'),
-      userName: '',
-      userNick: '',
-      userTel: '',
-      userId: '',
-      tokenId: '',
-      isface: '',
-      pageLoad: {// 进入页面将用户信息显示在页面上
-        trigger: 'always',
-        handle: () => {
-          console.log("用户信息 pageLoad")
-          let userinfo = ui.getStorageSync('userinfo')
-          console.log("用户信息 userinfo:",userinfo)
-          if (userinfo !== null) {
-            if (userinfo.tokenId === '') {
-              this.isLogin = false
-              this.portraitUrl = require('#/images/portrait_bg.png')
-            } else {
-              this.isLogin = true
-              if(userinfo.userName === null){
-                this.userName = ''
-              }else {
-                this.userName = userinfo.userName
-              }
-
-              if(userinfo.nickName === null){
-                this.userNick = ''
-              }else{
-                this.userNick = userinfo.nickName
-              }
-
-              console.log("isface:" , userinfo.isHasFaceImg)
-
-              this.userTel = userinfo.tel
-              this.userId = userinfo.userId
-              this.isface = userinfo.isHasFaceImg
-              this.tokenId = userinfo.tokenId
-              if (userinfo.head === null || userinfo.head === '') {
+  export default {
+    config: {
+      backgroundColor: '#F2F2F2',
+      delay: false
+    },
+    data() {
+      return {
+        portraitUrl: require('#/images/portrait_bg.png'),
+        userName: '',
+        userNick: '',
+        userTel: '',
+        userId: '',
+        tokenId: '',
+        isface: '',
+        pageLoad: { // 进入页面将用户信息显示在页面上
+          trigger: 'always',
+          handle: () => {
+            console.log("用户信息 pageLoad")
+            let userinfo = ui.getStorageSync('userinfo')
+            console.log("用户信息 userinfo:", userinfo)
+            if (userinfo !== null) {
+              if (userinfo.tokenId === '') {
+                this.isLogin = false
                 this.portraitUrl = require('#/images/portrait_bg.png')
               } else {
-                this.portraitUrl = userinfo.head
+                this.isLogin = true
+                if (userinfo.userName === null) {
+                  this.userName = ''
+                } else {
+                  this.userName = userinfo.userName
+                }
+
+                if (userinfo.nickName === null) {
+                  this.userNick = ''
+                } else {
+                  this.userNick = userinfo.nickName
+                }
+
+                console.log("isface:", userinfo.isHasFaceImg)
+
+                this.userTel = userinfo.tel
+                this.userId = userinfo.userId
+                this.isface = userinfo.isHasFaceImg
+                this.tokenId = userinfo.tokenId
+                if (userinfo.head === null || userinfo.head === '') {
+                  this.portraitUrl = require('#/images/portrait_bg.png')
+                } else {
+                  this.portraitUrl = userinfo.head
+                }
               }
+            } else if (userinfo === null) {
+              this.isLogin = false
+              this.portraitUrl = require('#/images/portrait_bg.png')
             }
-          }else if(userinfo === null){
-            this.isLogin = false
-            this.portraitUrl = require('#/images/portrait_bg.png')
           }
         }
       }
-    }
-  },
-  methods: {
-    navigateBack () {
-      ui.navigateBack()
     },
-    // 头像上传
-    uploadPhoto () {
-      // ui.showActionSheet({
-      //   itemList: [
-      //     '拍摄',
-      //     '从手机相册选择'
-      //   ],
-      //   success: (index) => {
-      //     if (index > -1) {
-      //       this.chooseImage(index)
-      //     }
-      //   }
-      // })
-      this.chooseImage(2)
-    },
-    chooseImage (index) {
-      let that = this
-      ui.chooseImage({
-        clip: true,
-        sourceType: sourceType[index],
-        sizeType: sizeType[1],
-        success: function (res) {
-          let imagePath = res.tempFilePaths[0]
+    methods: {
+      navigateBack() {
+        ui.navigateBack()
+      },
+      // 头像上传
+      uploadPhoto() {
+        // ui.showActionSheet({
+        //   itemList: [
+        //     '拍摄',
+        //     '从手机相册选择'
+        //   ],
+        //   success: (index) => {
+        //     if (index > -1) {
+        //       this.chooseImage(index)
+        //     }
+        //   }
+        // })
+        this.chooseImage(2)
+      },
+      chooseImage(index) {
+        let that = this
+        ui.chooseImage({
+          clip: true,
+          sourceType: sourceType[index],
+          sizeType: sizeType[1],
+          success: function (res) {
+            let imagePath = res.tempFilePaths[0]
 
-          // 开始压缩
-          lrz(imagePath)
-            .then(function (rst) {
+            // 开始压缩
+            lrz(imagePath)
+              .then(function (rst) {
                 // 处理成功会执行
-                console.log("压缩成功",rst)
+                console.log("压缩成功", rst)
                 that.portraitUrl = rst.base64
 
                 ui.request({
@@ -261,139 +255,159 @@ export default {
                     'Authorization': 'Bearer ' + that.tokenId
                   },
                   success: (result) => {
-                    if(result.data.code === 2000){
-                      console.log("上传base64编码成功 result:",result)
-                      ui.showToast({ title: '更新头像链接成功' , icon: 'success' })
+                    if (result.data.code === 2000) {
+                      console.log("上传base64编码成功 result:", result)
+                      ui.showToast({
+                        title: '更新头像链接成功',
+                        icon: 'success'
+                      })
 
                       // 获取 userinfo 数据，再添加一个值
                       let userinfo = ui.getStorageSync('userinfo')
                       userinfo.head = that.portraitUrl
-                      ui.setStorageSync('userinfo',userinfo)
+                      ui.setStorageSync('userinfo', userinfo)
 
-                      console.log("修改后的 userinfo :" , userinfo)
-                    }else{
-                      ui.showToast({ title: '请求失败'+result.data.code })
+                      console.log("修改后的 userinfo :", userinfo)
+                    } else {
+                      ui.showToast({
+                        title: '请求失败' + result.data.code
+                      })
                     }
-                    
+
 
                   },
-                  fail: function ({ errMsg }) {
-                    ui.showToast({ title: '更新头像链接失败' })
-                    console.log("更新头像链接失败",errMsg)
+                  fail: function ({
+                    errMsg
+                  }) {
+                    ui.showToast({
+                      title: '更新头像链接失败'
+                    })
+                    console.log("更新头像链接失败", errMsg)
                   }
                 })
-            })
-            .catch(function (err){
+              })
+              .catch(function (err) {
                 // 处理失败会执行
-                console.log("压缩失败",err)
-                ui.showToast({ title: '图片压缩失败' })
-            })
-            .always(function () {
+                console.log("压缩失败", err)
+                ui.showToast({
+                  title: '图片压缩失败'
+                })
+              })
+              .always(function () {
                 // 不管是成功失败，都会执行
                 console.log("执行压缩")
-            });
-        },
-        fail: function (res) {
-        }
-      })
-    },
-    setUserInfo (value) {
-      console.log("设置用户信息",value)
-      if(value === "用户名"){
-        ui.navigateTo({
-          url: '/pages/userCenter/setUserInfo?type=用户名'
+              });
+          },
+          fail: function (res) {}
         })
-      }else if(value === "昵称"){
-        ui.navigateTo({
-          url: '/pages/userCenter/setUserInfo?type=昵称'
-        })
-      }else {
+      },
+      setUserInfo(value) {
+        console.log("设置用户信息", value)
+        if (value === "用户名") {
+          ui.navigateTo({
+            url: '/pages/userCenter/setUserInfo?type=用户名'
+          })
+        } else if (value === "昵称") {
+          ui.navigateTo({
+            url: '/pages/userCenter/setUserInfo?type=昵称'
+          })
+        } else {
 
+        }
+      },
+      faceUpload() {
+        ui.navigateTo({
+          url: '/pages/userCenter/faceUpload'
+        })
       }
     },
-    faceUpload() {
-      ui.navigateTo({
-        url: '/pages/userCenter/faceUpload'
-      })
-    }
-  },
-  mounted () {
-    let userinfo = ui.getStorageSync('userinfo')
-    console.log("用户信息页面：",userinfo)
-    if(userinfo.userName === null){
-      this.userName = ''
-    }else {
-      this.userName = userinfo.userName
-    }
+    mounted() {
+      let userinfo = ui.getStorageSync('userinfo')
+      console.log("用户信息页面：", userinfo)
+      if (userinfo.userName === null) {
+        this.userName = ''
+      } else {
+        this.userName = userinfo.userName
+      }
 
-    if(userinfo.nickName === null){
-      this.userNick = ''
-    }else{
-      this.userNick = userinfo.nickName
-    }
-    
-    this.tokenId = userinfo.tokenId
-    this.tel = userinfo.tel
-    this.userId = userinfo.userId
+      if (userinfo.nickName === null) {
+        this.userNick = ''
+      } else {
+        this.userNick = userinfo.nickName
+      }
 
-    console.log("用户名：",this.userName)
+      this.tokenId = userinfo.tokenId
+      this.tel = userinfo.tel
+      this.userId = userinfo.userId
 
-    if (userinfo.head === null || userinfo.head === '') {
-      this.portraitUrl = require('#/images/portrait_bg.png')
-    } else {
-      this.portraitUrl = userinfo.head
+      console.log("用户名：", this.userName)
+
+      if (userinfo.head === null || userinfo.head === '') {
+        this.portraitUrl = require('#/images/portrait_bg.png')
+      } else {
+        this.portraitUrl = userinfo.head
+      }
     }
   }
-}
-
 </script>
 
 <style lang="less">
+  // userinfo.less
+  .nav_bar {
+    background: #fff;
 
-// userinfo.less
-.nav_bar {
-  background: linear-gradient(to right, #1F97FE, #126DFE);
-  .nav_title{
-    color: #fff;
-  }
-}
-.userInfo_list{
-  background-color: #fff;
-  .active{
-    font-size: 14px;
-    color: #8C8C8C;
-  }
-  .active2{
-    font-size: 14px;
-    color: #1F95FF;
-  }
-}
-.userInfo_list2{
-  background-color: #fff;
-  .mix-1px(0, 0, 1, 0, #ccc);
-  .active{
-    font-size: 14px;
-    color: #8C8C8C;
-  }
-  .active2{
-    font-size: 14px;
-    color: #1F95FF;
-  }
-  .portrait{
-    display: flex;
-    .ui-image{
-      border-radius: 50%;
-    }
-    .ui-icon{
-      line-height: 40px;
+    .nav_title {
+      color: #000;
+      font-size: 36rpx;
+      font-weight: bold;
     }
   }
-}
 
-.list_title{
-  font-size: 12px;
-  color: #656565;
-  padding-left: 15px;
-  line-height: 40px;
-}
+  .userInfo_list {
+    background-color: #fff;
+
+    .active {
+      font-size: 14px;
+      color: #8C8C8C;
+    }
+
+    .active2 {
+      font-size: 14px;
+      color: #1F95FF;
+    }
+  }
+
+  .userInfo_list2 {
+    background-color: #fff;
+    .mix-1px(0, 0, 1, 0, #ccc);
+
+    .active {
+      font-size: 14px;
+      color: #8C8C8C;
+    }
+
+    .active2 {
+      font-size: 14px;
+      color: #1F95FF;
+    }
+
+    .portrait {
+      display: flex;
+
+      .ui-image {
+        border-radius: 50%;
+      }
+
+      .ui-icon {
+        line-height: 40px;
+      }
+    }
+  }
+
+  .list_title {
+    font-size: 12px;
+    color: #656565;
+    padding-left: 15px;
+    line-height: 40px;
+  }
 </style>

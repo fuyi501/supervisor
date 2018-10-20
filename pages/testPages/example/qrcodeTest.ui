@@ -1,0 +1,60 @@
+<!---->
+<template>
+  <ui-page>
+    <ui-image src="{{ src1 }}" width="240" height="240"></ui-image>
+    <ui-image src="{{ src2 }}" width="240" height="240"></ui-image>
+  </ui-page>
+</template>
+
+<script>
+
+import qrcode from '#/static/utils/qrcode'
+import qrious from '#/static/utils/qrious'
+
+export default {
+  config: {
+    navigationBarTitleText: ""
+  },
+  data() {
+    return {
+      src1: '',
+      src2: ''
+    }
+  },
+  methods: {
+    makeQRCode1 (data) {
+      let qr = qrcode(4, 'L');
+      qr.addData(data);
+      qr.make();
+      return qr.createDataURL(6)
+    },
+    makeQRCode2 (data) {
+      let qr = new qrious({
+        // background: 'green',
+        // backgroundAlpha: 0.8,
+        // foreground: 'blue',
+        // foregroundAlpha: 0.8,
+        level: 'H',
+        padding: 25,
+        size: 500,
+        value: data
+      });
+
+      return qr.toDataURL()
+      // console.log(qr.toDataURL('image/jpeg'));
+      //=> "data:image/jpeg;base64,/9j/...xqAqIqgKFAAAAAq3RRQAUUUUAf/Z"
+      }
+  },
+  mounted() {
+
+    this.src1 = this.makeQRCode1("你好")
+
+    this.src2 = this.makeQRCode2("https://github.com/neocotic/qrious")    
+
+  }
+}
+</script>
+
+<style lang="less">
+
+</style>

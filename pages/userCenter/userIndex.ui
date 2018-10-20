@@ -1,63 +1,55 @@
 <!--userCenter.ui-->
 <template>
-  <ui-view>
-    <ui-page page-load="{{ pageLoad }}">
-      <ui-nav-bar slot="nav-bar" class="nav_bar">
-        <ui-row height="46">
-          <ui-col vertical-align="middle" align="left">
-            <ui-view class="nav_title">我的</ui-view>
+  <ui-page 
+  page-load="{{ pageLoad }}"
+  >
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left">
+          <ui-view class="nav_title">我的</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50" bindtap="openSetting">
+          <ui-icon type="setting" size="24" color="#000"></ui-icon>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="user_content">
+
+      <ui-view class="user_info">
+        <ui-row height="90" class="header_top" >
+          <ui-col vertical-align="middle" align="left" span=4 space-left=15 bindtap="openUserInfo">
+            <!-- 头像 -->
+            <ui-image src="{{ portraitUrl }}" mode='aspectFill' width="60" height="60" class="head_portrait"></ui-image>
           </ui-col>
-          <ui-col vertical-align="middle" align="center" width="50" bindtap="setting">
-            <ui-icon type="setting" size="24" color="#000"></ui-icon>
+          <ui-col vertical-align="middle" align="left" span=4 bindtap="openUserInfo">
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" space-right=15>
+            <!-- <ui-view class="user_name">{{ isLogin ? userName : '傅毅' }}</ui-view> -->
+            <ui-view class="user_name" bindtap="openUserQR">
+              <ui-icon type="erweima1" size="18" color="#1F95FF"></ui-icon>
+              傅毅
+            </ui-view>
+            <ui-view class="user_phone">
+              <ui-icon type="phone" size="14" color="#fff"></ui-icon>
+              {{ userTel }}13408468876
+            </ui-view>
           </ui-col>
         </ui-row>
-      </ui-nav-bar>
+        <ui-row height="50" class="work_state">
+          <ui-col span=8 vertical-align="middle" align="right" bindtap="openUserInfo">
+          </ui-col>
+          <ui-col span=1 vertical-align="middle" align="right">
+            <ui-icon type="gonggao3" color="#F66542" size="24"></ui-icon>
+          </ui-col>
+          <ui-col span=3 vertical-align="middle" align="right" space-right=15>
+            <ui-view>上班中</ui-view>
+          </ui-col>
+        </ui-row>
+      </ui-view>
 
-      <ui-view class="user_content">
-
-        <ui-view class="user_info">
-          <ui-row height="90" class="header_top" bindtap="login">
-            
-            <ui-col vertical-align="middle" align="left" width="90" space-left=15>
-              <ui-view class="head_portrait">
-                <!-- <ui-icon type="user_portrait" color="#D0EDFF" size="50"></ui-icon> -->
-              </ui-view>
-              <!-- 头像 -->
-              <ui-image
-              src="{{ portraitUrl }}"
-              mode='aspectFill'
-              width="60"
-              height="60"
-              class="head_portrait"
-              ></ui-image>
-            </ui-col>
-            <ui-col vertical-align="middle" align="right" space-right=15>
-              <ui-view class="login">{{ isLogin ? userName : '傅毅' }}</ui-view>
-              <ui-view class="login_after" >
-                <ui-icon type="phone" size="14" color="#fff"></ui-icon>
-                {{ userTel }}13408468876
-              </ui-view>
-            </ui-col>
-          </ui-row>
-
-          <ui-row height="50" class="money_wrap">
-            <ui-col span=8 vertical-align="middle" align="right">
-            </ui-col>
-            <ui-col span=1 vertical-align="middle" align="right">
-              <ui-icon type="gonggao3" color="#F66542" size="24"></ui-icon>
-            </ui-col>
-            <ui-col span=3 vertical-align="middle" align="right" space-right=15>
-              我的收藏
-            </ui-col>
-          </ui-row>
-
-
-        </ui-view>
-        
-
-        <ui-view class="user_content_list_wrapper">
-        
-        <ui-row height="50" class="user_content_list" space-bottom="10" bindtap="collect">
+      <ui-view class="user_content_list_wrapper">
+        <!-- <ui-row height="50" class="user_content_list" space-bottom="10" bindtap="collect">
           <ui-col width="50" vertical-align="middle" align="center">
             <ui-icon type="collect" color="#F66542" size="24"></ui-icon>
           </ui-col>
@@ -67,9 +59,9 @@
           <ui-col vertical-align="middle" align="right" width="50" space-right="15">
             <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
           </ui-col>
-        </ui-row>
+        </ui-row> -->
 
-        <ui-row height="50" class="user_content_list" space-bottom="10" bindtap="shoppingMall">
+        <!-- <ui-row height="50" class="user_content_list" space-bottom="10" bindtap="shoppingMall">
           <ui-col width="50" vertical-align="middle" align="center">
             <ui-icon type="life" color="#84D43A" size="24"></ui-icon>
           </ui-col>
@@ -79,7 +71,7 @@
           <ui-col vertical-align="middle" align="right" width="50" space-right="15">
             <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
           </ui-col>
-        </ui-row>
+        </ui-row> -->
 
         <ui-row height="50" class="user_content_list2" bindtap="Meiqia">
           <ui-col width="50" vertical-align="middle" align="center">
@@ -92,7 +84,7 @@
             <ui-icon type="arrow-right" size="18" color="#BAB9BF"></ui-icon>
           </ui-col>
         </ui-row>
-        <ui-row height="50" class="user_content_list2" url="/pages/userCenter/problem">
+        <ui-row height="50" class="user_content_list2" url="/pages/userCenter/setting/feedback">
           <ui-col width="50" vertical-align="middle" align="center">
             <ui-icon type="wenti" color="#3F93EB" size="24"></ui-icon>
           </ui-col>
@@ -115,274 +107,257 @@
           </ui-col>
         </ui-row>
 
-          <!-- 测试页面，只在开发环境下使用，生产环境下删除 -->
-          <ui-row height="50" class="user_content_list2" bindtap="testIndex">
-            <ui-col width="50" vertical-align="middle" align="center">
-              <ui-icon type="about" color="#3F93EB" size="24"></ui-icon>
-            </ui-col>
-            <ui-col vertical-align="middle">
-              测试页面
-            </ui-col>
-            <ui-col vertical-align="middle" align="right" width="50" space-right="15">
-              <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
-            </ui-col>
-          </ui-row>
+        <!-- 测试页面，只在开发环境下使用，生产环境下删除 -->
+        <ui-row height="50" class="user_content_list2" bindtap="testIndex">
+          <ui-col width="50" vertical-align="middle" align="center">
+            <ui-icon type="about" color="#3F93EB" size="24"></ui-icon>
+          </ui-col>
+          <ui-col vertical-align="middle">
+            测试页面
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" width="50" space-right="15">
+            <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+          </ui-col>
+        </ui-row>
 
-        </ui-view>
       </ui-view>
-    </ui-page>
+    </ui-view>
+  </ui-page>
 </template>
 
 
 <script>
-// userCenter.js
+  // userCenter.js
+  export default {
+    config: {
+      navigationStyle: "custom"
+    },
+    data() {
+      return {
+        isLogin: true,
+        userName: '', // 用户名
+        userTel: '', // 用户电话号码
+        userId: '', // 用户工号
+        currentNum: 0, // 这个值控制显示登录页面还是注册页面,0为登录页面,1为注册页面
+        portraitUrl: require('#/images/portrait_bg.png'), //头像
+        pageLoad: { // 进入页面通过缓存tokenId来判断是否是登录状态
+          trigger: 'always',
+          handle: () => {
+            console.log("个人中心 pageLoad")
+            // let userinfo = ui.getStorageSync('userinfo')
+            // console.log("个人中心 userinfo:", userinfo)
+            // if (userinfo !== null) {
+            //   if (userinfo.tokenId === '') {
+            //     this.isLogin = false
+            //     this.portraitUrl = require('#/images/portrait_bg.png')
+            //   } else {
+            //     console.log("个人中心 配置用户信息")
+            //     this.isLogin = true
 
-export default {
-  config: {
-    navigationStyle: "custom",
-    // navigationBarTextStyle: 'white',
-    // backgroundColor:"transparent",
-    // navigationBarBorderColor:"#39f" 
-  },
-  data () {
-    return {
-      isLogin: false,
-      userName: '', // 用户名
-      userTel: '', // 用户电话号码
-      userId: '', // 用户工号
-      currentNum: 0, // 这个值控制显示登录页面还是注册页面,0为登录页面,1为注册页面
-      portraitUrl: require('#/images/portrait_bg.png'), //头像
-      pageLoad: {// 进入页面通过缓存tokenId来判断是否是登录状态
-        trigger: 'always',
-        handle: () => {
-          console.log("个人中心 pageLoad")
-          let userinfo = ui.getStorageSync('userinfo')
-          console.log("个人中心 userinfo:",userinfo)
-          if (userinfo !== null) {
-            if (userinfo.tokenId === '') {
-              this.isLogin = false
-              this.portraitUrl = require('#/images/portrait_bg.png')
-            } else {
-              console.log("个人中心 配置用户信息")
-              this.isLogin = true
-              
-              if(userinfo.userName === null){
-                this.userName = userinfo.tel
-              }else{
-                this.userName = userinfo.userName
-              }
-              
-              this.userTel = userinfo.tel
-              this.userId = userinfo.userId
-              if (userinfo.head === null || userinfo.head === '') {
-                this.portraitUrl = require('#/images/portrait_bg.png')
-              } else {
-                this.portraitUrl = userinfo.head
-              }
-            }
-          }else if(userinfo === null){
-            this.isLogin = false
-            this.portraitUrl = require('#/images/portrait_bg.png')
+            //     if (userinfo.userName === null) {
+            //       this.userName = userinfo.tel
+            //     } else {
+            //       this.userName = userinfo.userName
+            //     }
+
+            //     this.userTel = userinfo.tel
+            //     this.userId = userinfo.userId
+            //     if (userinfo.head === null || userinfo.head === '') {
+            //       this.portraitUrl = require('#/images/portrait_bg.png')
+            //     } else {
+            //       this.portraitUrl = userinfo.head
+            //     }
+            //   }
+            // } else if (userinfo === null) {
+            //   this.isLogin = false
+            //   this.portraitUrl = require('#/images/portrait_bg.png')
+            // }
           }
         }
-      },
-      pullDown: {
-        distance: 30
       }
-    }
-  },
-  methods: {
-    handleOpenBrowser(){
-      ui.openBrowser({
-        url: 'https://itunes.apple.com/cn/app/uileader%E5%95%86%E5%9F%8E/id1377514585?mt=8',
-        system:true
-      })
     },
-    loginPage () {
-      import(`#/pages/userCenter/login/loginInterface.ui`).then((content) => {
-        ui.showDialog({
-          content: content, // dialog 内容
-          statusBarColor: 'black', // 打开窗体时，设置状态栏的字体颜色，有white和black两种可选
-          // 向loginInterface.ui传入数据
-          data: {
-            currentNum: this.currentNum
-          },
-          // 接收ui.hideDialog回传的数据，隐藏 dialog 时调用
-          onHide: (data) => {
-            console.log("登录页面关闭返回的数据：", data)
-            if (data && data.userinfo) {
-              this.isLogin = data.userinfo.isLogin
-              if(data.userinfo.userName === null){
-                this.userName = data.userinfo.tel // 用户名改电话
-              }else{
-                this.userName = data.userinfo.userName // 用户名
+    methods: {
+      // 登录页面
+      loginPage() {
+        import(`#/pages/userCenter/login/loginInterface.ui`).then((content) => {
+          ui.showDialog({
+            content: content, // dialog 内容
+            statusBarColor: 'black', // 打开窗体时，设置状态栏的字体颜色，有white和black两种可选
+            // 向loginInterface.ui传入数据
+            data: {
+              currentNum: this.currentNum
+            },
+            // 接收ui.hideDialog回传的数据，隐藏 dialog 时调用
+            onHide: (data) => {
+              console.log("登录页面关闭返回的数据：", data)
+              if (data && data.userinfo) {
+                this.isLogin = data.userinfo.isLogin
+                if (data.userinfo.userName === null) {
+                  this.userName = data.userinfo.tel // 用户名改电话
+                } else {
+                  this.userName = data.userinfo.userName // 用户名
+                }
+                this.userTel = data.userinfo.tel // 用户电话
+                this.userId = data.userinfo.userId // 用户工号
+                if (data.userinfo.head === null || data.userinfo.head === '') {
+                  this.portraitUrl = require('#/images/portrait_bg.png')
+                } else {
+                  // this.portraitUrl = data.userinfo.data.head // 有头像应该请求头像，这里先注释掉
+                  this.portraitUrl = require('#/images/portrait_bg.png')
+                }
+              } else {
+                this.isLogin = false
+                console.log('没有接收到数据')
               }
-              this.userTel = data.userinfo.tel // 用户电话
-              this.userId = data.userinfo.userId // 用户工号
-              if(data.userinfo.head === null || data.userinfo.head === ''){
-                this.portraitUrl = require('#/images/portrait_bg.png')
-              }else{
-                // this.portraitUrl = data.userinfo.data.head // 有头像应该请求头像，这里先注释掉
-                this.portraitUrl = require('#/images/portrait_bg.png')
-              }
-            } else {
-              this.isLogin = false
-              console.log('没有接收到数据')
             }
-          }
+          })
         })
-      })
-    },
-    login () {
-      if (this.isLogin) {
-        // 如果已经登录，则跳转到用户信息页面
+      },
+      // 用户信息
+      openUserInfo() {
+        if (this.isLogin) {
+          // 如果已经登录，则跳转到用户信息页面
+          ui.navigateTo({
+            url: '/pages/userCenter/user/userInfo'
+          })
+        } else {
+          this.loginPage()
+        }
+      },
+      openUserQR () {
         ui.navigateTo({
-          url: '/pages/userCenter/userInfo'
+          url: '/pages/userCenter/user/userQR'
         })
-      } else {
-        this.loginPage()
-      }
-    },
-    openMessage () {
-      ui.navigateTo({
-        url: '/pages/userCenter/notice'
-      })
-    },
-    // 设置
-    setting () {
-      if (this.isLogin) {
+      },
+      // 打开消息通知
+      openMessage() {
         ui.navigateTo({
-          url: '/pages/userCenter/setting'
+          url: '/pages/messages/notices'
         })
-      } else {
-        this.loginPage()
-      }
-    },
-    // 收藏
-    collect () {
-      if (this.isLogin) {
+      },
+      // 设置
+      openSetting() {
+        if (this.isLogin) {
+          ui.navigateTo({
+            url: '/pages/userCenter/setting/setting'
+          })
+        } else {
+          this.loginPage()
+        }
+      },
+      // 收藏
+      collect() {
+        if (this.isLogin) {
+          ui.navigateTo({
+            url: '/pages/userCenter/collect'
+          })
+        } else {
+          this.loginPage()
+        }
+      },
+      shoppingMall() {
+        ui.showToast({
+          title: '敬请期待',
+          icon: 'success'
+        })
+      },
+      // 客服
+      Meiqia() {
+        if (this.isLogin) {
+          ui.startMeiqia({
+            info: {
+              name: '张三',
+              tel: '123456',
+              weixin: '5201314',
+              '爱好': '吃苹果'
+            },
+            message: '你好',
+            success: function (data) {},
+            fail: function (data) {}
+          })
+        } else {
+          this.loginPage()
+        }
+      },
+      //测试页面
+      testIndex() {
         ui.navigateTo({
-          url: '/pages/userCenter/collect'
+          url: '/pages/testPages/testIndex'
         })
-      } else {
-        this.loginPage()
       }
     },
-    shoppingMall () {
-      ui.showToast({ title: '敬请期待', icon: 'success' })
-      // if (this.isLogin) {
-      //   ui.openBrowser({
-      //     url: 'http://www.uileader.com/price.html',
-      //     backgroundColor: '#3399ff',
-      //     color: '#ffffff'
-      //   })
-      // } else {
-      //   this.loginPage()
-      // }
-    },
-    // 客服
-    Meiqia () {
-      if (this.isLogin) {
-        ui.startMeiqia({
-          info: {
-            name: '张三',
-            tel: '123456',
-            weixin: '5201314',
-            '爱好': '吃苹果'
-          },
-          message: '你好',
-          success: function (data) {
-          },
-          fail: function (data) {
-          }
-        })
-      } else {
-        this.loginPage()
-      }
-    },
-    navigateBack () {
-      ui.navigateBack()
-    },
-    //测试页面
-    testIndex () {
-      ui.navigateTo({
-        url: '/pages/testPages/testIndex'
-      })
+    mounted() {
+      console.log('userCenter mounted')
     }
-  },
-  mounted () {
-    console.log('userCenter mounted')
   }
-}
-
 </script>
 
 <style lang="less">
-
-.nav_bar {
-  background: #fff;
-  border: 1px solid transparent;
-  .nav_title {
-    color: #000;
-    padding-left: 20rpx;
-    font-size: 36rpx;
-    font-weight: bold;
-  }
-}
-.user_info{
-  background-color: #2987FE;
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-bottom: 20px;
-  margin-top: 10px;
-  box-shadow: 0px 0px 20px #cccccc;
-  border-radius: 50px;
-  border: #000;
-}
-
-
-.header_top {
+  .nav_bar {
     background: #fff;
-    .head_portrait {
-      //width: 60px;
-      //height: 60px;
-      // background-color: #83C5FF;
-      //background: url('~images/portrait_bg.png') no-repeat center center;
-      //background-size: 100%;
-      border-radius: 50%; //line-height: 85px;
-      //overflow: hidden;
-      //text-align: center;
+    border: 1px solid transparent;
+
+    .nav_title {
+      color: #000;
+      padding-left: 20rpx;
+      font-size: 36rpx;
+      font-weight: bold;
     }
-    .login {
+  }
+
+  .user_info {
+    background-color: #fff;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    box-shadow: 0px 2px 10px 3px #cccccc;
+    border-radius: 10px;
+
+    .header_top {
+      background: #fff;
+      border-radius: 10px 10px 0px 0px;
+
+      .head_portrait {
+        //line-height: 85px;
+        border-radius: 50%;
+      }
+
+      .user_name {
         color: #000;
         font-size: 18px;
-    }
-    .login_after {
+        font-weight: bold;
+      }
+
+      .user_phone {
         color: #000;
         font-size: 14px;
+      }
     }
-}
 
-.money_wrap {
-    background-color: #fff;
-    .ui-view {
-        font-size: 14px;
+    .work_state {
+      background-color: #fff;
+      border-radius: 0px 0px 10px 10px;
+      .mix-1px(1, 0, 0, 0, #f5f5f5);
+
+      .ui-view {
+        font-size: 16px;
         color: #4F4F4F;
+      }
     }
-}
+  }
 
-.user_content_list_wrapper {
-  padding-top: 10px;
-  background-color: #F2F2F2; 
-}
+  .user_content_list_wrapper {
+    padding-top: 10px;
+    background-color: #F2F2F2;
+    
+    .user_content_list {
+      background-color: #fff;
+    }
 
-.user_content_list {
-    background-color: #fff;
-}
-
-.user_content_list2 {
-    background-color: #fff;
-    .mix-1px(0, 0, 1, 0, #ccc);
-}
-
+    .user_content_list2 {
+      background-color: #fff;
+      .mix-1px(0, 0, 1, 0, #ccc);
+    }
+  }
 </style>

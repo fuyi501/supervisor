@@ -1,19 +1,14 @@
 <!--homeTemplete.ui-->
 <template>
   <ui-page pull-down="{{ pullDown }}"> 
-
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {'background-color':'#1981FF'} }}">
+    <!-- 导航条 -->
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
-        
-        <ui-col vertical-align="middle" align="center" width="40">
-        </ui-col>
-        
-        <ui-col vertical-align="middle" align="center">
+        <ui-col vertical-align="middle" align="left">
           <ui-view class="nav_title">{{ nav_title }}</ui-view>
         </ui-col>
-        
-        <ui-col width="40" bindtap="handleShow10">
-          <ui-popover ui:model="show10" position="bottom">
+        <ui-col width="40" bindtap="handleScan">
+          <ui-popover ui:model="scanShow" position="bottom">
             <ui-view>
               <ui-view class="popover_item">
                 <ui-row height="35" bindtap="handleHide('扫一扫')" border-bottom>
@@ -32,12 +27,31 @@
                 </ui-row>
               </ui-view>
             </ui-view>
-            <ui-icon  slot="content" type="add" size="20" color="#fff"></ui-icon>
+            <ui-icon  slot="content" type="add" size="20" color="#000"></ui-icon>
           </ui-popover>
-
         </ui-col>
       </ui-row>
     </ui-nav-bar>
+
+      <ui-view class="user_info">
+        <ui-row height="90" class="header_top" bindtap="">
+          <ui-col vertical-align="middle" align="left" width="90" space-left=15>
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" space-right=15>
+            
+          </ui-col>
+        </ui-row>
+        <ui-row height="50" class="work_state">
+          <ui-col span=8 vertical-align="middle" align="right">
+          </ui-col>
+          <ui-col span=1 vertical-align="middle" align="right">
+            <ui-icon type="gonggao3" color="#F66542" size="24"></ui-icon>
+          </ui-col>
+          <ui-col span=3 vertical-align="middle" align="right" space-right=15>
+            <ui-view>上班中</ui-view>
+          </ui-col>
+        </ui-row>
+      </ui-view>
 
     <ui-view class="template_content">
 
@@ -90,7 +104,7 @@ export default {
       isLogin: false,
       listIndex: null,
       nav_title: "项目管理",
-      show10: false,
+      scanShow: false,
       items: [],
       maskStyle: { backgroundColor: 'transparent' },
 
@@ -139,11 +153,11 @@ export default {
         })
     },
     // + 号操作
-    handleShow10 () {
-      this.show10 = true
+    handleScan () {
+      this.scanShow = true
     },
     handleHide (text) {
-      this.show10 = false
+      this.scanShow = false
       if(text === '扫一扫'){
         // 只允许从相机扫码
         ui.scanCode({
@@ -273,10 +287,17 @@ export default {
 </script>
 
 <style lang="less">
-.nav_title{
-  color: #fff;
-  // font-weight: bold;
+
+.nav_bar {
+  background: #fff;
+  .nav_title {
+    color: #000;
+    padding-left: 10px;
+    font-size: 36rpx;
+    font-weight: bold;
+  }
 }
+
 // 加号内容样式
 .ui-popover-overlay {
   padding: 0;
@@ -291,6 +312,49 @@ export default {
     background-color: #eee;
   }
 }
+
+.user_info {
+  background-color: #fff;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  box-shadow: 0px 2px 10px 3px #cccccc;
+  border-radius: 10px;
+
+  .header_top {
+    background: #fff;
+    border-radius: 10px 10px 0px 0px;
+
+    .head_portrait {
+      //line-height: 85px;
+      border-radius: 50%;
+    }
+
+    .user_name {
+      color: #000;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .user_phone {
+      color: #000;
+      font-size: 14px;
+    }
+  }
+
+  .work_state {
+    background-color: #fff;
+    border-radius: 0px 0px 10px 10px;
+    .mix-1px(1, 0, 0, 0, #f5f5f5);
+
+    .ui-view {
+      font-size: 16px;
+      color: #4F4F4F;
+    }
+  }
+}
+
 // 进度条样式
 .sample_block {
   font-size: 14px;
