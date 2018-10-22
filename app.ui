@@ -19,7 +19,7 @@ export default {
       "pages/application/askOff/askoff",
       "pages/application/supplement/buqian",
       "pages/application/approval/approval"
-    ,"pages/testPages/example/indexTest","pages/messages/notices","pages/testPages/example/qrcodeTest","pages/userCenter/user/userQR"],
+    ,"pages/testPages/example/indexTest","pages/messages/notices","pages/testPages/example/qrcodeTest","pages/userCenter/user/userQR","pages/testPages/example/statusBarTest"],
     "theme": {
       "theme-color": "#3399ff"
     },

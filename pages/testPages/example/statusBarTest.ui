@@ -1,0 +1,64 @@
+<!---->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left">
+          <ui-view  class="nav_title">应用</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="content">
+      <ui-row height="40">
+        <ui-col span="2" vertical-align="middle">
+          当前样式：
+        </ui-col>
+        <ui-col span="10">
+            <ui-input class="input" type="string" name="input" value="{{sty}}"></ui-input>
+        </ui-col>
+      </ui-row>
+      <ui-button bindtap="set('dark')">设置为深色</ui-button>
+      <ui-button bindtap="set('light')">设置为浅色</ui-button>
+      <ui-button type="primary" bindtap="get">获取当前样式</ui-button>
+    </ui-view>
+  </ui-page>
+</template>
+
+<script>
+export default {
+  config: {
+    navigationStyle: 'custom',
+    navigationBarTextStyle: 'black',
+    navigationBarBackgroundColor: '#fff',
+    "statusBarColor": "black",
+    "navigationBarVisible": false,
+    "backgroundColor":"#F9F9F9",
+  },
+  data() {
+    return {
+      sty: '未获取'
+    }
+  },
+  methods: {
+    get () {
+      ui.getStatusBarStyle({
+        success: ({ style }) => {
+          this.sty = style === 'dark' ? '深色' : '浅色'
+        }
+      })
+    },
+    set (style) {
+      this.sty = style
+      ui.setStatusBarStyle({
+        style: style
+      })
+    }
+  },
+  mounted() {}
+}
+</script>
+
+<style lang="less">
+
+</style>

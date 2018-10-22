@@ -89,9 +89,9 @@
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
                 <ui-icon type="rizhi3" color="#ff525d" size="30"></ui-icon>    
-                <ui-view class="app_text">日志</ui-view>           
+                <ui-view class="app_text">日志</ui-view>
             </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openApproval">
                 <ui-icon type="shenpi1" color="#ff525d" size="30"></ui-icon>    
                 <ui-view class="app_text">审批</ui-view>           
             </ui-col>
@@ -208,6 +208,12 @@ export default {
     openBuKa () {
       ui.navigateTo({
         url: '/pages/application/supplement/buqian'
+      })
+    },
+    // 审批
+    openApproval () {
+      ui.navigateTo({
+        url: '/pages/application/approval/approval'
       })
     }
   },

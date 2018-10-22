@@ -2,6 +2,7 @@
 ## 设计风格
 
 白色标题栏，颜色为：#fff
+
 标题栏返回箭头，颜色为：#1890ff
 
 ## 图标库
@@ -19,4 +20,5 @@
 ## 软件包名
 
 com.uileader.apploader
+
 com.uileader.PandoraEntryActivity
