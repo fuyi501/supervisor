@@ -5,23 +5,25 @@
       <ui-row height="46">
         <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
           <ui-view>
-            <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <ui-text class="nav_title">请假申请</ui-text>
+          <ui-view class="nav_title">请假申请</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="50">
-          <ui-view>
-          </ui-view>
+          <ui-view class="nav_right">更多</ui-view>
         </ui-col>
       </ui-row>
     </ui-nav-bar>
 
     <ui-view class="form_content">
       <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
-          <ui-view>请假类型</ui-view>
+        <ui-col vertical-align="middle" align="left" width="90" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            请假类型
+          </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-picker title="" range="{{ typeList }}" value="{{ typeValue }}" bindchange="handleType"></ui-picker>
@@ -29,8 +31,11 @@
       </ui-row>
 
       <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
-          <ui-view>开始时间</ui-view>
+        <ui-col vertical-align="middle" align="left" width="90" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            开始时间
+          </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="4">
           <ui-view class="">
@@ -45,8 +50,11 @@
       </ui-row>
 
       <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
-          <ui-view>结束时间</ui-view>
+        <ui-col vertical-align="middle" align="left" width="90" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            结束时间
+          </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="4">
           <ui-view class="">
@@ -61,24 +69,31 @@
       </ui-row>
 
       <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
-          <ui-view>请假天数</ui-view>
+        <ui-col vertical-align="middle" align="left" width="90" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            请假时长
+          </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-            {{ 0 }} 天
+            {{ 0 }} 小时
           </ui-view>
         </ui-col>
       </ui-row>
 
       <ui-view style="margin-top:10px" class="detail_description">
-        <ui-text block>请假事由</ui-text>
+        <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+        <ui-text>请假事由</ui-text>
         <ui-textarea maxlength="-1" placeholder="请输入请假事由" placeholder-style="color:#999B9E" ui:model="{{ askOffReason }}"></ui-textarea>
       </ui-view>
 
       <!-- 审批人 -->
       <ui-view class="recipients">
-        <ui-view class="title">审批人</ui-view>
+        <ui-view class="title">
+          <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+          审批人
+        </ui-view>
         <ui-view class="recipients_content">
           <ui-view class="recipients_list" ui:for="{{ approverList }}" ui:for-item="item">
             <ui-view class="list_content" bindtap="deleteApprovers(index)">
@@ -118,17 +133,13 @@
           </ui-view>
         </ui-view>
       </ui-view>
-      <ui-row height="50" space-top="10">
 
-        <!-- <ui-col vertical-align="middle" align="right" space="20">
-          <ui-button type="default" size="small" plain="true" bindtap="saveDraft">保存为草稿</ui-button>
-        </ui-col> -->
-
-        <ui-col vertical-align="middle" align="left" space="20">
-          <ui-button type="primary" size="small" bindtap="submit">立即提交</ui-button>
+      <ui-row height="60" space-top="10">
+        <ui-col vertical-align="middle" align="center" space="30">
+          <ui-button type="primary" bindtap="submit">立即提交</ui-button>
         </ui-col>
       </ui-row>
-      <ui-view class="iphonex-bottom"></ui-view>
+
     </ui-view>
 
   </ui-page>
@@ -350,24 +361,27 @@ export default {
 </script>
 
 <style lang="less">
-  .ui-actionsheet-menu-cell {
-    font-size: 14px;
-    color: #666;
-  }
+
 .nav_bar {
-  background: linear-gradient(to right, #1F97FE, #126DFE);
-  .ui-view{
-    color: #fff;
-    font-size: 14px;
+  background: #fff;
+  .ui-icon {
+    color: #1890ff;
   }
-  .ui-text{
-    color: #fff;
+  .nav_title {
+    color: #000;
+    font-size: 32rpx;
+    font-weight: bold;
+  }
+  .nav_right{
+    color: #1890ff;
     font-size: 16px;
   }
 }
 
 .form_content{
-  // padding: 15px 0;
+  padding-top: 10px;
+  // .mix-1px(1, 0, 1, 0, #ccc);
+
   .ui-row{
     background: #fff;
     .mix-1px(0, 0, 1, 0, #ccc);
@@ -413,12 +427,15 @@ export default {
 .detail_description{
   margin-bottom: 10px;
   background: #fff;
+  .ui-icon {
+    padding-left: 10px;
+  }
   .ui-text{
     // width: 70px;
     text-align: left;
     line-height: 30px;
     color: #1A1E23;
-    padding-left: 10px;
+    font-size: 14px;
   }
   .ui-textarea-wrapper{
     border: 0;
@@ -433,7 +450,7 @@ export default {
     padding-left: 10px;
     line-height: 40px;
     .ui-text{
-      font-size: 12px;
+      font-size: 14px;
       color: #ccc;
     }
   }

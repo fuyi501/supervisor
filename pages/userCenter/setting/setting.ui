@@ -4,7 +4,7 @@
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
         <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
-          <ui-icon type="arrow-left" size="20" color="#000"></ui-icon>
+          <ui-icon type="arrow-left" size="20"></ui-icon>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
           <ui-view class="nav_title">设置</ui-view>
@@ -159,8 +159,13 @@ export default {
 
 <style lang="less">
   // setting.less
+@self-left-arrow: #1890ff;
+
 .nav_bar {
   background: #fff;
+  .ui-icon {
+    color: @self-left-arrow;
+  }
   .nav_title{
     color: #000;
     font-weight: bold;

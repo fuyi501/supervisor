@@ -47,7 +47,7 @@ export default {
         },
         {
           "pagePath": "pages/contacts/workers",
-          "iconName": "home",
+          "iconName": "lianxiren1",
           "text": "通讯录"
         },
         {
@@ -297,6 +297,7 @@ export default {
 <style lang="less">
  @import './static/css/animate.css';
  @import './static/css/loading.less';
+ @import './static/css/selfcss.less';
  @import './static/font/iconfont.css';
 * {
     margin: 0;

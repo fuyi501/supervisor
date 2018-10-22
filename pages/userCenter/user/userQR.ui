@@ -3,7 +3,7 @@
   <ui-page>
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
-        <ui-col vertical-align="middle" align="left" space=20>
+        <ui-col vertical-align="middle" align="left" space=20 bindtap="navigateBack">
           <ui-icon type="arrow-left" color="#F66542" size="20"></ui-icon>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="50" >
@@ -11,10 +11,10 @@
       </ui-row>
     </ui-nav-bar>
 
-    <ui-view class="user_content">二维码名片</ui-view>
+    <ui-view class="qr_content">二维码名片</ui-view>
 
-      <ui-view class="user_info">
-        <ui-row height="80" class="header_top" border-bottom>
+      <ui-view class="qr_info">
+        <ui-row height="80" class="qr_header">
           <ui-col vertical-align="middle" align="left" width="90" space-left=20>
             <ui-image src="{{ portraitUrl }}" mode='aspectFill' width="50" height="50" class="head_portrait"></ui-image>
           </ui-col>
@@ -22,12 +22,12 @@
             <ui-view class="user_name">傅毅的名片</ui-view>
           </ui-col>
         </ui-row>
-        <ui-row height="360" class="header_top">
+        <ui-row height="360">
           <ui-col vertical-align="middle" align="center">
             <ui-image src="{{ qrcode }}" width="250" height="250"></ui-image>
           </ui-col>
         </ui-row>
-        <ui-row height="40" class="work_state">
+        <ui-row height="40" class="qr_footer">
           <ui-col vertical-align="middle" align="center">
             <ui-view>
               <ui-icon type="setting2" color="#F66542" size="16"></ui-icon>
@@ -45,7 +45,8 @@ import qrious from '#/static/utils/qrious'
 
   export default {
     config: {
-      navigationBarTitleText: ""
+      navigationBarTitleText: "",
+      disableScroll: true
     },
     data() {
       return {
@@ -54,21 +55,24 @@ import qrious from '#/static/utils/qrious'
       }
     },
     methods: {
+      navigateBack() {
+        ui.navigateBack()
+      },
       makeQRCode2 (data) {
-      let qr = new qrious({
-        // background: 'green',
-        // backgroundAlpha: 0.8,
-        // foreground: 'blue',
-        // foregroundAlpha: 0.8,
-        level: 'H',
-        // padding: 25,
-        size: 500,
-        value: data
-      });
+        let qr = new qrious({
+          // background: 'green',
+          // backgroundAlpha: 0.8,
+          // foreground: 'blue',
+          // foregroundAlpha: 0.8,
+          level: 'H',
+          // padding: 25,
+          size: 500,
+          value: data
+        });
 
-      return qr.toDataURL()
-      // console.log(qr.toDataURL('image/jpeg'));
-      //=> "data:image/jpeg;base64,/9j/...xqAqIqgKFAAAAAq3RRQAUUUUAf/Z"
+        return qr.toDataURL()
+        // console.log(qr.toDataURL('image/jpeg'));
+        //=> "data:image/jpeg;base64,/9j/...xqAqIqgKFAAAAAq3RRQAUUUUAf/Z"
       }
     },
     mounted() {
@@ -92,7 +96,7 @@ import qrious from '#/static/utils/qrious'
     }
   }
 
-  .user_content {
+  .qr_content {
     margin-left: 20px;
     margin-right: 20px;
     margin-bottom: 10px;
@@ -101,7 +105,7 @@ import qrious from '#/static/utils/qrious'
     font-weight: bold;
   }
 
-  .user_info {
+  .qr_info {
     background-color: #fff;
     margin-left: 20px;
     margin-right: 20px;
@@ -110,24 +114,19 @@ import qrious from '#/static/utils/qrious'
     box-shadow: 0px 2px 5px #cccccc;
     border-radius: 5px;
 
-    .header_top {
+    .qr_header {
       background: #fff;
       border-radius: 10px 10px 0px 0px;
-      // .mix-1px(0, 0, 1, 0, #ccc);
+      .mix-1px(0, 0, 1, 0, #e8e8e8);
 
       .user_name {
         color: #000;
         font-size: 18px;
         font-weight: bold;
       }
-
-      .user_phone {
-        color: #000;
-        font-size: 14px;
-      }
     }
 
-    .work_state {
+    .qr_footer {
       background-color: #fff;
       border-radius: 0px 0px 5px 5px;
 

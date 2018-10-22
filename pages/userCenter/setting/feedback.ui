@@ -4,7 +4,7 @@
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
         <ui-col vertical-align="middle" align="left" width="50" space-left="10" bindtap="navigateBack">
-          <ui-icon type="arrow-left" size="20" color="#000"></ui-icon>
+          <ui-icon type="arrow-left" size="20" color="#1890ff"></ui-icon>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
           <ui-view class="nav_title">问题反馈</ui-view>
@@ -115,6 +115,9 @@
   .nav_bar {
     background: #fff;
     color: #000;
+    .nav_title{
+      font-weight: bold;
+    }
   }
 
   .placeholder::-webkit-input-placeholder {

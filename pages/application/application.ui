@@ -58,11 +58,11 @@
                 <ui-icon type="daka4" color="#ff525d" size="30"></ui-icon>    
                 <ui-view class="app_text">签到</ui-view>           
             </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openAskOff">
                 <ui-icon type="qingjia1" color="#ff525d" size="30"></ui-icon>    
                 <ui-view class="app_text">请假</ui-view>           
             </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openBuKa">
                 <ui-icon type="buka1" color="#8bb93f" size="30"></ui-icon>    
                 <ui-view class="app_text">补卡</ui-view>             
             </ui-col>
@@ -198,7 +198,18 @@ export default {
     }
   },
   methods: {
-   
+    // 请假
+    openAskOff() {
+      ui.navigateTo({
+        url: '/pages/application/askOff/askoff'
+      })
+    },
+    // 补卡
+    openBuKa () {
+      ui.navigateTo({
+        url: '/pages/application/supplement/buqian'
+      })
+    }
   },
   mounted() {}
 }
@@ -213,7 +224,7 @@ export default {
   background: #fff;
   .nav_title {
     color: #000;
-    padding-left: 20rpx;
+    padding-left: 30rpx;
     font-size: 36rpx;
     font-weight: bold;
   }

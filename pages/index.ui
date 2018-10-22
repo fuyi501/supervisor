@@ -1,6 +1,6 @@
 <!--homeTemplete.ui-->
 <template>
-  <ui-page pull-down="{{ pullDown }}"> 
+  <ui-page pull-down="{{ pullDown }}">
     <!-- 导航条 -->
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
@@ -27,109 +27,209 @@
                 </ui-row>
               </ui-view>
             </ui-view>
-            <ui-icon  slot="content" type="add" size="20" color="#000"></ui-icon>
+            <ui-icon slot="content" type="add" size="20" color="#000"></ui-icon>
           </ui-popover>
         </ui-col>
       </ui-row>
     </ui-nav-bar>
 
-      <ui-view class="user_info">
-        <ui-row height="90" class="header_top" bindtap="">
-          <ui-col vertical-align="middle" align="left" width="90" space-left=15>
-          </ui-col>
-          <ui-col vertical-align="middle" align="right" space-right=15>
-            
-          </ui-col>
-        </ui-row>
-        <ui-row height="50" class="work_state">
-          <ui-col span=8 vertical-align="middle" align="right">
-          </ui-col>
-          <ui-col span=1 vertical-align="middle" align="right">
-            <ui-icon type="gonggao3" color="#F66542" size="24"></ui-icon>
-          </ui-col>
-          <ui-col span=3 vertical-align="middle" align="right" space-right=15>
-            <ui-view>上班中</ui-view>
-          </ui-col>
-        </ui-row>
-      </ui-view>
-
-    <ui-view class="template_content">
-
-      <ui-view ui:for="{{ items }}" class="template_list" >
-          <ui-view class="list_bottom" bindtap="handleItems(item)" bindlongtap="popoverShow($event,index)">
-            <ui-view class="list_title">{{item.projectName}}</ui-view>
-            <ui-view class="list_text">
-              项目周期：{{item.startTime}} 到 {{item.endTime}}
-            </ui-view>
-            <ui-view class="list_text">
-              参与人数：100 人
-            </ui-view>
-            <ui-view class="sample_block">
-              <!-- <ui-view class="sample_title">完成进度</ui-view> -->
-              <ui-view class="sample_content">
-                <ui-progress percent="{{ 50 }}" show-info active active-color="#20a0ff"></ui-progress>
-              </ui-view>
-            </ui-view>
-          </ui-view>
-      </ui-view>
-
+    <ui-view class="items_info">
+      <ui-row height="140" class="items_img" bindtap="">
+        <ui-image src="{{ src }}" width="100%" height="100%"></ui-image>
+      </ui-row>
+      <ui-row height="40" class="info_header" bindtap="">
+        <ui-col span=12 vertical-align="middle" align="left" space-left=10>
+          <ui-view>地铁六号线标段一</ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="40" class="info_footer">
+        <ui-col span=1 vertical-align="middle" align="left" space-left=10>
+          <ui-icon type="gonggao3" color="#F66542" size="24"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="left" space-left=15>
+          <ui-view>正在施工中</ui-view>
+        </ui-col>
+      </ui-row>
     </ui-view>
 
-    <ui-fixed-view bottom="80" right="30" bindtap="addItems">
-      <ui-view class="addbtn">
-          <ui-icon type="add" size="24"></ui-icon>
-        </ui-view>
-    </ui-fixed-view>
+    <ui-view class="data_info">2018-10-21 星期日</ui-view>
 
-    <!-- popover -->
-    <ui-popover hide-on-touch="true" ref="popover" show-arrow="{{false}}" height="135" mask-style="{{ maskStyle }}" class="custom">
-        <!-- <ui-view bindtap="showTitle('标为未读')" hover-class="touch_end">标为未读</ui-view> -->
-        <ui-view bindtap="showTitle('置顶项目')" hover-class="touch_end">置顶项目</ui-view>
-        <ui-view bindtap="showTitle('删除该项目')" hover-class="touch_end">删除该项目</ui-view>
-    </ui-popover>
+    <ui-view class="template_list">
+      <ui-view class="chart_template" >
+        <ui-view class="title">项目考勤</ui-view>
+        <ui-row height="220">
+          <ui-col vertical-align="middle" align="center" span=8>
+            <ui-view class="left_content">
+              <ui-donut
+                value="{{donut.data}}"
+                width="180"
+                height="180"
+                external-radius="80"
+                internal-radius="40"
+                is-animated="true"
+                color-schema="{{donut.colorSchema}}"
+                highlight-slice-by-id="{{1}}"
+                radius-hover-offset="5">
+              </ui-donut>
+            </ui-view>
+          </ui-col>
+          <ui-col vertical-align="middle" align="center">
+            <ui-view class="right_content">
+              <ui-view class="right_01">说明</ui-view>
+              <ui-row space-top="20">
+                <ui-col vertical-align="middle" align="center">
+                  <ui-view class="right_02">其他</ui-view>
+                </ui-col>
+              </ui-row>
+            </ui-view>
+          </ui-col>
+        </ui-row>
+        <ui-row space-top="0" class="footer_content">
+          <ui-col vertical-align="middle" align="center">
+            <ui-legend
+              value="{{legendData.legend}}"
+              height="30"
+              is-horizontal="{{true}}"
+              is-animated="{{true}}"
+              text-size="{{legendData.textSize}}"
+              text-letter-spacing ="0.5"
+              margin-ratio="1.5"
+              color-schema="{{legendData.colorSchema}}">
+            </ui-legend>
+          </ui-col>
+        </ui-row>
+        <ui-row space-top="0" height=40 border-top>
+          <ui-col vertical-align="middle" align="left">
+            查看详情
+          </ui-col>
+        </ui-row>
+      </ui-view>
+
+      <ui-view class="chart_template" >
+        <ui-view class="title">项目考勤</ui-view>
+        <ui-row height="220">
+          <ui-col vertical-align="middle" align="center" span=8>
+            <ui-view class="left_content">
+              <ui-donut
+                value="{{donut.data}}"
+                width="180"
+                height="180"
+                external-radius="80"
+                internal-radius="40"
+                is-animated="true"
+                color-schema="{{donut.colorSchema}}"
+                highlight-slice-by-id="{{1}}"
+                radius-hover-offset="5">
+              </ui-donut>
+            </ui-view>
+          </ui-col>
+          <ui-col vertical-align="middle" align="center">
+            <ui-view class="right_content">
+              <ui-view class="right_01">说明</ui-view>
+              <ui-row space-top="20">
+                <ui-col vertical-align="middle" align="center">
+                  <ui-view class="right_02">其他</ui-view>
+                </ui-col>
+              </ui-row>
+            </ui-view>
+          </ui-col>
+        </ui-row>
+        <ui-row space-top="0" class="footer_content">
+          <ui-col vertical-align="middle" align="center">
+            <ui-legend
+              value="{{legendData.legend}}"
+              height="30"
+              is-horizontal="{{true}}"
+              is-animated="{{true}}"
+              text-size="{{legendData.textSize}}"
+              text-letter-spacing ="0.5"
+              margin-ratio="1.5"
+              color-schema="{{legendData.colorSchema}}">
+            </ui-legend>
+          </ui-col>
+        </ui-row>
+        <ui-row space-top="0" height=40 border-top>
+          <ui-col vertical-align="middle" align="left">
+            查看详情
+          </ui-col>
+        </ui-row>
+      </ui-view>
+    </ui-view>
 
   </ui-page>
 </template>
 
 
 <script>
-
-export default {
-  config: {
-    navigationStyle: 'custom',
-    navigationBarTitleText: '项目管理',
-  },
-  data () {
-    return {
-      isLogin: false,
-      listIndex: null,
-      nav_title: "项目管理",
-      scanShow: false,
-      items: [],
-      maskStyle: { backgroundColor: 'transparent' },
-
-      // 下拉刷新
-      pullDown: {
-        distance: 100,
-        disableContentMove: [''],
-        onBegin: () => {},
-        onActive: this.getItems,
-        // onAfter: this.handleAfter
-      }
-    }
-  },
-  created () {
-    console.log('isLogin:', this.isLogin)
-  },
-  methods: {
-    addItems () {
-      ui.navigateTo({
-        url: '/pages/items/addItems'
-      })
+  export default {
+    config: {
+      navigationStyle: 'custom',
+      // backgroundColor: '#f5f5f5'
     },
-    getItems () {
-      let that = this
-      // 请求项目
+    data() {
+      return {
+        isLogin: false,
+        nav_title: "项目管理",
+        scanShow: false,
+        src: 'http://images.uileader.com/20171103/5906a28c-0f12-4b71-8df2-98791d8716f6.jpg',
+
+        // 下拉刷新
+        pullDown: {
+          distance: 50,
+          disableContentMove: [''],
+          onBegin: () => {},
+          onActive: this.getItems,
+          // onAfter: this.handleAfter
+        },
+        donut: {
+          data: [
+            {
+              quantity: 144,
+              percentaged:10,
+              name: '已打卡',
+              id: 1
+            }, {
+              quantity: 35.9,
+              percentaged:10,
+              name: '未打卡',
+              id: 2
+            }, {
+              quantity: 49.6,
+              name: '迟到',
+              id: 3
+            }
+          ],
+          colorSchema: ['#2ec7ff', '#3f8ff1', '#ff574d']
+        },
+        legendData: {
+          legend: [
+            {
+              id: 1,
+              name: '已打卡'
+            },
+            {
+              id: 2,
+              name: '未打卡'
+            },
+            {
+              id: 3,
+              name: '迟到'
+            }
+
+          ],
+          textSize: 12,
+          colorSchema: ['#2ec7ff', '#3f8ff1', '#ff574d']
+        }
+      }
+    },
+    created() {
+      console.log('isLogin:', this.isLogin)
+    },
+    methods: {
+
+      getItems() {
+        let that = this
+        // 请求项目
         ui.request({
           url: "http://119.23.30.32:9999/tram/getitems",
           method: 'GET',
@@ -140,277 +240,179 @@ export default {
           success: function (result) {
             console.log("请求项目返回的数据:", result)
             if (result.statusCode === 200) {
-              ui.showToast({ title: '请求成功', icon: 'success' })
+              ui.showToast({
+                title: '请求成功',
+                icon: 'success'
+              })
               that.items = result.data
-              
+
             } else {
-              ui.showToast({ title: '请求失败', icon: 'success' })
+              ui.showToast({
+                title: '请求失败',
+                icon: 'success'
+              })
             }
           },
-          fail: function ({ errMsg }) {
-            ui.showToast({ title: '请求失败' + errMsg })
-          }
-        })
-    },
-    // + 号操作
-    handleScan () {
-      this.scanShow = true
-    },
-    handleHide (text) {
-      this.scanShow = false
-      if(text === '扫一扫'){
-        // 只允许从相机扫码
-        ui.scanCode({
-          onlyFromCamera: true,
-          success: (res) => {
-            console.log(res)
-            ui.showAlert({
-                title: '扫码结果',
-                content:  res.result
+          fail: function ({
+            errMsg
+          }) {
+            ui.showToast({
+              title: '请求失败' + errMsg
             })
           }
         })
-      }else{
-        ui.showToast({
-          title: text
+      },
+      // + 号操作
+      handleScan() {
+        this.scanShow = true
+      },
+      handleHide(text) {
+        this.scanShow = false
+        if (text === '扫一扫') {
+          // 只允许从相机扫码
+          ui.scanCode({
+            onlyFromCamera: true,
+            success: (res) => {
+              console.log(res)
+              ui.showAlert({
+                title: '扫码结果',
+                content: res.result
+              })
+            }
+          })
+        } else {
+          ui.showToast({
+            title: text
+          })
+        }
+      },
+      // 查看项目详情
+      handleItems(val) {
+        console.log("项目名字：", val.projectName)
+        ui.setStorageSync('itemInfo', val)
+        ui.navigateTo({
+          url: '/pages/items/itemDetail'
         })
       }
     },
-    // 查看项目详情
-    handleItems(val){
-      console.log("项目名字：", val.projectName)
-      ui.setStorageSync('itemInfo', val)
-      ui.navigateTo({
-        url: '/pages/items/itemDetail'
-      })
-    },
-    longtapItems () {
-
-    },
-    popoverShow (e, index) {
-      console.log(index)
-      this.listIndex = index
-      // this.popover = []
-      // this.popover[index] = true
-      // if (this.popoverText[index] === undefined) {
-      //   this.popoverText[index] = '赞'
+    mounted() {
+      this.getItems()
+      // if(!this.isLogin){
+      //   this.loginPage()
       // }
-      this.$refs.popover.showPopover({
-        el: e.target,
-        position: 'bottom',
-        effect: 'slide'
-      })
-    },
-    showTitle (title) {
-      let that = this
+      window.setTimeout(() => {
+        ui.closeSplashscreen()
+      }, 1000)
 
-      console.log(this.items[this.listIndex])
-      // ui.showToast({
-      //   title: `${title}(${this.items[this.listIndex].projectName})`
-      // })
-      this.$refs.popover.hidePopover()
-      // 删除项目请求
-        ui.request({
-          url: "http://119.23.30.32:9999/tram/delitems",
-          data: {
-            _id: this.items[this.listIndex]._id,
-          },
-          method: 'POST',
-          // dataType: 'jsonp',
-          header: {
-            'Content-Type': 'application/json'
-          },
-          success: function (result) {
-            console.log("删除项目:", result)
-            if (result.data.data.code === 2000) {
-              ui.showToast({ title: '删除成功', icon: 'success' })
-              
-              that.getItems()
-
-            } else {
-              ui.showToast({ title: '删除失败', icon: 'success' })
-            }
-          },
-          fail: function ({ errMsg }) {
-            ui.showToast({ title: '删除失败' + errMsg })
-          }
-        })
-    },
-    loginPage () {
-      import(`#/pages/userCenter/login/loginInterface.ui`).then((content) => {
-        ui.showDialog({
-          content: content, // dialog 内容
-          statusBarColor: 'black', // 打开窗体时，设置状态栏的字体颜色，有white和black两种可选
-          // 向loginInterface.ui传入数据
-          data: {
-            currentNum: this.currentNum
-          },
-          // 接收ui.hideDialog回传的数据，隐藏 dialog 时调用
-          onHide: (data) => {
-            console.log("登录页面关闭返回的数据：", data)
-            if (data && data.userinfo) {
-              this.isLogin = data.userinfo.isLogin
-              if(data.userinfo.userName === null){
-                this.userName = data.userinfo.tel // 用户名改电话
-              }else{
-                this.userName = data.userinfo.userName // 用户名
-              }
-              this.userTel = data.userinfo.tel // 用户电话
-              this.userId = data.userinfo.userId // 用户工号
-              if(data.userinfo.head === null || data.userinfo.head === ''){
-                this.portraitUrl = require('#/images/portrait_bg.png')
-              }else{
-                // this.portraitUrl = data.userinfo.data.head // 有头像应该请求头像，这里先注释掉
-                this.portraitUrl = require('#/images/portrait_bg.png')
-              }
-            } else {
-              this.isLogin = false
-              console.log('没有接收到数据')
-            }
-          }
-        })
-      })
     }
-  },
-  mounted () {
-    this.getItems()
-    // if(!this.isLogin){
-    //   this.loginPage()
-    // }
-    window.setTimeout(() => {
-      ui.closeSplashscreen()
-    }, 1000)
-    
   }
-}
-
 </script>
 
 <style lang="less">
-
-.nav_bar {
-  background: #fff;
-  .nav_title {
-    color: #000;
-    padding-left: 10px;
-    font-size: 36rpx;
-    font-weight: bold;
-  }
-}
-
-// 加号内容样式
-.ui-popover-overlay {
-  padding: 0;
-  width: 120px;
-}
-.touch_end {
-    background: #eee;
-}
-.popover_item{
-  padding: 0 10px;
-  &:active{
-    background-color: #eee;
-  }
-}
-
-.user_info {
-  background-color: #fff;
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-bottom: 20px;
-  margin-top: 10px;
-  box-shadow: 0px 2px 10px 3px #cccccc;
-  border-radius: 10px;
-
-  .header_top {
+  // 导航栏
+  .nav_bar {
     background: #fff;
-    border-radius: 10px 10px 0px 0px;
 
-    .head_portrait {
-      //line-height: 85px;
-      border-radius: 50%;
-    }
-
-    .user_name {
+    .nav_title {
       color: #000;
-      font-size: 18px;
+      padding-left: 10px;
+      font-size: 36rpx;
       font-weight: bold;
     }
-
-    .user_phone {
-      color: #000;
-      font-size: 14px;
-    }
   }
 
-  .work_state {
+  // 加号内容样式
+  .ui-popover-overlay {
+    padding: 0;
+    width: 120px;
+  }
+  .popover_item {
+    padding: 0 10px;
+
+    &:active {
+      background-color: #eee;
+    }
+  }
+  // 头部项目信息样式
+  .items_info {
     background-color: #fff;
-    border-radius: 0px 0px 10px 10px;
-    .mix-1px(1, 0, 0, 0, #f5f5f5);
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    box-shadow: 0px 2px 10px 3px #cccccc;
+    border-radius: 10px;
 
-    .ui-view {
-      font-size: 16px;
-      color: #4F4F4F;
+    .items_img {
+      background: #fff;
+      border-radius: 10px 10px 0px 0px;
+      .ui-image {
+        border-radius: 10px 10px 0px 0px;
+      }
+    }
+
+    .info_header {
+      background: #fff;
+      .ui-view {
+        font-size: 32rpx;
+        font-weight: bold;
+      }
+    }
+
+    .info_footer {
+      background-color: #fff;
+      border-radius: 0px 0px 10px 10px;
+      .mix-1px(1, 0, 0, 0, #f5f5f5);
+
+      .ui-view {
+        font-size: 16px;
+        color: #4F4F4F;
+      }
     }
   }
-}
-
-// 进度条样式
-.sample_block {
-  font-size: 14px;
-}
-.ui-progress {
-  margin: 5px 0px;
-}
-// 右下固定按钮
-.addbtn{
-  width:53px;
-  height:53px;
-  background-color:#1F95FF; // #fdd15c
-  line-height:53px;
-  color:#fff;
-  text-align:center;
-  border-radius:50%;
-  z-index: 99;
-}
-// 项目模板样式
-.template_content{
-  padding: 10px;
-  .template_list{
-    border-radius: 5px;
-    overflow: hidden;
+  // 时间样式
+  .data_info {
+    margin-left: 20px;
     margin-bottom: 10px;
+    font-size: 32rpx;
   }
-  .list_bottom{
-    padding: 10px 10px 10px 10px;
-    background-color: #F7F7F7;
-    .list_title{
+
+  // 图表列表样式
+  .template_list {
+    background-color: #f5f5f5;
+    padding-top: 10px;
+  }
+
+  .chart_template {
+    background-color: #fff;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    .title{
+      color: #262626;
+      line-height: 30px;
       font-size: 16px;
-      color: #222222;
-      margin-bottom: 15px;
+      font-weight: bold;
+      .mix-1px(0, 0, 1, 0, #ccc);
     }
-    .list_text{
-      color: #959595;
-      font-size: 14px;
+    .left_content{
+      width: 100%;
+    }
+    .right_content{
+      width: 100%;
+      .right_01{
+        color: #606060;
+        font-size: 18px;
+      }
+      .right_02{
+        color: #A0A0A0;
+        font-size: 14px;
+      }
+    }
+    .footer_content {
+      svg {
+        padding-top: 10px;
+      }
     }
   }
-}
-.custom {
-    width:130px;
-    background-color:#fff; 
-    .ui-popover-overlay-outer{
-        box-shadow: 0 0px 22px -1px #c1bfbf;
-        .ui-popover-overlay{
-            padding:0;
-        }
-    }
-  .ui-view{
-    font-size:16px;
-    color:#2E2E2E;
-    padding: 10px;
-  }
-}
-.touch_end {
-    background: #eee;
-}
+  
 </style>
