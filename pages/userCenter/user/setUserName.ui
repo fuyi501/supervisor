@@ -1,0 +1,156 @@
+<!---->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="20" color="#126DFE"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">修改{{nameOrNick}}</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="button_content">
+      <ui-input ui:model="{{ confirmInfo }}" placeholder=" {{ text }} " maxlength="10"></ui-input>
+      <ui-button form-type="submit" type="primary" class="submit" bindtap="confirm">确认修改</ui-button>
+    </ui-view>
+
+  </ui-page>
+</template>
+
+<script>
+
+const confirmUrl = 'https://api.estech.xyz:8533/user/profile' // 更新用户信息
+
+export default {
+  config: {
+    navigationStyle: "custom"
+  },
+  data() {
+    return {
+      nameOrNick: '',
+      confirmInfo: '',
+      text: ''
+    }
+  },
+  methods: {
+    navigateBack () {
+      ui.navigateBack()
+    },
+    confirm () {
+      var self = this
+      let userinfo = ui.getStorageSync('userinfo')
+      console.log("修改用户名和昵称 userinfo:",userinfo)
+      if(userinfo !== null){
+        if(this.confirmInfo === ''){
+          ui.showToast({ title: this.text , icon: 'success' })
+        }else{
+          if(this.nameOrNick === '用户名'){
+            // 确认修改用户名
+            ui.request({
+              url: confirmUrl,
+              data: {
+                username: this.confirmInfo,
+                nickname: userinfo.nickName
+              },
+              method: 'POST',
+              header: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + userinfo.tokenId
+              },
+              success: function (result) {
+                console.log("修改请求返回的数据", result)
+                if(result.data.code === 2000){
+
+                  let userinfo = ui.getStorageSync('userinfo')
+                  userinfo.userName = self.confirmInfo
+                  ui.setStorageSync('userinfo', userinfo)
+
+                  ui.showToast({ title: '修改成功', icon: 'success' })
+                  ui.navigateBack()
+                }else{
+                  ui.showToast({ title: '修改失败' + result.data.desc })
+                }
+                
+                // ui.setStorageSync('userinfo', result.data.result)
+              },
+              fail: function ({ errMsg }) {
+                ui.showToast({ title: '修改失败' })
+                console.log("修改失败：",errMsg)
+              }
+            })
+          }else {
+            // 确认修改昵称
+            ui.request({
+              url: confirmUrl,
+              data: {
+                nickname: this.confirmInfo,
+                username: userinfo.userName
+              },
+              method: 'POST',
+              header: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + userinfo.tokenId
+              },
+              success: function (result) {
+                console.log("修改请求返回的数据", result)
+                if(result.data.code === 2000){
+
+                  let userinfo = ui.getStorageSync('userinfo')
+                  userinfo.nickName = self.confirmInfo
+                  ui.setStorageSync('userinfo', userinfo)
+                  
+                  ui.showToast({ title: '修改成功', icon: 'success' })
+                  ui.navigateBack()
+                }else{
+                  ui.showToast({ title: '修改失败' + result.data.desc })
+                }
+                // ui.setStorageSync('userinfo', result.data.result)
+              },
+              fail: function ({ errMsg }) {
+                ui.showToast({ title: '修改失败' })
+                console.log("修改失败：",errMsg)
+              }
+            })
+          }
+
+        }
+      }
+    }
+  },
+  mounted() {
+    let getData = ui.getQuery()
+    // ui.showToast({ title: getData })
+    if(getData.type === '用户名'){
+      this.nameOrNick = getData.type
+      this.text = '请输入您要修改的用户名'
+    }else {
+      this.nameOrNick = getData.type
+      this.text = '请输入您要修改的昵称'
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.nav_bar {
+  background: #fff;
+  .nav_title {
+    color: #000;
+    font-size: 36rpx;
+    font-weight: bold;
+  }
+}
+.button_content{
+  padding: 10px 20px 0 20px;
+  .ui-input{
+    border: 0;
+  }
+  .submit{
+    margin-top: 10px;
+  }
+}
+</style>

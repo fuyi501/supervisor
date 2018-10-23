@@ -1,0 +1,187 @@
+<!---->
+<template>
+  <ui-page class="global_page">
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left">
+          <ui-view  class="nav_title">通讯录</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-row class="search_box" height="50">
+      <ui-col width="15" vertical-align="middle" align="center"></ui-col>
+      <ui-col vertical-align="middle" align="center">
+        <ui-view class="search_content">  
+          <ui-row height="35">
+            <ui-col vertical-align="middle" align="center" width="30">
+              <ui-icon type="sousuo" color="#B5B5B5" size="18"></ui-icon>
+            </ui-col>
+            <ui-col vertical-align="middle">
+              <ui-form action="/search">
+                <ui-input type="search" name="search" placeholder="搜索"></ui-input>
+              </ui-form>
+            </ui-col>
+          </ui-row>
+        </ui-view>
+      </ui-col>
+      <ui-col width="15" vertical-align="middle" align="center"></ui-col>
+    </ui-row>
+
+    <ui-row height="60" class="contacts_list1" space-top=10 space-bottom=10 bindtap="">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon">
+          <ui-icon type="haoyou2" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">新的申请</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
+        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+      </ui-col>
+    </ui-row>
+
+    <ui-row height="60" class="contacts_list2" bindtap="">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon">
+          <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">组织架构</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
+        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+      </ui-col>
+    </ui-row>
+
+    <ui-row height="60" class="contacts_list2" bindtap="">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon">
+          <ui-icon type="lianxiren1" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">外部好友</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
+        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+      </ui-col>
+    </ui-row>
+
+    <ui-row height="60" class="contacts_list1" bindtap="">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon" style="background-color:#1890ff" >
+          <ui-icon type="lianxiren2" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">手机联系人</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
+        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+      </ui-col>
+    </ui-row>
+
+
+  </ui-page>
+</template>
+
+<script>
+export default {
+  config: {
+    navigationStyle: 'custom',
+    backgroundColor: '#fff',
+  },
+  data() {
+    return {
+      
+    }
+  },
+  methods: {
+    
+  },
+  mounted() {}
+}
+</script>
+
+<style lang="less">
+.global_page {
+  background-color: #f5f5f5 !important;
+  // padding-left: 20rpx; // 1rpx = 0.5px
+  // padding-right: 20rpx;
+}
+.nav_bar {
+  background: #fff;
+  .nav_title {
+    color: #000;
+    padding-left: 20rpx;
+    font-size: 36rpx;
+    font-weight: bold;
+  }
+}
+.search_box {
+  width: 100%;
+  background-color: #fff;
+  .search_content {
+    background-color: #F4F4F4;
+    height: 35px;
+    border-radius: 25px;
+    overflow: hidden;
+    width: 100%;
+    .ui-input {
+      border: 0;
+      padding: 0;
+      background: transparent;
+      width: 95%;
+    }
+    .ui-input-inner {
+      height: 35px;
+    }
+  }
+}
+.contacts_list1 {
+  background-color: #fff;
+  .left_icon{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color:#FCB300; 
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    font-size: 16px;
+  }
+  .text_content {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: #24292C;
+  }
+}
+
+.contacts_list2 {
+  background-color: #fff;
+  .left_icon{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color:#1890ff; 
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    font-size: 16px;
+  }
+  .text_content {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    color: #24292C;
+    .mix-1px(0, 0, 1, 0, #ccc);
+  }
+  .right_icon {
+    .mix-1px(0, 0, 1, 0, #ccc);
+  }
+}
+</style>

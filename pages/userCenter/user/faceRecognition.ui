@@ -3,27 +3,34 @@
   <ui-page>
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
-        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
-          <ui-view>
-            <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
-          </ui-view>
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="20" color="#126DFE"></ui-icon>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <ui-text class="nav_title">人脸照片</ui-text>
+          <ui-view class="nav_title">人脸识别照片</ui-view>
         </ui-col>
-        <ui-col vertical-align="middle" align="center" width="50">
-          <ui-view>
-          </ui-view>
-        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50"></ui-col>
       </ui-row>
     </ui-nav-bar>
 
-    <ui-view style="{{  {height:faceHeight + 'px'} }}" class="preview">
-      <ui-image src="{{imageSrc}}"  mode="aspectFit"></ui-image>
+    <ui-view ui:if="{{ isHasFaceImg }}">
+      <ui-view style="{{ { height:faceHeight + 'px'} }}" class="preview">
+        <ui-image src="{{imageSrc}}"  mode="aspectFit"></ui-image>
+      </ui-view>
+      <ui-view class="btn_content">
+        <ui-button form-type="submit" type="primary" class="submit" bindtap="uploadFaceImg">更新人脸照片</ui-button>
+      </ui-view>
     </ui-view>
-
-    <ui-view class="sample_content">
-      <ui-button form-type="submit" type="primary" class="submit" bindtap="uploadFace">上传人脸照片</ui-button>
+    <ui-view ui:else>
+      <ui-view class="without_img" style="{{ { height: faceHeight + 'px'} }}">
+        <ui-view class="show_tip">
+          <ui-icon type="renlian2" size="100" color="#F66542"></ui-icon>
+          <ui-view class="img_title">您还没有上传人脸照片</ui-view>
+        </ui-view>
+      </ui-view>
+      <ui-view class="btn_content">
+        <ui-button form-type="submit" type="primary" class="submit" bindtap="uploadFaceImg">上传人脸照片</ui-button>
+      </ui-view>
     </ui-view>
 
   </ui-page>
@@ -50,7 +57,7 @@ export default {
     navigateBack () {
       ui.navigateBack()
     },
-    uploadFace () {
+    uploadFaceImg () {
       this.chooseImage()
     },
     chooseImage () {
@@ -145,17 +152,25 @@ export default {
 
 <style lang="less">
 .nav_bar {
-  background: #126DFE;
-  .ui-view{
-    color: #fff;
-    font-size: 14px;
-  }
-  .ui-text{
-    color: #fff;
-    font-size: 16px;
+  background: #fff;
+  .nav_title {
+    color: #000;
+    font-size: 36rpx;
+    font-weight: bold;
   }
 }
-.sample_content{
+.without_img {
+  flex-grow: 1;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  text-align: center;
+  flex-grow: 1;
+}
+.btn_content{
   padding: 10px 20px 0 20px;
   .ui-input{
     border: 0;

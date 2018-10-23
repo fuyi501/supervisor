@@ -23,7 +23,7 @@
       </ui-col>
     </ui-row>
 
-    <ui-row height="50" class="user_content_list2" space-top="10" bindtap="">
+    <ui-row height="50" class="user_content_list2" space-top="10" bindtap="newsInfo">
       <ui-col vertical-align="middle" space-left="15">
         新消息通知
       </ui-col>
@@ -31,7 +31,8 @@
         <ui-icon type="arrow-right" size="18" color="#BAB9BF"></ui-icon>
       </ui-col>
     </ui-row>
-    <ui-row height="50" class="user_content_list2" bindtap="">
+
+    <ui-row height="50" class="user_content_list2" bindtap="privacy">
       <ui-col vertical-align="middle" space-left="15">
         隐私
       </ui-col>
@@ -39,6 +40,7 @@
         <ui-icon type="arrow-right" size="18" color="#BAB9BF"></ui-icon>
       </ui-col>
     </ui-row>
+
     <ui-navigator url="/pages/userCenter/setting/commonUse">
       <ui-row height="50" class="user_content_list2" space-bottom="10">
         <ui-col vertical-align="middle" space-left="15">
@@ -60,6 +62,7 @@
         </ui-col>
       </ui-row>
     </ui-navigator>
+
     <ui-row height="50" class="user_content_list2" space-top="20" bindtap="logOut">
       <ui-col vertical-align="middle" align="center">
         <ui-view class="log_out">安全退出</ui-view>
@@ -74,7 +77,7 @@
 const logoutUrl = 'https://www.uileader.com/touchui-backstage/logout.do'
 export default {
   config: {
-    navigationBarTitleText: '设置',
+    navigationStyle: "custom",
     backgroundColor: '#F2F2F2',
     delay:false
   },
@@ -84,6 +87,12 @@ export default {
   methods: {
     navigateBack () {
       ui.navigateBack()
+    },
+    newsInfo () {
+      ui.showToast({ title: '敬请期待', icon: 'success' })
+    },
+    privacy () {
+      ui.showToast({ title: '敬请期待', icon: 'success' })
     },
     loginPage () {
       import(`#/pages/userCenter/login/loginInterface.ui`).then((content) => {
@@ -154,7 +163,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style lang="less">

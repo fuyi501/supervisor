@@ -1,4 +1,4 @@
-<!--about.ui-->
+<!--about.ui 修改好-->
 <template>
   <ui-page>
     <ui-nav-bar slot="nav-bar" class="nav_bar">

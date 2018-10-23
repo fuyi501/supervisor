@@ -104,7 +104,7 @@
         </ui-view>
       </ui-col>
     </ui-row>
-    <ui-row height="50" class="userInfo_list2" bindtap="faceUpload">
+    <ui-row height="50" class="userInfo_list2" bindtap="faceRecognition">
       <ui-col vertical-align="middle" space-left="15">
         人脸签到
       </ui-col>
@@ -305,19 +305,19 @@
         console.log("设置用户信息", value)
         if (value === "用户名") {
           ui.navigateTo({
-            url: '/pages/userCenter/setUserInfo?type=用户名'
+            url: '/pages/userCenter/user/setUserName?type=用户名'
           })
         } else if (value === "昵称") {
           ui.navigateTo({
-            url: '/pages/userCenter/setUserInfo?type=昵称'
+            url: '/pages/userCenter/user/setUserName?type=昵称'
           })
         } else {
 
         }
       },
-      faceUpload() {
+      faceRecognition() {
         ui.navigateTo({
-          url: '/pages/userCenter/faceUpload'
+          url: '/pages/userCenter/user/faceRecognition'
         })
       }
     },
