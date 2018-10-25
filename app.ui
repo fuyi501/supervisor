@@ -18,8 +18,17 @@ export default {
       "pages/contacts/workers",
       "pages/application/askOff/askoff",
       "pages/application/supplement/buqian",
-      "pages/application/approval/approval"
-    ,"pages/testPages/example/indexTest","pages/messages/notices","pages/testPages/example/qrcodeTest","pages/userCenter/user/userQR","pages/testPages/example/statusBarTest","pages/userCenter/user/setUserName","pages/contacts/contacts"],
+      "pages/application/approval/approval",
+      "pages/testPages/example/indexTest",
+      "pages/messages/notices",
+      "pages/testPages/example/qrcodeTest",
+      "pages/userCenter/user/userQR",
+      "pages/testPages/example/statusBarTest",
+      "pages/userCenter/user/setUserName",
+      "pages/contacts/contacts",
+      "pages/application/signIn/signIn",
+      "pages/application/kaoqin/kaoqin",
+      "pages/application/xuncha/xunCha","pages/application/pangZhan/pangZhan","pages/application/noticeLetter/noticeLetter","pages/application/noticeLetter/contactLetter","pages/application/noticeLetter/noticeReply","pages/application/noticeLetter/contactReply","pages/contacts/contactBook","pages/application/rizhi/rizhi"],
     "theme": {
       "theme-color": "#3399ff"
     },
@@ -57,6 +66,27 @@ export default {
         }
       ]
     },
+    "pageTabBars": [
+      {
+        "id": "tab-bar-1",
+        "color": "#555",
+        "selectedColor": "#de3029",
+        "borderColor": "rgba(231, 231, 231, 0.6)",
+        "backgroundColor": "#fff",
+        "list": [
+          {
+            "pagePath": "pages/componentDemo/tabBar1-1",
+            "iconName": "api-network",
+            "text": "日报"
+          },
+          {
+            "pagePath": "pages/componentDemo/tabBar1-2",
+            "iconName": "setting",
+            "text": "统计"
+          }
+        ]
+      }
+    ],
     "networkBaseUrl":""
   },
   data () {

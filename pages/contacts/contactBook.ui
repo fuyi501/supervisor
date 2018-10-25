@@ -1,0 +1,384 @@
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">我的好友</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right"> </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view>
+      <ui-index-list show-top data="{{list}}" theme-color="#00ab48" bindcustomtap="singleselect">
+      </ui-index-list>
+    </ui-view>
+  </ui-page>
+</template>
+
+<script>
+  export default {
+    config: {
+      "navigationStyle": "custom",
+      "backgroundColor": "#fff"
+    },
+    data() {
+      return {
+        list: [{
+          index: 'A',
+          items: [{
+              name: '阿强',
+              icon: require('#/images/indexList/t1.png'),
+              checked: true
+            },
+            {
+              name: '安生',
+              icon: require('#/images/indexList/t2.png'),
+              checked: true
+            }
+          ]
+        }, {
+          index: 'B',
+          items: [{
+              name: '波波',
+              icon: require('#/images/indexList/t3.png')
+            },
+            {
+              name: '本',
+              icon: require('#/images/indexList/t4.png')
+            },
+            {
+              name: '本·杰明',
+              icon: require('#/images/indexList/t5.png')
+            }
+          ]
+        }, {
+          index: 'C',
+          items: [{
+              name: '陈杰',
+              icon: require('#/images/indexList/t6.png')
+            },
+            {
+              name: '长安',
+              icon: require('#/images/indexList/t7.png')
+            },
+            {
+              name: '程玲',
+              icon: require('#/images/indexList/t6.png')
+            },
+            {
+              name: '成龙',
+              icon: require('#/images/indexList/t5.png')
+            },
+            {
+              name: '池子',
+              icon: require('#/images/indexList/t4.png')
+            }
+          ]
+        }, {
+          index: 'D',
+          items: [{
+              name: '董子健',
+              icon: require('#/images/indexList/t3.png')
+            },
+            {
+              name: '董洁',
+              icon: require('#/images/indexList/t2.png')
+            },
+            {
+              name: '冬雪',
+              icon: require('#/images/indexList/t1.png')
+            },
+            {
+              name: '丁洁',
+              icon: require('#/images/indexList/t3.png')
+            },
+            {
+              name: '邓超',
+              icon: require('#/images/indexList/t4.png')
+            },
+            {
+              name: '大豆',
+              icon: require('#/images/indexList/t5.png')
+            }
+          ]
+        }, {
+          index: 'E',
+          items: [{
+              name: '厄尔',
+              icon: require('#/images/indexList/t6.png')
+            },
+            {
+              name: '额娘',
+              icon: require('#/images/indexList/t7.png')
+            }
+          ]
+        }, {
+          index: 'F',
+          items: [{
+            name: '福尔康',
+            icon: require('#/images/indexList/t6.png')
+          }]
+        }, {
+          index: 'G',
+          items: [{
+            name: '关雪',
+            icon: require('#/images/indexList/t5.png')
+          }]
+        }, {
+          index: 'H',
+          items: [{
+              name: '和珅',
+              icon: require('#/images/indexList/t4.png')
+            },
+            {
+              name: '何伟',
+              icon: require('#/images/indexList/t3.png')
+            },
+            {
+              name: '郝静',
+              icon: require('#/images/indexList/t2.png')
+            }
+          ]
+        }, {
+          index: 'J',
+          items: [{
+              name: '吉生生',
+              icon: require('#/images/indexList/t1.png')
+            },
+            {
+              name: '季星云',
+              icon: require('#/images/indexList/t2.png')
+            },
+            {
+              name: '金三胖',
+              icon: require('#/images/indexList/t3.png')
+            },
+            {
+              name: '姜爱玲',
+              icon: require('#/images/indexList/t4.png')
+            }
+          ]
+        }, {
+          index: 'K',
+          items: [{
+              name: '柯杰',
+              icon: require('#/images/indexList/t5.png')
+            },
+            {
+              name: '康阳',
+              icon: require('#/images/indexList/t6.png')
+            }
+          ]
+        }, {
+          index: 'L',
+          items: [{
+              name: '雷烈',
+              icon: require('#/images/indexList/t7.png')
+            },
+            {
+              name: '蕾蕾',
+              icon: require('#/images/indexList/t6.png')
+            },
+            {
+              name: '郎朗',
+              icon: require('#/images/indexList/t5.png')
+            },
+            {
+              name: '郎平',
+              icon: require('#/images/indexList/t4.png')
+            }
+          ]
+        }, {
+          index: 'M',
+          items: [{
+              name: '玛丽',
+              icon: require('#/images/indexList/t3.png')
+            },
+            {
+              name: '孟非',
+              icon: require('#/images/indexList/t2.png')
+            },
+            {
+              name: '墨白',
+              icon: require('#/images/indexList/t1.png')
+            }
+          ]
+        }, {
+          index: 'N',
+          items: [{
+            name: '娜娜',
+            icon: require('#/images/indexList/t2.png')
+          }]
+        }, {
+          index: 'Q',
+          items: [{
+              name: '秦昊',
+              icon: require('#/images/indexList/t3.png')
+            },
+            {
+              name: '清清',
+              icon: require('#/images/indexList/t4.png')
+            },
+            {
+              name: '晴晴',
+              icon: require('#/images/indexList/t5.png')
+            }
+          ]
+        }, {
+          index: 'R',
+          items: [{
+              name: '任生',
+              icon: require('#/images/indexList/t1.png')
+            },
+            {
+              name: '蓉儿',
+              icon: require('#/images/indexList/t2.png')
+            }
+          ]
+        }, {
+          index: 'S',
+          items: [{
+              name: '思思',
+              icon: require('#/images/indexList/t6.png')
+            },
+            {
+              name: '帅帅',
+              icon: require('#/images/indexList/t7.png')
+            },
+            {
+              name: '舒淇',
+              icon: require('#/images/indexList/t6.png')
+            }
+          ]
+        }, {
+          index: 'T',
+          items: [{
+              name: '婷婷',
+              icon: require('#/images/indexList/t5.png')
+            },
+            {
+              name: '甜甜',
+              icon: require('#/images/indexList/t4.png')
+            },
+            {
+              name: '唐僧',
+              icon: require('#/images/indexList/t3.png')
+            },
+            {
+              name: '腾飞',
+              icon: require('#/images/indexList/t2.png')
+            }
+          ]
+        }, {
+          index: 'W',
+          items: [{
+              name: '王坤',
+              icon: require('#/images/indexList/t1.png')
+            },
+            {
+              name: '王乾',
+              icon: require('#/images/indexList/t2.png')
+            }
+          ]
+        }, {
+          index: 'X',
+          items: [{
+              name: '谢腾飞',
+              icon: require('#/images/indexList/t3.png')
+            },
+            {
+              name: '谢菲菲',
+              icon: require('#/images/indexList/t4.png')
+            },
+            {
+              name: '项羽',
+              icon: require('#/images/indexList/t5.png')
+            },
+            {
+              name: '邢晓瑶',
+              icon: require('#/images/indexList/t6.png')
+            }
+          ]
+        }, {
+          index: 'Y',
+          items: [{
+              name: '云图',
+              icon: require('#/images/indexList/t7.png')
+            },
+            {
+              name: '玉玉',
+              icon: require('#/images/indexList/t6.png')
+            },
+            {
+              name: '杨帆',
+              icon: require('#/images/indexList/t5.png')
+            },
+            {
+              name: '袁莉',
+              icon: require('#/images/indexList/t4.png')
+            }
+          ]
+        }, {
+          index: 'Z',
+          items: [{
+              name: '赵申',
+              icon: require('#/images/indexList/t3.png')
+            },
+            {
+              name: '张飞',
+              icon: require('#/images/indexList/t2.png')
+            },
+            {
+              name: '章子怡',
+              icon: require('#/images/indexList/t1.png')
+            }
+          ]
+        }],
+        msg: ''
+      }
+    },
+    mounted() {
+
+    },
+    methods: {
+      navigateBack() {
+        ui.navigateBack()
+      },
+      singleselect(msg) {
+
+        this.msg = msg
+        console.log(this.msg)
+      }
+    }
+  }
+</script>
+
+<style lang="less">
+  // 导航栏
+  .nav_bar {
+    background: #fff;
+
+    .ui-icon {
+      color: #1890ff;
+    }
+
+    .nav_title {
+      color: #000;
+      font-size: 32rpx;
+      font-weight: bold;
+    }
+
+    .nav_right {
+      color: #1890ff;
+      font-size: 16px;
+    }
+  }
+</style>

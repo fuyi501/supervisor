@@ -3,6 +3,9 @@
   <ui-page>
     <ui-image src="{{ src1 }}" width="240" height="240"></ui-image>
     <ui-image src="{{ src2 }}" width="240" height="240"></ui-image>
+    <ui-view class="day">
+      时间：{{ day }}
+    </ui-view>
   </ui-page>
 </template>
 
@@ -10,15 +13,17 @@
 
 import qrcode from '#/static/utils/qrcode'
 import qrious from '#/static/utils/qrious'
+import dayjs from '#/static/utils/dayjs'
 
 export default {
   config: {
-    navigationBarTitleText: ""
+    navigationBarTitleText: "二维码"
   },
   data() {
     return {
       src1: '',
-      src2: ''
+      src2: '',
+      day: ''
     }
   },
   methods: {
@@ -51,10 +56,17 @@ export default {
 
     this.src2 = this.makeQRCode2("https://github.com/neocotic/qrious")    
 
+    console.log('当前时间：', dayjs())
+
   }
 }
 </script>
 
 <style lang="less">
 
+@import '../../../static/css/selfcss.less';
+
+.day {
+  color: @self-left-arrow;
+}
 </style>

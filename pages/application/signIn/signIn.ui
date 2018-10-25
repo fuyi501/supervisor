@@ -1,0 +1,492 @@
+<template>
+  <ui-page
+  page-load="{{ pageLoad }}"
+  >
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">签到</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right">更多</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="qiandao_windows" style="{{ { height: height + 'px'} }}">
+      <!-- 个人信息 -->
+      <ui-view class="top" >
+        <ui-row height="40" class="header_top" border-bottom>
+          <ui-col vertical-align="middle" align="center" width="36" space-left="10">
+            <ui-icon type="shijian" size="16" color="#ccc"></ui-icon> 
+          </ui-col>
+          <ui-col vertical-align="middle" align="left" width="90" >
+            2018-10-24
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" width="40" space-right=5>
+            <ui-icon type="zuzhi" size="16" color="#ccc"></ui-icon>
+          </ui-col>
+          <ui-col vertical-align="middle" align="left">
+            平头哥工作室
+          </ui-col>
+        </ui-row>
+        <ui-row height="40" class="header_top" border-bottom>
+          <ui-col vertical-align="middle" align="center" width="36" space-left="10">
+            <ui-icon type="map1" size="20" color="#ccc"></ui-icon> 
+          </ui-col>
+          <ui-col vertical-align="middle" align="left" width="90">
+            西南交大
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" space-right=10>
+            刷新
+          </ui-col>
+        </ui-row>
+      </ui-view>
+
+      <!-- 地图部分 -->
+      <ui-view class="map-content">
+        <div id="container" style="{{  {height:mapHeight + 'px'} }}">
+        </div>
+      </ui-view>
+
+    </ui-view>
+
+    <ui-fixed-view bottom="40" right="{{ qiandao-70 }}" bindtap="faceCompare">
+      <ui-view class="fixed-view-content">
+        <ui-row>签到</ui-row>
+        <ui-row> {{ time }} </ui-row>
+      </ui-view>
+    </ui-fixed-view>
+
+  </ui-page>
+</template>
+
+<script>
+
+import lrz from '#/static/utils/lrz'
+import dayjs from '#/static/utils/dayjs'
+
+export default {
+  config: {
+    navigationStyle: 'custom',
+    navigationBarTitleText: '签到',
+    backgroundColor: '#F4F4F4',
+    cache: true
+    // navigationBarTextStyle: 'black',
+    // disableScroll:true
+  },
+  data () {
+    return {
+      // 加载页面判断是否登录
+      isLogin: false,
+      userName: '傅毅',
+      userTel: '',
+      userId: '', // 用户工号
+      userItem: '中铁二局地铁六号线标段一', // 用户所属项目
+      tokenid: '',
+      currentNum: 0, // 这个值控制显示登录页面还是注册页面,0为登录页面,1为注册页面
+      portraitUrl: require('#/images/portrait_bg.png'),
+      pageLoad: {// 进入页面通过缓存tokenId来判断是否是登录状态
+        trigger: 'always',
+        handle: () => {
+          console.log("pageLoad 每次打开这个页面都会执行这个函数")
+   
+          // 判断是否有项目信息
+          let itemInfo = ui.getStorageSync('itemInfo')
+          if(itemInfo !== null){
+            console.log("项目信息：",itemInfo)
+            this.polyp = []
+            
+            this.userItem = itemInfo.projectName
+            var points = itemInfo.geoInfo
+            for(let i = 0; i < points.length; i++){
+              this.polyp.push([points[i].lon, points[i].lat])
+            }
+            console.log("this.polyp",this.polyp)
+            if(this.polygon !== ''){
+              console.log("重新绘制")
+              console.log("这时的 polygon ：",this.polygon)
+              this.polygon.setMap(null)
+              this.polygon.setPath(this.polyp)
+              this.polygon.setMap(this.map)
+            }
+          }
+
+          // 判断是否已签到
+          let qianDaoInfo = ui.getStorageSync('qianDaoInfo')
+          console.log("qianDaoInfo",qianDaoInfo)
+          if(qianDaoInfo !== null){
+            if(qianDaoInfo.qianDaoStatus !== null){
+              this.isQianDao = qianDaoInfo.qianDaoStatus
+            }else{
+              console.log("没有这个数据")
+            }
+          } else {
+            this.isQianDao = false
+          }
+        }
+      },
+      show: true,
+      show10: false,
+      height: ui.DEFAULT_CONTENT_HEIGHT,
+      //签到数据
+      isQianDao: false, // 是否已签到，默认为 false
+      qiandao: ui.WIN_WIDTH/2, // 签到按钮位于屏幕中间
+      sourceType: 'camera', // 只打开摄像头
+      sizeType: 'original', // 原图或者压缩
+      time: '',
+      //地图数据
+      mapHeight: ui.DEFAULT_CONTENT_HEIGHT-80+4,
+      ismaploaded: false,
+      map: '', // 高德地图对象
+      script: '', // script 对象
+      toolbar: '', // toolbar 对象
+      polygon: '', // 多边形对象
+      marker1: '', // marker 对象
+      marker1InPolygon: '', // 判断点是否在多边形区域内
+      polyp: [  // 多边形 边缘数据
+        [103.976088, 30.767869],
+        [103.983526, 30.771802],
+        [103.993025, 30.761379], 
+        [103.986502, 30.755577],
+        [103.979292, 30.759412]
+      ],
+      center: [116.397428, 39.90923]
+    }
+  },
+  computed: {
+    userInfo: function () {
+      return this.userName + " " + this.userTel
+    }
+  },
+  methods: {
+    navigateBack () {
+      ui.navigateBack()
+    },
+    init () {
+      this.script = document.createElement("script")
+      this.script.type = "text/javascript"
+      this.script.src="https://webapi.amap.com/maps?v=1.4.8&key=df579385937f9b125094f73fb9be7ff2&plugin=AMap.ToolBar",
+      document.body.appendChild(this.script)
+
+      console.log("script:",this.script,"this.map:",this.map,"this.toolbar:",this.toolbar)
+
+      this.script.onload = () => {
+        console.log("进来了")
+          //基本地图加载
+          this.map = new AMap.Map("container", {
+              resizeEnable: true,
+              center: this.center,//地图中心点
+              zoom: 12 //地图显示的缩放级别
+          });
+          // AMap.plugin('AMap.ToolBar',() => {//异步加载插件
+          //     this.toolbar = new AMap.ToolBar({
+          //       position: "RB",
+          //       locate: true,
+          //       liteStyle: false,
+          //       autoPosition: true
+          //     });
+          //     this.map.addControl(this.toolbar);
+          // });
+
+          // 同步加载插件
+          this.toolbar = new AMap.ToolBar({
+                            position: "RB",
+                            locate: true,
+                            liteStyle: false,
+                            autoPosition: true
+                        });
+          this.map.addControl(this.toolbar);
+          this.ismaploaded = true;
+          // map.setFitView() // 注释掉
+          console.log("地图初始化完成")
+          
+          if(this.ismaploaded){
+            console.log(" 启动定位功能 ", this.ismaploaded)
+            this.autoGetLocation ()
+          }
+          console.log("script:",this.script,"this.map:",this.map,"this.toolbar:",this.toolbar)
+
+      }
+    },
+    autoGetLocation () {
+      // 注册 定位 事件
+      console.log("开始定位")
+      this.toolbar.on("location", (res) => {
+        console.log("定位成功")
+        // console.log(res.type,"坐标：",res.lnglat)
+        // console.log("坐标：",res.lnglat.lng,res.lnglat.lat)
+        this.center = [ res.lnglat.lng, res.lnglat.lat ]
+        console.log("center",this.center)
+
+        let mapInfo = {
+          mapCenter: this.center,
+          mapPolyonDatas: this.polyp
+        }
+        ui.setStorageSync('mapInfo',mapInfo)
+
+        this.map.setCenter(new AMap.LngLat(res.lnglat.lng, res.lnglat.lat ))
+
+        console.log("map.center", this.map.getCenter())
+
+        console.log("this.polypath", this.polyp)
+
+        this.polygon = new AMap.Polygon({
+            map: this.map,
+            fillOpacity:0.4,
+            path: this.polyp
+        });
+
+        if(this.marker1 != ''){
+          console.log("marker 不为空",this.marker1)
+          this.map.remove(this.marker1)
+        }else{
+          console.log("marker 为空",this.marker1)
+        }
+
+        this.marker1 = new AMap.Marker({
+            map: this.map,
+            position: this.center
+        });
+
+        this.marker1InPolygon  = this.polygon.contains(this.marker1.getPosition());
+        this.marker1.setLabel({
+            content:this.marker1InPolygon? "在工作区内":"很抱歉，您不在工作区内",
+            offset:new AMap.Pixel(20,0)
+        });
+        this.map.setFitView() // 自适应地图显示
+      })
+    },
+    faceCompare () {
+      if(this.isQianDao){
+        ui.showAlert({
+          title: "签到结果",
+          content: `
+            <div style="font-size: 20px; text-align: center;"> 您已签到，请勿重复签到 </div>
+          `,
+          buttonText: '我知道了',
+          buttonStyle: { color: '#f97d0e' },
+          success () {
+            console.log("已签到")
+          }
+        })
+      }else{
+        
+        console.log("准备签到")
+        var that = this
+
+        ui.chooseImage({
+        sourceType: that.sourceType,
+        sizeType: that.sizeType,
+        success: function (res) {
+          ui.showLoading({
+            text: '正在签到'
+          })
+          console.log(res)
+          var imageSrc = res.tempFilePaths[0]
+          console.log("图片路径：", imageSrc)
+          console.log("上传token：", that.tokenid)
+
+          // 上传图片
+          lrz(imageSrc)
+            .then(function (rst) {
+                // 处理成功会执行
+                console.log("识别压缩成功",rst)
+
+                let imageSrcBase64 = rst.base64
+                
+                // 去掉头部的照片 base64 编码
+                var imageBase = imageSrcBase64.split(',')[1]
+                console.log("总长度:",rst.base64Len, "去掉头部后的长度：",imageBase.length)
+
+                ui.request({
+                  url: 'https://api.estech.xyz:8533/face/compare/base64',
+                  data: {
+                    'img': imageBase
+                  },
+                  method: 'POST',
+                  header: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + that.tokenid
+                  },
+                  success: (result) => {
+                    ui.hideLoading()
+
+                    console.log("上传对比base64编码成功 result:",result)
+
+                    if(result.data.code === 2000){
+                      if(result.data.data.sim > 90){
+                        // 签到成功后返回 签到结果 告知用户 
+                        ui.showAlert({
+                          title: "签到结果",
+                          content: `
+                            <div style="font-size: 20px; text-align: center;"> 签到成功 </div>
+                          `,
+                          buttonText: '我知道了',
+                          buttonStyle: { color: '#f97d0e' },
+                          success () {
+                            console.log("签到成功")
+                            that.isQianDao = true
+                            let qianDaoInfo = {
+                              qianDaoStatus: that.isQianDao,
+                              qianDaoLocation: that.center
+                            }
+                            ui.setStorageSync('qianDaoInfo',qianDaoInfo)
+                          }
+                        })
+                      }else{
+                        // 签到失败 
+                        ui.showAlert({
+                          title: "签到失败",
+                          content: `
+                            <div style="font-size: 20px; text-align: center;"> 人脸不匹配 </div>
+                          `,
+                          buttonText: '我知道了',
+                          buttonStyle: { color: '#f97d0e' },
+                          success () {
+                            console.log("签到失败")
+                            that.isQianDao = false
+                            let qianDaoInfo = {
+                              qianDaoStatus: that.isQianDao,
+                              qianDaoLocation: that.center
+                            }
+                            ui.setStorageSync('qianDaoInfo',qianDaoInfo)
+                          }
+                        })
+                      }
+                    }else{
+                      // 请求失败
+                      ui.showAlert({
+                        title: "签到失败",
+                        content: `
+                          <div style="font-size: 20px; text-align: center;"> 请求失败</br>请再次尝试 </div>
+                        `,
+                        buttonText: '我知道了',
+                        buttonStyle: { color: '#f97d0e' },
+                        success () {
+                          console.log("签到失败")
+                          that.isQianDao = false
+                          let qianDaoInfo = {
+                            qianDaoStatus: that.isQianDao,
+                            qianDaoLocation: that.center
+                          }
+                          ui.setStorageSync('qianDaoInfo',qianDaoInfo)
+                        }
+                      })
+                    }
+                  },
+                  fail: function ({ errMsg }) {
+                    
+                    ui.hideLoading()
+                    ui.showToast({ title: '上传对比失败' })
+                    console.log("上传对比失败：",errMsg)
+                  }
+                })
+
+            })
+            .catch(function (err){
+                // 处理失败会执行
+                console.log("压缩失败",err)
+                
+            })
+            .always(function () {
+                // 不管是成功失败，都会执行
+                console.log("执行压缩")
+            });
+         
+          },
+          fail: function (res) {
+            console.log("选择照片失败:", res)
+          }
+        })
+
+        
+      }
+      
+    },
+    nowTimes () {
+      this.time = dayjs().format("mm:ss")
+    }
+  
+  },
+  mounted() {
+    console.log("签到 mounted")
+
+    this.init()
+    console.log('当前时间：', dayjs())
+    setInterval(this.nowTimes, 1000);
+  
+  }
+}
+
+</script>
+
+<style lang="less">
+
+.nav_bar {
+  background: #fff;
+  .ui-icon {
+    color: #1890ff;
+  }
+  .nav_title {
+    color: #000;
+    font-size: 32rpx;
+    font-weight: bold;
+  }
+  .nav_right{
+    color: #1890ff;
+    font-size: 16px;
+  }
+}
+
+.qiandao_windows {
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.header_top {
+  background: #fff;
+  .login {
+    color: #000;
+    font-size: 16px;
+  }
+  .login_after {
+      color: #000;
+      font-size: 12px;
+  }
+
+}
+.map-content {
+  flex-grow: 1;
+  background-color: #fff; 
+  // .mix-flex-center();
+}
+.amap-logo {
+  bottom:-100px;
+  // display: none;
+} 
+.amap-copyright {
+  bottom:-100px;
+  // display: none;
+}  
+
+.fixed-view-content {
+  padding: 0 6px;
+  border-radius:50%;
+  width:140px !important;
+  height: 140px;
+  // line-height: 140px;
+  padding-top:38px;
+  text-align: center;
+  color: #fff;
+  font-size: 20px;
+  background-color: @theme-color;
+  z-index: 99;
+}
+</style>

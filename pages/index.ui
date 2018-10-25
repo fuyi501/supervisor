@@ -44,7 +44,7 @@
       </ui-row>
       <ui-row height="40" class="info_footer">
         <ui-col span=1 vertical-align="middle" align="left" space-left=10>
-          <ui-icon type="gonggao3" color="#F66542" size="24"></ui-icon>
+          <ui-icon type="shigong" color="#F66542" size="20"></ui-icon>
         </ui-col>
         <ui-col vertical-align="middle" align="left" space-left=15>
           <ui-view>正在施工中</ui-view>
@@ -300,6 +300,31 @@
       // if(!this.isLogin){
       //   this.loginPage()
       // }
+
+      // 监听推送消息
+      ui.onPushClick(function (res) {
+        console.log("监听成功:",res)
+        let proName = res.payload.split(':')[1]
+
+        ui.request({
+          url: "http://119.23.30.32:9999/tram/getitems",
+          data: {
+            projectName: proName
+          },
+          method: 'GET',
+          dataType: 'jsonp',
+          success: function (result) {
+            console.log("推送监听请求结果result:",result)
+            ui.setStorageSync('itemInfo', result.data)
+            ui.navigateTo({
+              url: '/pages/attend/itemDetail'
+            })
+          },
+          fail: function ({ errMsg }) {
+          }
+        })
+      })
+
       window.setTimeout(() => {
         ui.closeSplashscreen()
       }, 1000)
