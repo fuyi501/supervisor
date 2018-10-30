@@ -57,7 +57,10 @@ export default {
     this.src2 = this.makeQRCode2("https://github.com/neocotic/qrious")    
 
     console.log('当前时间：', dayjs())
-
+    
+    console.log(dayjs('2018-10-14').diff(dayjs('2018-10-10'), 'days'))
+    console.log(dayjs('2019-10-10').diff(dayjs('2018-10-10'), 'months'))
+    console.log(dayjs('2022-10-10').diff(dayjs('2018-10-10'), 'years'))
   }
 }
 </script>

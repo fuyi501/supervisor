@@ -28,7 +28,7 @@ export default {
       "pages/contacts/contacts",
       "pages/application/signIn/signIn",
       "pages/application/kaoqin/kaoqin",
-      "pages/application/xuncha/xunCha","pages/application/pangZhan/pangZhan","pages/application/noticeLetter/noticeLetter","pages/application/noticeLetter/contactLetter","pages/application/noticeLetter/noticeReply","pages/application/noticeLetter/contactReply","pages/contacts/contactBook","pages/application/rizhi/rizhi","pages/application/items/createOrJoin","pages/application/items/createItems"],
+      "pages/application/xuncha/xunCha","pages/application/pangZhan/pangZhan","pages/application/noticeLetter/noticeLetter","pages/application/noticeLetter/contactLetter","pages/application/noticeLetter/noticeReply","pages/application/noticeLetter/contactReply","pages/contacts/contactBook","pages/application/rizhi/rizhi","pages/application/items/createOrJoin","pages/application/items/createItems","pages/application/items/drawAMap"],
     "theme": {
       "theme-color": "#3399ff"
     },

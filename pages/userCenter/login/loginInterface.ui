@@ -220,8 +220,6 @@
               // 同时将请求的数据保存到本地，这里有问题，稍后再看
               ui.setStorageSync('userinfo', userinfo)
               
-              
-              
             } else {
               ui.showToast({
                 title: result.data.desc

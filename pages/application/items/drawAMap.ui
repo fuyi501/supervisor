@@ -1,0 +1,646 @@
+<!--popicon4.ui-->
+<template>
+  <ui-page>
+
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" width="100" space-left="10" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="20"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">地图绘制</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" width="50" bindtap="refreshAMap">
+          <ui-view class="nav_right">刷新</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" width="50" space-right="10" bindtap="saveAndQuit">
+          <ui-view class="nav_right">保存</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-fixed-view style="z-index:1000" top="0">
+      <ui-pop-icon left="{{thisLeft}}" bindhide="dismiss" bindmaskhide="maskhide" top="{{thisTop + 50}}" background="transparent"
+        ui:model="toggle" class="pop-menu-demo4" animate="none">
+        <ui-view class="circle1" style="{{{display:display}}}"></ui-view>
+        <ui-view class="circle2" style="{{{display:display}}}"></ui-view>
+        <ui-pop-icon-item bindtap="closepopicon('清除图层')" item-color="#55ACEE" top="{{offsetY - 8}}" left="{{offsetX - 80}}">
+          <ui-view>清除</ui-view>
+          <ui-view>图层</ui-view>
+        </ui-pop-icon-item>
+        <ui-pop-icon-item bindtap="closepopicon('完成绘图')" item-color="#55ACEE" top="{{offsetY - 65}}" left="{{offsetX - 55}}">
+          <ui-view>完成</ui-view>
+          <ui-view>绘图</ui-view>
+        </ui-pop-icon-item>
+        <ui-pop-icon-item bindtap="closepopicon('新建绘图')" item-color="#55ACEE" top="{{offsetY - 95}}" left="{{offsetX }}">
+          <ui-view>新建</ui-view>
+          <ui-view>绘图</ui-view>
+        </ui-pop-icon-item>
+        <ui-pop-icon-item bindtap="closepopicon('撤销')" item-color="#07C7A5" top="{{offsetY -195}}" left="{{offsetX + 10}}">
+          <ui-view style="line-height: 38px">撤销</ui-view>
+          <!-- <ui-view >撤销</ui-view>
+            <ui-view >一点</ui-view> -->
+        </ui-pop-icon-item>
+        <ui-pop-icon-item bindtap="closepopicon('显示距离')" item-color="#FFA95D" top="{{offsetY -65}}" left="{{offsetX - 170}}">
+          <ui-view>显示</ui-view>
+          <ui-view>距离</ui-view>
+        </ui-pop-icon-item>
+        <ui-pop-icon-item bindtap="closepopicon('完成编辑')" item-color="#FA6470" top="{{offsetY -135}}" left="{{offsetX - 125}}">
+          <ui-view>完成</ui-view>
+          <ui-view>编辑</ui-view>
+        </ui-pop-icon-item>
+        <ui-pop-icon-item bindtap="closepopicon('编辑绘图')" item-color="#BA9CCC" top="{{offsetY -175}}" left="{{offsetX - 60}}">
+          <ui-view>编辑</ui-view>
+          <ui-view>绘图</ui-view>
+        </ui-pop-icon-item>
+        <ui-pop-icon-item bindtap="closepopicon('隐藏距离')" item-color="#98CF65" top="{{offsetY+5}}" left="{{offsetX - 195}}">
+          <ui-view>隐藏</ui-view>
+          <ui-view>距离</ui-view>
+        </ui-pop-icon-item>
+      </ui-pop-icon>
+    </ui-fixed-view>
+    <ui-fixed-view bottom="22" right="19" style="z-index:1000">
+      <ui-view class="togglebtn {{toggleicon}}" bindtap="togglepopicon">
+        <ui-icon type="add" size="24"></ui-icon>
+      </ui-view>
+    </ui-fixed-view>
+
+    <ui-view class="map-content">
+      <div id="container" style="{{  {height:mapHeight + 'px'} }}">
+      </div>
+    </ui-view>
+
+  </ui-page>
+</template>
+
+<script>
+  // 
+  export default {
+    config: {
+      navigationStyle: 'custom',
+      backgroundColor: '#F4F4F4',
+      cache: true
+    },
+    data() {
+      return {
+        script: '', // 加载 高德地图的 script 标签对象
+        saveBtn: ui.WIN_WIDTH / 2,
+        // 地图配置
+        mapHeight: ui.DEFAULT_CONTENT_HEIGHT, // 地图高度，默认为页面内容高度
+        map: '', // 地图对象
+        mouseTool: '', // 鼠标工具
+        center: [103.986162, 30.764893],
+        isEdit: false, // 是否可编辑
+        isUndo: false, // 是否可撤销
+        isSDraw: false, // 是否开始绘图
+        lnglat: [], // 坐标点
+        scale: 'scale', // 比例尺对象
+        showScale: true, // 是否显示比例尺
+        polygon: '', // 多边形对象 
+        polyEditor: '', // 多边形编辑对象
+        polyonPoints: [], // 绘制的多边形的边界坐标
+        polyArea: 0, // 多边形面积
+        texts: [], // 显示距离的文本对象数组
+        polyOnEvent: null, // 绘制多边形的监听事件
+        plugin: 'AMap.ToolBar,AMap.Scale,AMap.MouseTool,AMap.PolyEditor', // 地图所用插件, 逗号相隔
+
+        // 扇形图标配置
+        toggle: false, // 扇形图标切换
+        thisLeft: window.innerWidth,
+        thisTop: window.innerHeight,
+        offsetX: -70,
+        offsetY: -110,
+        display: 'none',
+        canClick: true,
+        toggleicon: 'togglebtn'
+
+      }
+    },
+    methods: {
+      navigateBack() {
+        ui.showConfirm({
+          content: '地图尚未保存，您要离开么？',
+          confirmButtonText: '离开',
+          cancelButtonText: '继续绘制',
+          success: (result) => {
+            if (result.confirm) {
+              ui.offBackButtonClick({
+                listener: this.navigateBack
+              })
+              ui.navigateBack()
+            }
+          }
+        })
+      },
+      refreshAMap () {
+        this.init()
+      },
+      saveAndQuit () {
+        console.log("保存并退出")
+        let polyPoints = [];
+
+        if (this.polyonPoints.length > 0) {
+
+          for (let i = 0; i < this.polyonPoints.length; i++) {
+            polyPoints.push({
+              "index": i + 1,
+              "lat": this.polyonPoints[i].lat,
+              "lon": this.polyonPoints[i].lng
+            })
+          }
+
+          let aMapInfo = {
+            isamap: true,
+            polyPoints: polyPoints,
+            polyArea: this.polyArea
+          }
+          console.log("aMapInfo:", aMapInfo)
+          ui.setStorageSync('aMapInfo', aMapInfo)
+
+          ui.showToast({
+            title: '保存成功',
+            icon: 'success'
+          })
+          setTimeout(() => {
+            ui.navigateBack()
+          }, 1000)
+        } else {
+          ui.showToast({
+            title: '您还没有绘制地图，请先绘制地图再保存',
+            icon: 'success'
+          })
+        }
+
+      },
+      // 点击开始／关闭按钮
+      togglepopicon() {
+        if (this.toggle) {
+          if (this.canClick) {
+            this.toggleicon = 'closestyle'
+            this.display = 'none'
+            this.toggle = false
+            this.canClick = false
+          }
+        } else {
+          if (this.canClick) {
+            this.toggleicon = 'openstyle'
+            this.display = 'block'
+            this.toggle = true
+            setTimeout(() => {
+              this.canClick = true
+            }, 700)
+          }
+        }
+      },
+      // 点击每一项时
+      closepopicon(val) {
+        ui.showToast({
+          title: val
+        })
+        this.display = 'none'
+        this.toggleicon = 'closestyle'
+        this.toggle = false
+
+        if (val === '新建绘图') {
+          console.log("开始新建绘图")
+          if (!this.isSDraw) {
+            this.isSDraw = true
+            this.isUndo = true // 可撤销
+            this.isEdit = false // 不可编辑
+            this.polyDraw()
+          } else {
+            console.log("绘图已完成,保存之后再次绘制")
+            ui.showToast({
+              title: '绘图已完成,保存之后再次绘制'
+            })
+          }
+        }
+        if (val === '完成绘图') {
+          if (this.isSDraw) {
+            console.log("完成绘图")
+            this.isUndo = false // 不可撤销
+            this.isEdit = true // 可编辑
+            this.isSDraw = true // 完成绘图 
+            this.finishDraw()
+          }
+        }
+        if (val === '清除图层') {
+          console.log("清除图层")
+          this.isUndo = false // 不可撤销
+          this.isEdit = false // 不可编辑
+          this.isSDraw = false // 未新建绘图
+          this.cleanDraw()
+        }
+        if (val === '撤销') {
+          console.log("撤销")
+          if (this.isUndo) {
+            this.pointRevoke()
+          } else if (this.isEdit) {
+            ui.showToast({
+              title: '绘图完成后不可撤销'
+            })
+          } else {
+            ui.showToast({
+              title: '绘图完成后不可撤销'
+            })
+          }
+
+        }
+        if (val === '编辑绘图') {
+          console.log("编辑绘图")
+          if (this.isEdit) {
+            this.polyEdit()
+          } else if (this.isSDraw) {
+            ui.showToast({
+              title: '绘图状态下不可编辑'
+            })
+          } else {
+            ui.showToast({
+              title: '绘图未完成不可编辑'
+            })
+          }
+
+        }
+        if (val === '完成编辑') {
+          console.log("完成编辑")
+          if (this.isEdit) {
+            this.polyFinishEdit()
+          } else if (this.isSDraw) {
+            ui.showToast({
+              title: '绘图状态下不可编辑'
+            })
+          } else {
+            ui.showToast({
+              title: '绘图未完成不可编辑'
+            })
+          }
+        }
+        if (val === '显示距离') {
+          console.log("显示距离")
+          if (this.isSDraw) {
+            this.showDistance()
+          } else {
+            ui.showToast({
+              title: '未新建绘图不可用'
+            })
+          }
+
+        }
+        if (val === '隐藏距离') {
+          console.log("隐藏距离")
+          if (this.isSDraw) {
+            this.hideDistance()
+          } else {
+            ui.showToast({
+              title: '未新建绘图不可用'
+            })
+          }
+        }
+      },
+      // 点击遮罩触发，安卓回退时触发
+      dismiss() {
+        if (this.canClick) {
+          this.canClick = false
+          this.toggleicon = 'closestyle'
+          this.display = 'none'
+          this.toggle = false
+        }
+      },
+      // 设置mask延时的情况下，mask关闭时触发，安卓回退时触发
+      maskhide() {
+        this.canClick = true
+      },
+      // 初始化，完成地图加载
+      init() {
+        this.script = document.createElement("script")
+        this.script.type = "text/javascript"
+        this.script.src = "https://webapi.amap.com/maps?v=1.4.8&key=df579385937f9b125094f73fb9be7ff2&plugin=" + this.plugin,
+          document.body.appendChild(this.script)
+
+        this.script.onload = () => {
+          console.log("进来了")
+          //基本地图加载
+          this.map = new AMap.Map("container", {
+            resizeEnable: true,
+            dragEnable: true, //拖拽
+            // doubleClickZoom: true, //双击放大
+            center: this.center, //地图中心点
+            zoom: 12 //地图显示的缩放级别
+          });
+
+          // 同步加载 工具条 插件
+          this.toolbar = new AMap.ToolBar({
+            position: "LB",
+            offset: new AMap.Pixel(10, 140),
+            locate: true,
+            liteStyle: true,
+            noIpLocate: true, // 开启 ip 定位
+            autoPosition: true // 自动定位
+          });
+          this.map.addControl(this.toolbar);
+
+          // 加载 比例尺 插件
+          this.scale = new AMap.Scale({
+            visible: this.showScale
+          });
+          this.map.addControl(this.scale);
+
+          // 加载鼠标工具插件
+          this.mouseTool = new AMap.MouseTool(this.map);
+
+          // 初始化多边形绘制对象
+          this.polygon = new AMap.Polygon({
+            // path: this.polyonPoints,//设置多边形边界路径, 等待后面获取到坐标后设置
+            strokeColor: "#FF33FF", //线颜色
+            strokeOpacity: 0.2, //线透明度
+            strokeWeight: 3, //线宽
+            fillColor: "#1791fc", //填充色
+            fillOpacity: 0.35 //填充透明度
+          });
+
+          // 获取地理数据
+          let aMapInfo = ui.getStorageSync('aMapInfo')
+          console.log("绘制地图 aMapInfo:", aMapInfo)
+          if (aMapInfo !== null) {
+            console.log("配置地图数据")
+            var points = aMapInfo.polyPoints
+            var setPoints = []
+            for (let i = 0; i < points.length; i++) {
+              setPoints.push([points[i].lon, points[i].lat])
+            }
+            console.log("setPoints", setPoints)
+            this.polygon.setPath(setPoints)
+            console.log("this.map", this.map)
+            this.polygon.setMap(this.map)
+            this.polyonPoints = setPoints
+            this.isUndo = false // 不可撤销
+            this.isEdit = true // 可编辑
+            this.isSDraw = true // 完成绘图 
+          }
+
+          this.polyEditor = new AMap.PolyEditor(this.map, this.polygon)
+
+          // this.ismaploaded = true;
+          // map.setFitView() // 注释掉
+          console.log("地图初始化完成")
+          console.log("工具条", this.toolbar.getOffset()) //获取工具条相对于地图容器左上角的偏移量
+
+          // this.toolbar.setOffset(new AMap.Pixel(10,140))
+          // if(this.ismaploaded){
+          //   console.log(" 启动定位功能 ", this.ismaploaded)
+          //   this.autoGetLocation ()
+          // }
+          console.log("script:", this.script, "this.map:", this.map, "this.toolbar:", this.toolbar)
+
+          console.log("this.polygon:", this.polygon)
+
+        }
+      },
+      // 绘制多边形
+      polyDraw() {
+        let _this = this;
+        this.polyOnEvent = function (e) {
+          _this.lnglat = [e.lnglat.lng, e.lnglat.lat];
+          _this.polyonPoints.push(e.lnglat)
+          console.log("第", _this.polyonPoints.length, "个点：", _this.lnglat)
+          _this.polygon.setPath(_this.polyonPoints)
+          _this.polygon.setMap(_this.map);
+          _this.polyArea = _this.polygon.getArea();
+
+          // 编辑地图的时候动态显示 每条边的距离
+          _this.hideDistance()
+          _this.showDistance()
+        }
+        this.map.on('click', this.polyOnEvent);
+      },
+      // 撤销一个点
+      pointRevoke() {
+        this.hideDistance()
+        this.polyonPoints.pop()
+        this.polygon.setPath(this.polyonPoints)
+        this.polygon.setMap(this.map);
+        this.showDistance()
+        console.log("撤销轨迹点")
+      },
+      // 完成绘制
+      finishDraw() {
+        console.log("绘制完成")
+        this.polyArea = this.polygon.getArea()
+        this.map.off('click', this.polyOnEvent);
+      },
+      // 清空绘图
+      cleanDraw() {
+        this.mouseTool.close(true)
+        this.polyonPoints = []
+        this.polygon.setMap(null)
+        this.map.remove(this.texts)
+        this.polyArea = 0
+        console.log("清空绘图")
+      },
+      // 编辑地图
+      polyEdit() {
+        this.hideDistance()
+        // this.polyEditor = new AMap.PolyEditor(this.map, this.polygon);
+        this.polyEditor.open();
+
+        // 编辑地图的时候动态显示 每条边的距离
+        this.polyEditor.on("adjust", (e) => {
+          console.log("编辑地图")
+          this.hideDistance()
+          // this.showDistance()
+        })
+      },
+      // 完成编辑地图
+      polyFinishEdit() {
+        this.polyEditor.close();
+        this.polyArea = this.polygon.getArea()
+        this.hideDistance()
+        this.showDistance()
+        console.log("编辑之后所有轨迹点：", this.polyonPoints)
+      },
+      // 显示距离
+      showDistance() {
+
+        console.log("绘制的多边形的所有边的点：", this.polyonPoints)
+        let lnglats = this.polyonPoints;
+        console.log(lnglats)
+        let length = lnglats.length;
+        let text;
+        var lnglat1;
+        var lnglat2;
+        for (let i = 1; i < lnglats.length; i++) {
+          console.log(lnglats[i], lnglats[i - 1])
+          lnglat1 = new AMap.LngLat(lnglats[i].lng, lnglats[i].lat)
+          lnglat2 = new AMap.LngLat(lnglats[i - 1].lng, lnglats[i - 1].lat)
+          text = new AMap.Text({
+            text: Math.round(lnglat1.distance(lnglat2)) + '米',
+            position: lnglat1.divideBy(2).add(lnglat2.divideBy(2)),
+            map: this.map,
+            style: {
+              'border-color': 'green',
+              'font-size': '12px'
+            }
+          })
+          this.texts.push(text);
+        }
+
+        lnglat1 = new AMap.LngLat(lnglats[0].lng, lnglats[0].lat)
+        lnglat2 = new AMap.LngLat(lnglats[length - 1].lng, lnglats[length - 1].lat)
+        console.log(lnglats[0], lnglats[length - 1])
+        text = new AMap.Text({
+          text: Math.round(lnglat1.distance(lnglat2)) + '米',
+          position: lnglat1.divideBy(2).add(lnglat2.divideBy(2)),
+          map: this.map,
+          style: {
+            'border-color': 'green',
+            'font-size': '12px'
+          }
+        })
+        this.texts.push(text);
+        console.log("距离显示完成")
+      },
+      // 隐藏距离
+      hideDistance() {
+        this.map.remove(this.texts)
+      }
+
+    },
+    mounted() {
+      console.log("绘制地图 mounted")
+      try {
+        this.init() //初始化地图
+
+      } catch (e) {
+        console.log("异常：", e)
+      }
+    }
+  }
+</script>
+
+<style lang="less">
+  .nav_bar {
+    background: #fff;
+
+    .ui-icon {
+      color: #1890ff;
+    }
+
+    .nav_title {
+      color: #000;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .nav_right {
+      color: #1890ff;
+      font-size: 15px;
+    }
+  }
+
+  // 隐藏高德地图 logo
+  .amap-logo {
+    bottom: -100px;
+    // display: none;
+  }
+
+  .amap-copyright {
+    bottom: -100px;
+    // display: none;
+  }
+
+  // 导航栏文字
+  .nav_title {
+    color: #fff;
+    // font-weight: bold;
+  }
+
+  // 扇形图标的样式
+  .circle1 {
+    display: none;
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    padding: 20px;
+    position: absolute;
+    top: -233px;
+    left: -196px;
+    box-shadow: rgba(220, 234, 244, .8) -1px -3px 3px;
+    background-color: rgba(236, 245, 252, .5)
+  }
+
+  .circle2 {
+    display: none;
+    width: 540px;
+    height: 540px;
+    border-radius: 50%;
+    padding: 20px;
+    position: absolute;
+    top: -334px;
+    left: -284px;
+    box-shadow: rgba(220, 234, 244, .8) -1px -3px 3px;
+    background-color: rgba(236, 245, 252, .5)
+  }
+
+  .ui-icon-item {
+    color: #fff;
+
+    .ui-view {
+      line-height: 1.4
+    }
+  }
+
+  .togglebtn {
+    width: 53px;
+    height: 53px;
+    background-color: #126DFE; // #fdd15c
+    line-height: 53px;
+    color: #fff;
+    text-align: center;
+    border-radius: 50%;
+  }
+
+  .openstyle {
+    animation: open .5s;
+    animation-fill-mode: forwards;
+    animation-delay: .1s;
+  }
+
+  @keyframes open {
+    0% {
+      transform: rotate(0);
+    }
+
+    100% {
+      transform: rotate(45deg);
+    }
+  }
+
+  .closestyle {
+    animation: close .5s;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes close {
+    0% {
+      transform: rotate(45deg);
+    }
+
+    100% {
+      transform: rotate(0);
+    }
+  }
+
+  // 保存并退出按钮
+  .fixed-view-content {
+    padding: 0 6px;
+    border-radius: 30px;
+    width: 160px !important;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    color: #fff;
+    font-size: 20px;
+    background-color: @theme-color;
+    z-index: 99;
+  }
+</style>
