@@ -297,9 +297,7 @@
     },
     mounted() {
       this.getItems()
-      // if(!this.isLogin){
-      //   this.loginPage()
-      // }
+      
 
       // 监听推送消息
       ui.onPushClick(function (res) {
@@ -324,6 +322,21 @@
           }
         })
       })
+
+      let userinfo = ui.getStorageSync('userinfo')
+      console.log("工作首页 userinfo:", userinfo)
+      if(userinfo === null){
+        ui.navigateTo({
+          url: '/pages/userCenter/login/loginInterface'
+        })
+      }else{
+        if(!userinfo.isLogin){
+          ui.navigateTo({
+            url: '/pages/userCenter/login/loginInterface'
+          })
+        }
+      }
+      
 
       window.setTimeout(() => {
         ui.closeSplashscreen()

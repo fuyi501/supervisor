@@ -45,7 +45,8 @@ export default {
             { title: '首页原版', link: '/pages/testPages/example/indexTest' },
             { title: '上传cid', link: '/pages/test/setCid' },
             { title: '二维码', link: '/pages/testPages/example/qrcodeTest' },
-            { title: '系统状态栏', link: '/pages/testPages/example/statusBarTest' }
+            { title: '系统状态栏', link: '/pages/testPages/example/statusBarTest' },
+            { title: '加入项目', link: '/pages/application/items/createOrJoin' }
           ]
         }
       ]

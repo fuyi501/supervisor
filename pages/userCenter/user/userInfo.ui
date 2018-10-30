@@ -61,7 +61,7 @@
         手机
       </ui-col>
       <ui-col vertical-align="middle" align="right" space-right="15">
-        <ui-view class="active">{{ tel }}
+        <ui-view class="active">{{ userTel }}
           <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
         </ui-view>
       </ui-col>
@@ -337,7 +337,7 @@
       }
 
       this.tokenId = userinfo.tokenId
-      this.tel = userinfo.tel
+      this.userTel = userinfo.tel
       this.userId = userinfo.userId
 
       console.log("用户名：", this.userName)

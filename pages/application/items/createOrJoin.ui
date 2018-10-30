@@ -1,0 +1,98 @@
+<!---->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="20" color="#126DFE"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">开启智能办公之旅</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+    
+    <ui-view >
+      <ui-view class="without_img" style="{{ { height: Height + 'px'} }}">
+        <ui-view class="show_tip">
+          <ui-view class="title">创建项目或加入项目</ui-view>
+          <ui-view class="subtitle">开启智能监理之旅</ui-view>
+          <ui-icon type="items3" size="140" color="#ccc"></ui-icon>
+        </ui-view>
+      </ui-view>
+      <ui-view class="btn_content">
+        <ui-row>
+          <ui-col vertical-align="middle" align="center" space-right=10 bindtap="createItems">
+            <ui-button type="primary" bindtap="">创建项目</ui-button>
+          </ui-col>
+          <ui-col vertical-align="middle" align="center" space-left=10>
+            <ui-button type="primary" bindtap="">加入项目</ui-button>
+          </ui-col>
+        </ui-row>
+      </ui-view>
+    </ui-view>
+
+  </ui-page>
+</template>
+
+<script>
+export default {
+  config: {
+    navigationStyle: "custom"
+  },
+  data() {
+    return {
+      Height: ui.DEFAULT_CONTENT_HEIGHT * 0.8
+    }
+  },
+  methods: {
+    navigateBack () {
+      ui.navigateBack()
+    },
+    createItems () {
+      ui.navigateTo({
+        url: '/pages/application/items/createItems'
+      })
+    }
+  },
+  mounted() {
+    console.log('创建或者加入项目 mounted')
+  }
+}
+</script>
+
+<style lang="less">
+.nav_bar {
+  background: #fff;
+  .nav_title {
+    color: #000;
+    font-size: 36rpx;
+    font-weight: bold;
+  }
+}
+.without_img {
+  flex-grow: 1;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  text-align: center;
+  flex-grow: 1;
+  .title {
+    font-size: 24px;
+  }
+  .subtitle {
+    font-size: 16px;
+  }
+}
+.btn_content{
+  padding: 10px 20px 0 20px;
+  .ui-input{
+    border: 0;
+  }
+}
+
+</style>

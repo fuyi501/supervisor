@@ -77,11 +77,12 @@
 
 <script>
   // 注册接口
-  const registerUrl = 'https://api.estech.xyz:8533/auth/register'
+  const registerUrl = 'auth/register'
   // 登录接口
-  const loginUrl = 'https://api.estech.xyz:8533/auth/login'
+  const loginUrl = 'auth/login'
   // 密码加密
   import encryptRSA from '#/static/utils/security'
+  import dayjs from '#/static/utils/dayjs'
 
   export default {
     config: {
@@ -175,12 +176,12 @@
                 isLogin: true,
                 userName: result.data.data.profile.username,
                 nickName: result.data.data.profile.nickname,
-                userId: result.data.data.profile.employeeId,
+                userId: result.data.data.profile.employee_id,
                 tel: result.data.data.profile.tel,
                 tokenId: result.data.data.token,
-                isHasAvatar: result.data.data.profile.hasAvatar,
-                registerTime: '',
-                loginTime: '',
+                isHasAvatar: result.data.data.profile.has_avatar,
+                registerTime: dayjs(result.data.data.profile.create_at).format("YYYY-MM-DD HH:mm:ss"),
+                loginTime: result.data.data.loginTime,
                 faceImgBase64: '',
                 isHasFaceImg: false
               }
@@ -198,11 +199,28 @@
               })
 
               // 登录成功后关闭 dialog ，并将 userinfo 传递回去
-              ui.hideDialog({
-                userinfo: userinfo
+              // ui.hideDialog({
+              //   userinfo: userinfo
+              // })
+              console.log('成功')
+              
+              ui.switchTab({
+                url: '/pages/index',
+                success: () => {
+                  console.log('成功')
+                },
+                fail: ({errMsg}) => {
+                  console.log("登录失败：", errMsg)
+                },
+                complete: () => {
+                  console.log('complete')
+                }
               })
+
               // 同时将请求的数据保存到本地，这里有问题，稍后再看
               ui.setStorageSync('userinfo', userinfo)
+              
+              
               
             } else {
               ui.showToast({
