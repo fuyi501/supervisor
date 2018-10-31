@@ -298,7 +298,6 @@
     mounted() {
       this.getItems()
       
-
       // 监听推送消息
       ui.onPushClick(function (res) {
         console.log("监听成功:",res)

@@ -1,0 +1,260 @@
+<!---->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">考勤统计</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right">报表</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-tabs index="{{ currentTab }}"  bindchange="handleChange($event, 'currentTab')">
+      <ui-tab>日统计</ui-tab>
+      <ui-tab>月统计</ui-tab>
+      <ui-tab>我的</ui-tab>
+    </ui-tabs>
+    <ui-swiper current="{{ currentTab }}" bindchange="handleContentChange($event, 'currentTab')">
+      <!-- 日统计 -->
+      <ui-swiper-item>
+        <ui-view class="circular" >
+          <ui-circular
+              radius="80"
+              top="80"
+              left="80"
+              color="#1F97FE"
+              value="70"
+              line-width="10"
+              line-cap="round"
+              ></ui-circular>
+          <ui-view class="text">
+            <ui-text>打卡人数/应到人数</ui-text>
+            <ui-view>12/20</ui-view>
+            <ui-text>打卡详情</ui-text>
+          </ui-view>
+        </ui-view>
+
+        <ui-view class="day-box">
+          <ui-row space-top=0>
+            <ui-col span=12>
+              <ui-row border-bottom space-top=10 height=100>
+                <ui-col span=5 align="center" bindtap="">
+                    <ui-view class="number">3</ui-view>
+                    <ui-view class="numText">未打卡</ui-view>       
+                </ui-col>
+                <ui-col span=2 align="center" bindtap="">
+                    <ui-view class="number">5</ui-view>
+                    <ui-view class="numText">迟到</ui-view>           
+                </ui-col>
+                <ui-col span=5 align="center" bindtap="">
+                    <ui-view class="number">6</ui-view>
+                    <ui-view class="numText">外勤</ui-view>             
+                </ui-col>
+              </ui-row>
+            </ui-col>
+          </ui-row>
+        </ui-view>
+
+        <ui-view class="day-box2">
+          <ui-row space-top=0 height=60>
+            <ui-col vertical-align="middle" align="center" bindtap="">
+                <ui-view class="text">请假3人</ui-view>     
+            </ui-col>
+            <ui-col vertical-align="middle" align="center" bindtap="">
+                <ui-view class="text">请假3人</ui-view>         
+            </ui-col>
+            <ui-col vertical-align="middle" align="center" bindtap="">
+                <ui-view class="text">请假3人</ui-view>           
+            </ui-col>
+            <ui-col vertical-align="middle" align="center" bindtap="">
+                <ui-view class="text">请假3人</ui-view>          
+            </ui-col>
+          </ui-row>
+        </ui-view>
+      </ui-swiper-item>
+      <!-- 月统计 -->
+      <ui-swiper-item>
+        <ui-view class="day-box2">
+          <ui-row space-top=0 height=60>
+            <ui-col vertical-align="middle" align="center" bindtap="">
+                <ui-view class="text">请假3人</ui-view>     
+            </ui-col>
+            <ui-col vertical-align="middle" align="center" bindtap="">
+                <ui-view class="text">请假3人</ui-view>         
+            </ui-col>
+            <ui-col vertical-align="middle" align="center" bindtap="">
+                <ui-view class="text">请假3人</ui-view>           
+            </ui-col>
+            <ui-col vertical-align="middle" align="center" bindtap="">
+                <ui-view class="text">请假3人</ui-view>          
+            </ui-col>
+          </ui-row>
+        </ui-view>
+      </ui-swiper-item>
+      <!-- 我的 -->
+      <ui-swiper-item>
+        <ui-view class="day-box2">
+          <ui-row space-top=0 height=60>
+            <ui-col vertical-align="middle" align="left" bindtap="" space-left=10>
+                <ui-view>《 2018-10 》</ui-view> 
+            </ui-col>
+          </ui-row>
+        </ui-view>
+        <ui-view class="content_list">
+          <ui-view ui:for="{{ monthItem }}" class="{{ {'list_content':true}, {'grey-bg': index % 2 != 0}}}">
+            <ui-row height="30" style="margin-left:0px">
+              <ui-col align="left" span=2 vertical-align="middle" space-left="10">
+                <ui-text>{{ item }}</ui-text>
+              </ui-col>
+              <ui-col align="center" span=3 vertical-align="middle" space-left="10">
+                <ui-text style="color:#111">12:23</ui-text>
+              </ui-col>
+              <ui-col align="center" span=3 vertical-align="middle" space-right="10">
+                <ui-text style="color:#111">18:23</ui-text>
+              </ui-col>
+              <ui-col align="right" span=2 vertical-align="middle" space-right="10">
+                <ui-text style="color:#1F97FE">正常</ui-text>
+              </ui-col>
+              <ui-col align="left" span=2 vertical-align="middle" space-right="10">
+                <ui-text style="color:#1F97FE">正常</ui-text>
+              </ui-col>
+            </ui-row>
+          </ui-view>
+        </ui-view>
+        <ui-view style="width:200px;margin:0 auto;margin-bottom:50px;">
+          <ui-divider >没有新数据了</ui-divider>
+        </ui-view>
+      </ui-swiper-item>
+
+    </ui-swiper>
+
+    
+
+
+  </ui-page>
+</template>
+
+<script>
+import dayjs from '#/static/utils/dayjs'
+
+export default {
+  config: {
+    navigationStyle: 'custom',
+    backgroundColor: '#F6F6F6',
+  },
+  data() {
+    return {
+      currentTab: 0,
+      monthItem: [],
+    }
+  },
+  methods: {
+    // 返回按钮
+    navigateBack () {
+      ui.navigateBack()
+    },
+    handleChange (index, key) {
+      this[key] = index
+    },
+    handleContentChange (index, key) {
+      this[key] = index
+    }
+  },
+  mounted() {
+    this.monthItem = []
+    let cMonth = dayjs().month()
+    let days = dayjs().date()
+    for(let i=0; i<days; i++){
+      this.monthItem.push((cMonth+1) + '-' + (i+1))
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.nav_bar {
+  background: #fff;
+  .ui-icon {
+    color: #1890ff;
+  }
+  .nav_title {
+    color: #000;
+    font-size: 32rpx;
+    font-weight: bold;
+  }
+  .nav_right{
+    color: #1890ff;
+    font-size: 16px;
+  }
+}
+.ui-tabs{
+  background-color: #fff;
+  padding-bottom: 1px;
+}
+.circular{
+  background-color: #fff;
+  .mix-flex-center();
+  position: relative;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  // padding: 10px 0;
+  .text{
+    position: absolute;
+    text-align: center;
+    line-height: 30px;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    .ui-text{
+      font-size: 12px;
+      color: #a5a5a5;
+    }
+    .ui-view{
+      font-size: 30px;
+      font-weight: bold;
+      color: #000;
+      &.count{
+        color:#FF9900;
+      }
+    }
+  }
+}
+.day-box {
+  background-color: #fff;
+  // border-radius:10px;
+  // margin: 10px;
+  .number{
+    font-size: 30px;
+  }
+  .numText{
+    font-size: 14px;
+  }
+}
+.day-box2{
+  background-color: #fff;
+  .text{
+    height: 35px;
+    width: 80%;
+    line-height: 35px;
+    font-size: 14px;
+    color: #000;
+    background-color: #f0f0f0;
+    border-radius: 6px;
+  }
+}
+.grey-bg{
+  background-color: #fff;
+}
+.list_content{
+  height: 45px;
+  .mix-flex-y-center();
+}
+</style>
