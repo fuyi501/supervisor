@@ -42,7 +42,7 @@
           <ui-col vertical-align="middle" align="left" width="90">
             西南交大
           </ui-col>
-          <ui-col vertical-align="middle" align="right" space-right=10>
+          <ui-col vertical-align="middle" align="right" space-right=10 bindtap="refreshAMap">
             刷新
           </ui-col>
         </ui-row>
@@ -56,7 +56,7 @@
 
     </ui-view>
 
-    <ui-fixed-view bottom="40" right="{{ qiandao-70 }}" bindtap="faceCompare">
+    <ui-fixed-view bottom="100" right="{{ qiandao-70 }}" bindtap="faceCompare">
       <ui-view class="fixed-view-content">
         <ui-row>签到</ui-row>
         <ui-row> {{ time }} </ui-row>
@@ -133,7 +133,7 @@ export default {
       },
       show: true,
       show10: false,
-      height: ui.DEFAULT_CONTENT_HEIGHT,
+      height: ui.DEFAULT_CONTENT_HEIGHT - 57,
       //签到数据
       isQianDao: false, // 是否已签到，默认为 false
       qiandao: ui.WIN_WIDTH/2, // 签到按钮位于屏幕中间
@@ -141,7 +141,7 @@ export default {
       sizeType: 'original', // 原图或者压缩
       time: '',
       //地图数据
-      mapHeight: ui.DEFAULT_CONTENT_HEIGHT-80+4,
+      mapHeight: ui.DEFAULT_CONTENT_HEIGHT-80-57+4,
       ismaploaded: false,
       map: '', // 高德地图对象
       script: '', // script 对象
@@ -167,6 +167,9 @@ export default {
   methods: {
     navigateBack () {
       ui.navigateBack()
+    },
+    refreshAMap () {
+      this.init()
     },
     init () {
       this.script = document.createElement("script")
