@@ -1,0 +1,156 @@
+<!---->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">监理工作联系单</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right">更多</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <!-- 应用 -->
+    <ui-view class="app_box">
+      <ui-row space-top=0 >
+        <ui-col span=12>
+          <ui-row>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openSendContactLetter">
+                <ui-icon type="shenpi3" color="#ffa940" size="40"></ui-icon>    
+                <ui-view class="app_text">我发出的</ui-view>       
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openReceiveContactLetter">
+                <ui-icon type="chucha1" color="#ffa940" size="40"></ui-icon>    
+                <ui-view class="app_text">我收到的</ui-view>           
+            </ui-col>
+          </ui-row>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+    <!-- 应用 -->
+    <ui-row height="60" class="contacts_list1" space-top=10 bindtap="writeContactLetter">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon">
+          <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">填写监理工作联系单</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
+        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+      </ui-col>
+    </ui-row>
+
+
+  </ui-page>
+</template>
+
+<script>
+  export default {
+    config: {
+      navigationStyle: 'custom',
+      backgroundColor: '#fafafa',
+    },
+    data() {
+      return {
+        
+      }
+    },
+    methods: {
+      navigateBack() {
+        ui.navigateBack()
+      },
+      // 我发出的监理工作联系单
+      openSendContactLetter () {
+        ui.navigateTo({
+          url: '/pages/application/contactLetter/sendContactLetter'
+        })
+      },
+      // 我接收的监理工作联系单
+      openReceiveContactLetter () {
+        ui.navigateTo({
+          url: '/pages/application/contactLetter/receiveContactLetter'
+        })
+      },
+      // 填写监理工作联系单
+      writeContactLetter () {
+        ui.navigateTo({
+          url: '/pages/application/contactLetter/writeContactLetter'
+        })
+      }
+    },
+    mounted() {
+      console.log("我的审批 mounted")
+    }
+  }
+</script>
+
+<style lang="less">
+  .nav_bar {
+    background: #fff;
+
+    .ui-icon {
+      color: #1890ff;
+    }
+
+    .nav_title {
+      color: #000;
+      font-size: 32rpx;
+      font-weight: bold;
+    }
+
+    .nav_right {
+      color: #1890ff;
+      font-size: 16px;
+    }
+  }
+
+  .app_box {
+    background-color: #fff;
+    padding-bottom: 15px;
+    // .mix-1px(0, 0, 1, 0, #ccc); /* 下边1像素细线 */
+    
+    .centerInfo {
+      height: 30px;
+      line-height: 30px;
+        .ui-col-content {
+          font-weight: bold;
+          font-size: 14px;
+        }
+    }
+    .app_list {
+      height:80px;
+    }
+    .app_text {
+      font-size: 12px;
+    }
+  }
+.contacts_list1 {
+  background-color: #fff;
+  .left_icon{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color:#FCB300; 
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    font-size: 16px;
+  }
+  .text_content {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: #24292C;
+  }
+}
+</style>

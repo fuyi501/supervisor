@@ -22,12 +22,12 @@
         <ui-col vertical-align="middle" align="left" width="160" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            承包单位项目经理部
+            项目部
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <ui-input
-            placeholder="请输入承包单位名称"
+            placeholder="请输入项目监理机构名称"
             placeholder-style="color:#999B9E"
             show-clear="{{false}}"
             ui:model="{{ companyName }}"
@@ -36,15 +36,63 @@
       </ui-row>
 
       <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="90" space-left="10">
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            通知时间
+            联系单编号
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <ui-view class="">
-           {{ noticeTime }}
+           {{ contactNumber }}
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="90" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            施工单位
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-input
+            placeholder="请输入施工单位名称"
+            placeholder-style="color:#999B9E"
+            show-clear="{{false}}"
+            ui:model="{{ constructionUnit }}"
+          ></ui-input>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="90" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            项目经理
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-input
+            placeholder="请输入项目经理名称"
+            placeholder-style="color:#999B9E"
+            show-clear="{{false}}"
+            ui:model="{{ projectManager }}"
+          ></ui-input>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="90" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            回复时间
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-view class="">
+           {{ contactReplyTime }}
           </ui-view>
         </ui-col>
       </ui-row>
@@ -53,62 +101,40 @@
         <ui-col vertical-align="middle" align="left" width="120" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            整改时限
+            整改部位
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <ui-input
-            placeholder="请输入整改时限"
+            placeholder="请输入整改部位"
             placeholder-style="color:#999B9E"
             show-clear="{{true}}"
-            ui:model="{{ timeLimit }}"
+            ui:model="{{ contactReplyPosition }}"
           ></ui-input>
-        </ui-col>
-      </ui-row>
-
-      <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="15" space-left="10">
-          <ui-view>
-            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" space="20">
-          <ui-switch title="存在质量隐患" bindchange="qualitySwitchChange"></ui-switch>
-        </ui-col>
-      </ui-row>
-
-      <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="15" space-left="10">
-          <ui-view>
-            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" space="20">
-          <ui-switch title="存在安全隐患" bindchange="safeSwitchChange"></ui-switch>
         </ui-col>
       </ui-row>
 
       <ui-view style="margin-top:10px" class="detail_description">
         <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-        <ui-text>事由（说明、关键词）</ui-text>
+        <ui-text>检查内容</ui-text>
         <ui-textarea 
           maxlength="-1" 
           auto-height
-          placeholder="请输入事由描述"
+          placeholder="请输入检查内容"
           placeholder-style="color:#999B9E" 
-          ui:model="{{ noticeReason }}">
+          ui:model="{{ contactReplyCheckContent }}">
         </ui-textarea>
       </ui-view>
 
       <ui-view style="margin-top:10px" class="detail_description">
         <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-        <ui-text>通知内容</ui-text>
+        <ui-text>整改情况</ui-text>
         <ui-textarea 
           maxlength="-1" 
           auto-height
-          placeholder="请输入通知内容"
+          placeholder="请输入整改情况"
           placeholder-style="color:#999B9E" 
-          ui:model="{{ noticeContent }}">
+          ui:model="{{ rectificationContent }}">
         </ui-textarea>
       </ui-view>
 
@@ -163,17 +189,18 @@ export default {
   },
   data () {
     return {
-      pageTitle: '新增监理工程师通知单',
+      pageTitle: '监理工程师联系回复单',
       pageTitleRight: '更多',
-      companyName: '沪通铁路工程IV标项目部',
-      noticeTime: '', // 通知时间
-      timeLimit: '3日内将整改完成并进行回复', // 整改时限
-      // 质量和安全问题
-      isQuality: false,
-      isSafe: false,
-      // 通知单事由和通知内容
-      noticeReason: '', // 通知事由
-      noticeContent: '', // 通知内容
+      companyName: '监理三分部', // 项目部
+      contactNumber: '126号', // 联系单编号
+      constructionUnit: '', // 施工单位
+      projectManager: '', // 项目经理
+      contactReplyTime: '', // 联系单回复时间
+      contactReplyPosition: '二号隧道', // 整改部位
+    
+      // 联系单回复检查内容
+      contactReplyCheckContent: '', // 检查内容
+      rectificationContent: '', // 整改情况
 
       // 附件
       accessoryContent: [],
@@ -228,13 +255,13 @@ export default {
     // 提交
     submit () {
       if (this.companyName === '') {
-        ui.showToast({ title: '请输入承包单位名称' })
-      } else if (this.timeLimit === '') {
-        ui.showToast({ title: '请输入整改时限' })
-      } else if (this.noticeReason === '') {
-        ui.showToast({ title: '请输入通知单事由' })
-      } else if (this.noticeContent === '') {
-        ui.showToast({ title: '请输入通知内容' })
+        ui.showToast({ title: '请输入项目部名称' })
+      } else if (this.constructionUnit === '') {
+        ui.showToast({ title: '请输入施工单位' })
+      } else if (this.projectManager === '') {
+        ui.showToast({ title: '请输入项目经理' })
+      } else if (this.rectificationContent === '') {
+        ui.showToast({ title: '请输入整改情况' })
       } else {
        this.paySubmit()
       }
@@ -248,7 +275,7 @@ export default {
   },
   mounted () {
     
-    this.noticeTime = dayjs().format("YYYY-MM-DD HH:mm")
+    this.contactReplyTime = dayjs().format("YYYY-MM-DD HH:mm")
 
   }
 }

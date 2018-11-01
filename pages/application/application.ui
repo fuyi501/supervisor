@@ -67,6 +67,26 @@
                 <ui-view class="app_text">补卡</ui-view>             
             </ui-col>
           </ui-row>
+
+          <ui-row>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openApproval">
+                <ui-icon type="shenpi1" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">审批</ui-view>           
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <!-- <ui-icon type="rizhi3" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text"></ui-view> -->
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <!-- <ui-icon type="pangzhan" color="#28aa91" size="30"></ui-icon> 
+                <ui-view class="app_text"></ui-view>  -->
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <!-- <ui-icon type="xuncha" color="#fc9153" size="30"></ui-icon>    
+                <ui-view class="app_text"></ui-view>              -->
+            </ui-col>
+          </ui-row>
+          
         </ui-col>
       </ui-row>
     </ui-view>
@@ -82,11 +102,10 @@
       </ui-row>
       <ui-row space-top=0 >
         <ui-col span=12>
-          
           <ui-row>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openXunCha">
-                <ui-icon type="xuncha" color="#fc9153" size="30"></ui-icon>    
-                <ui-view class="app_text">巡查记录</ui-view>             
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openRiZhi">
+                <ui-icon type="rizhi3" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">监理日志</ui-view>
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openPangZhan">
                 <ui-icon type="pangzhan" color="#28aa91" size="30"></ui-icon> 
@@ -96,28 +115,28 @@
                 <ui-icon type="gonggao3" color="#28aa91" size="30"></ui-icon>    
                 <ui-view class="app_text">监理通知单</ui-view>       
             </ui-col>
-            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="openContact">
-                <ui-icon type="gonggao3" color="#ff525d" size="30"></ui-icon>    
-                <ui-view class="app_text">监理联系单</ui-view>           
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openNoticeReply">
+                <ui-icon type="gonggao3" color="red" size="30"></ui-icon>    
+                <ui-view class="app_text">通知回复单</ui-view>              
             </ui-col>
           </ui-row>
 
           <ui-row>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openRiZhi">
-                <ui-icon type="rizhi3" color="#ff525d" size="30"></ui-icon>    
-                <ui-view class="app_text">日志</ui-view>
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="openContact">
+                <ui-icon type="gonggao3" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">监理联系单</ui-view>           
             </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openApproval">
-                <ui-icon type="shenpi1" color="#ff525d" size="30"></ui-icon>    
-                <ui-view class="app_text">审批</ui-view>           
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openContactReply">
+                <ui-icon type="gonggao3" color="#28aa91" size="30"></ui-icon>    
+                <ui-view class="app_text">联系回复单</ui-view>       
             </ui-col>
-            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="yanshou1" color="#ff525d" size="30"></ui-icon>    
-                <ui-view class="app_text">验收</ui-view>           
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openXunCha">
+                <ui-icon type="xuncha" color="#fc9153" size="30"></ui-icon>    
+                <ui-view class="app_text">巡查记录</ui-view>             
             </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openReply">
-                <ui-icon type="gonggao3" color="red" size="30"></ui-icon>    
-                <ui-view class="app_text">回复单</ui-view>              
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <!-- <ui-icon type="shenpi1" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text"></ui-view>            -->
             </ui-col>
           </ui-row>
           
@@ -134,12 +153,16 @@
           项目管理
         </ui-col>
       </ui-row>
-      <ui-row space-top=0 >
+      <ui-row space-top=0>
         <ui-col span=12>
           <ui-row>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openContactReply">
-                <ui-icon type="gonggao3" color="#28aa91" size="30"></ui-icon>    
-                <ui-view class="app_text">联系回复单</ui-view>       
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="rizhi2" color="red" size="30"></ui-icon>    
+                <ui-view class="app_text">汇报</ui-view>              
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="ribao1" color="#8bb93f" size="30"></ui-icon>    
+                <ui-view class="app_text">日报</ui-view>             
             </ui-col>
             <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
                 <ui-icon type="zhoubao1" color="#ff525d" size="30"></ui-icon>    
@@ -149,13 +172,13 @@
                 <ui-icon type="yuebao" color="red" size="30"></ui-icon>    
                 <ui-view class="app_text">月报</ui-view>              
             </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="gonggao3" color="#8bb93f" size="30"></ui-icon>    
-                <ui-view class="app_text">通知单</ui-view>             
-            </ui-col>
           </ui-row>
 
           <ui-row>
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="yanshou1" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">验收</ui-view>           
+            </ui-col>
             <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
                 <ui-icon type="safe2" color="#fc9153" size="30"></ui-icon>    
                 <ui-view class="app_text">安全</ui-view>             
@@ -165,12 +188,8 @@
                 <ui-view class="app_text">质量</ui-view> 
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="gonggao3" color="#8bb93f" size="30"></ui-icon>    
-                <ui-view class="app_text">联系回复单</ui-view>             
-            </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="rizhi2" color="red" size="30"></ui-icon>    
-                <ui-view class="app_text">汇报</ui-view>              
+                <!-- <ui-icon type="gonggao3" color="#8bb93f" size="30"></ui-icon>     -->
+                <!-- <ui-view class="app_text">联系回复单</ui-view>              -->
             </ui-col>
           </ui-row>
         </ui-col>
@@ -271,25 +290,25 @@ export default {
     // 监理工程师通知单
     openNotice () {
       ui.navigateTo({
-        url: '/pages/application/noticeLetter/noticeLetter'
+        url: '/pages/application/noticeLetter/noticeIndex'
       })
     },
     // 监理工作联系单
     openContact () {
       ui.navigateTo({
-        url: '/pages/application/noticeLetter/contactLetter'
+        url: '/pages/application/contactLetter/contactIndex'
       })
     },
     // 通知回复单
-    openReply () {
+    openNoticeReply () {
       ui.navigateTo({
-        url: '/pages/application/noticeLetter/noticeReply'
+        url: '/pages/application/noticeLetter/noticeReplyIndex'
       })
     },
     // 联系回复单
     openContactReply () {
       ui.navigateTo({
-        url: '/pages/application/noticeLetter/contactReply'
+        url: '/pages/application/contactLetter/contactReplyIndex'
       })
     },
     // 日志

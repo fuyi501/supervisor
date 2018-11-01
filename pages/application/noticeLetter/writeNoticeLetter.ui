@@ -22,7 +22,7 @@
         <ui-col vertical-align="middle" align="left" width="160" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            单位项目部
+            承包单位项目经理部
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
@@ -39,12 +39,12 @@
         <ui-col vertical-align="middle" align="left" width="90" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            联系时间
+            通知时间
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <ui-view class="">
-           {{ contactTime }}
+           {{ noticeTime }}
           </ui-view>
         </ui-col>
       </ui-row>
@@ -96,19 +96,19 @@
           auto-height
           placeholder="请输入事由描述"
           placeholder-style="color:#999B9E" 
-          ui:model="{{ contactReason }}">
+          ui:model="{{ noticeReason }}">
         </ui-textarea>
       </ui-view>
 
       <ui-view style="margin-top:10px" class="detail_description">
         <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-        <ui-text>联系内容</ui-text>
+        <ui-text>通知内容</ui-text>
         <ui-textarea 
           maxlength="-1" 
           auto-height
-          placeholder="请输入联系内容"
+          placeholder="请输入通知内容"
           placeholder-style="color:#999B9E" 
-          ui:model="{{ contactContent }}">
+          ui:model="{{ noticeContent }}">
         </ui-textarea>
       </ui-view>
 
@@ -163,17 +163,17 @@ export default {
   },
   data () {
     return {
-      pageTitle: '新增监理工作联系单',
+      pageTitle: '监理工程师通知单',
       pageTitleRight: '更多',
       companyName: '沪通铁路工程IV标项目部',
-      contactTime: '', // 联系时间
+      noticeTime: '', // 通知时间
       timeLimit: '3日内将整改完成并进行回复', // 整改时限
       // 质量和安全问题
       isQuality: false,
       isSafe: false,
-      // 联系单事由和联系内容
-      contactReason: '', // 联系事由
-      contactContent: '', // 联系内容
+      // 通知单事由和通知内容
+      noticeReason: '', // 通知事由
+      noticeContent: '', // 通知内容
 
       // 附件
       accessoryContent: [],
@@ -231,10 +231,10 @@ export default {
         ui.showToast({ title: '请输入承包单位名称' })
       } else if (this.timeLimit === '') {
         ui.showToast({ title: '请输入整改时限' })
-      } else if (this.contactReason === '') {
-        ui.showToast({ title: '请输入联系单事由' })
-      } else if (this.contactContent === '') {
-        ui.showToast({ title: '请输入联系内容' })
+      } else if (this.noticeReason === '') {
+        ui.showToast({ title: '请输入通知单事由' })
+      } else if (this.noticeContent === '') {
+        ui.showToast({ title: '请输入通知内容' })
       } else {
        this.paySubmit()
       }
@@ -248,7 +248,7 @@ export default {
   },
   mounted () {
     
-    this.contactTime = dayjs().format("YYYY-MM-DD HH:mm")
+    this.noticeTime = dayjs().format("YYYY-MM-DD HH:mm")
 
   }
 }

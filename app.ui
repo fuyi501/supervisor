@@ -39,19 +39,22 @@ export default {
       "pages/application/approval/approval",
       "pages/application/xuncha/xunCha",
       "pages/application/pangZhan/pangZhan",
-      "pages/application/noticeLetter/noticeLetter",
-      "pages/application/noticeLetter/contactLetter",
-      "pages/application/noticeLetter/noticeReply",
-      "pages/application/noticeLetter/contactReply",
+      "pages/application/noticeLetter/writeNoticeLetter",
+      "pages/application/contactLetter/writeContactLetter",
+      "pages/application/noticeLetter/writeNoticeReply",
+      "pages/application/contactLetter/writeContactReply",
       "pages/application/rizhi/rizhi",
       "pages/application/items/createOrJoin",
       "pages/application/items/createItems",
       "pages/application/items/drawAMap",
       // "pages/application/kaoqin/kaoqin",
       // "pages/application/kaoqin/kqStatistics",
-      // "pages/application/signIn/signIn",
-      // "pages/application/signIn/signInStatistics"
-      ],
+      "pages/application/signIn/signIn",
+      "pages/application/signIn/signInStatistics"
+      ,"pages/application/approval/approvalRecord",
+      "pages/application/approval/myApproval",
+      "pages/application/contactLetter/contactIndex",
+      "pages/application/noticeLetter/noticeIndex","pages/application/noticeLetter/noticeReplyIndex","pages/application/contactLetter/contactReplyIndex","pages/application/noticeLetter/sendNoticeLetter","pages/application/noticeLetter/receiveNoticeLetter","pages/application/noticeLetter/sendNoticeReply","pages/application/noticeLetter/receiveNoticeReply","pages/application/contactLetter/sendContactLetter","pages/application/contactLetter/receiveContactLetter","pages/application/contactLetter/sendContactReply","pages/application/contactLetter/receiveContactReply"],
     "theme": {
       "theme-color": "#3399ff"
     },
@@ -104,25 +107,6 @@ export default {
           },
           {
             "pagePath": "pages/application/kaoqin/kqStatistics",
-            "iconName": "daka4",
-            "text": "统计"
-          }
-        ]
-      },
-      {
-        "id": "qiandao",
-        "color": "#7a7e83",
-        "selectedColor": "#39f",
-        "borderColor": "rgba(231, 231, 231, 0.6)",
-        "backgroundColor": "#fff",
-        "list": [
-          {
-            "pagePath": "pages/application/signIn/signIn",
-            "iconName": "daka2",
-            "text": "考勤"
-          },
-          {
-            "pagePath": "pages/application/signIn/signInStatistics",
             "iconName": "daka4",
             "text": "统计"
           }

@@ -77,6 +77,15 @@ import qrious from '#/static/utils/qrious'
       },
       navigateBack() {
         this.setScreenBrightness(this.screenValue / 100)
+        
+        ui.offBackButtonClick({
+          listener: this.navigateBack,
+          success () {
+            console.log('取消监听')
+            ui.showToast({ title: '取消监听', icon: 'success' })
+          }
+        })
+        
         ui.navigateBack()
       },
       makeQRCode2 (data) {
@@ -106,6 +115,8 @@ import qrious from '#/static/utils/qrious'
       this.qrcode = this.makeQRCode2("https://github.com/neocotic/qrious")    
 
       this.setScreenBrightness(80/100)
+
+      ui.onBackButtonClick(this.navigateBack)
 
     }
   }

@@ -12,8 +12,8 @@
         <ui-col vertical-align="middle" align="center">
           <ui-view class="nav_title">签到</ui-view>
         </ui-col>
-        <ui-col vertical-align="middle" align="center" width="50">
-          <ui-view class="nav_right">更多</ui-view>
+        <ui-col vertical-align="middle" align="center" width="50" bindtap="openStatistics" >
+          <ui-view class="nav_right">统计</ui-view>
         </ui-col>
       </ui-row>
     </ui-nav-bar>
@@ -35,7 +35,7 @@
             平头哥工作室
           </ui-col>
         </ui-row>
-        <ui-row height="40" class="header_top" border-bottom>
+        <ui-row height="40" class="header_top">
           <ui-col vertical-align="middle" align="center" width="36" space-left="10">
             <ui-icon type="map1" size="20" color="#ccc"></ui-icon> 
           </ui-col>
@@ -56,7 +56,7 @@
 
     </ui-view>
 
-    <ui-fixed-view bottom="100" right="{{ qiandao-70 }}" bindtap="faceCompare">
+    <ui-fixed-view bottom="40" right="{{ qiandao-70 }}" bindtap="faceCompare">
       <ui-view class="fixed-view-content">
         <ui-row>签到</ui-row>
         <ui-row> {{ time }} </ui-row>
@@ -75,7 +75,7 @@ export default {
   config: {
     navigationStyle: 'custom',
     navigationBarTitleText: '签到',
-    backgroundColor: '#F4F4F4',
+    // backgroundColor: '#F4F4F4',
     cache: true
     // navigationBarTextStyle: 'black',
     // disableScroll:true
@@ -133,7 +133,7 @@ export default {
       },
       show: true,
       show10: false,
-      height: ui.DEFAULT_CONTENT_HEIGHT - 57,
+      height: ui.DEFAULT_CONTENT_HEIGHT,
       //签到数据
       isQianDao: false, // 是否已签到，默认为 false
       qiandao: ui.WIN_WIDTH/2, // 签到按钮位于屏幕中间
@@ -141,7 +141,7 @@ export default {
       sizeType: 'original', // 原图或者压缩
       time: '',
       //地图数据
-      mapHeight: ui.DEFAULT_CONTENT_HEIGHT-80-57+4,
+      mapHeight: ui.DEFAULT_CONTENT_HEIGHT - 80 - 10,
       ismaploaded: false,
       map: '', // 高德地图对象
       script: '', // script 对象
@@ -167,6 +167,11 @@ export default {
   methods: {
     navigateBack () {
       ui.navigateBack()
+    },
+    openStatistics () {
+      ui.navigateTo({
+        url: '/pages/application/signIn/signInStatistics'
+      })
     },
     refreshAMap () {
       this.init()
@@ -413,7 +418,7 @@ export default {
       
     },
     nowTimes () {
-      this.time = dayjs().format("mm:ss")
+      this.time = dayjs().format("HH:mm:ss")
     }
   
   },
@@ -466,6 +471,7 @@ export default {
 
 }
 .map-content {
+  margin: 0px 5px 0px;
   flex-grow: 1;
   background-color: #fff; 
   // .mix-flex-center();

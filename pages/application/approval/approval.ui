@@ -3,216 +3,172 @@
   <ui-page>
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
-        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
-          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <ui-view class="nav_title">我的审批</ui-view>
+          <ui-view class="nav_title">审批</ui-view>
         </ui-col>
-        <ui-col vertical-align="middle" align="center" width="50"></ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right">更多</ui-view>
+        </ui-col>
       </ui-row>
     </ui-nav-bar>
-      <ui-tab-view class="type-badge">
-        <template slot="header">
-          <ui-tab-view-header>
-            <ui-view>请假</ui-view>
-          </ui-tab-view-header>
-          <ui-tab-view-header>
-            <ui-view>补签</ui-view>
-          </ui-tab-view-header>
-        </template>
-        <template slot="body">
-          <ui-tab-view-body 
-          enable-reach-bottom-load="{{loadMore}}"
-          on-load-more="{{ handleLoadMore }}">
-            
-            <ui-view class="info_list">
-              <ui-row height="100" class="top_tip" border-bottom ui:for="{{ qingJiaList }}" ui:for-item="item">
-                <ui-col width="60" align="center" style="padding-top:6px">
-                  <ui-view class="left_icon">假</ui-view>
-                </ui-col>
-                <ui-col class="text" align="left" vertical-align="middle" space="10">
-                  <ui-view style="width: 100%;">
-                    <ui-row height="30">
-                      <ui-col align="left" vertical-align="middle">
-                        <ui-text>请假批号: {{ item.payId }}</ui-text>
-                      </ui-col>
-                      <ui-col align="right" width="100" vertical-align="middle" space-right="10">
-                        <ui-view>{{ getLocalTime(item.createTime) }}</ui-view>
-                      </ui-col>
-                    </ui-row>
-                    <ui-view>请假天数：{{ item.daynumber }}</ui-view>
-                    <ui-view>审批人：{{ item.shenpiren }}</ui-view>
-                    <ui-view style="color:red;" >审批中</ui-view>
-                  </ui-view>
-                </ui-col>
-              </ui-row>
-            </ui-view>
 
-            <ui-view style="width:200px;margin:0 auto;">
-              <ui-divider ui:show="{{!loadMore}}">没有新数据了</ui-divider>
-            </ui-view>
-          </ui-tab-view-body>
-          <ui-tab-view-body 
-          enable-reach-bottom-load="{{loadMore}}"
-          on-load-more="{{ handleLoadMore }}">
+    <!-- 应用 -->
+    <ui-view class="app_box">
+      <ui-row space-top=0 >
+        <ui-col span=12>
+          <ui-row>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openApprovalRecord">
+                <ui-icon type="shenpi3" color="#ffa940" size="40"></ui-icon>    
+                <ui-view class="app_text">我审批的</ui-view>       
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openMyApproval">
+                <ui-icon type="chucha1" color="#ffa940" size="40"></ui-icon>    
+                <ui-view class="app_text">我发起的</ui-view>           
+            </ui-col>
+          </ui-row>
+        </ui-col>
+      </ui-row>
+    </ui-view>
 
-          <ui-view class="info_list">
-              <ui-row height="100" class="top_tip" border-bottom ui:for="{{ buQianList }}" ui:for-item="item">
-                <ui-col width="60" align="center" style="padding-top:6px">
-                  <ui-view class="left_icon">补</ui-view>
-                </ui-col>
-                <ui-col class="text" align="left" vertical-align="middle" space="10">
-                  <ui-view style="width: 100%;">
-                    <ui-row height="30">
-                      <ui-col align="left" vertical-align="middle">
-                        <ui-text>补签批号: {{ item.payId }}</ui-text>
-                      </ui-col>
-                      <ui-col align="right" width="100" vertical-align="middle" space-right="10">
-                        <ui-view>{{ getLocalTime(item.createTime) }}</ui-view>
-                      </ui-col>
-                    </ui-row>
-                    <ui-view>补签日期：{{ item.dayBuQian }}</ui-view>
-                    <ui-view>审批人：{{ item.shenpiren }}</ui-view>
-                    <ui-view style="color:red;" >审批中</ui-view>
-                  </ui-view>
-                </ui-col>
-              </ui-row>
-            </ui-view>
-           
+    <!-- 应用 -->
+    <ui-view class="app_box" style="margin-top: 10px;">
+      <ui-row space-top=10>
+        <ui-col width="5" align="center" vertical-align="middle">
+        </ui-col>
+        <ui-col class="centerInfo" space-left=10>
+          出勤休假
+        </ui-col>
+      </ui-row>
+      <ui-row space-top=0 >
+        <ui-col span=12>
+          <ui-row>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openKaoQin">
+                <ui-icon type="daka2" color="#28aa91" size="30"></ui-icon>    
+                <ui-view class="app_text">考勤打卡</ui-view>       
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openSignIn">
+                <ui-icon type="daka4" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">签到</ui-view>           
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openAskOff">
+                <ui-icon type="qingjia1" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">请假</ui-view>           
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openBuKa">
+                <ui-icon type="buka1" color="#8bb93f" size="30"></ui-icon>    
+                <ui-view class="app_text">补卡</ui-view>             
+            </ui-col>
+          </ui-row>
+        </ui-col>
+      </ui-row>
+    </ui-view>
 
-            <ui-view style="width:200px;margin:0 auto;">
-              <ui-divider ui:show="{{!loadMore}}">没有新数据了</ui-divider>
-            </ui-view>
-          </ui-tab-view-body>
-        </template>
-      </ui-tab-view>
+
   </ui-page>
 </template>
 
 <script>
-export default {
-  config: {
-    navigationStyle: 'custom'
-  },
-  data () {
-    return {
-      loadMore:true,
-      qingJiaList: [{
-        payId: 'QJ2018090712',
-        projectId: 123,
-        projectName: '其他',
-        daynumber: 1,
-        shenpiren: '傅毅',
-        memo: '',
-        createTime: 1511280000000
-      },{
-        payId: 'QJ2018090712',
-        projectId: 123,
-        projectName: '其他',
-        daynumber: 2,
-        shenpiren: '傅毅',
-        memo: '',
-        createTime: 1511280000000
-      }],
-      buQianList: [{
-        payId: 'BQ2018090712',
-        projectId: 123,
-        projectName: '其他',
-        dayBuQian: '2018-09-05',
-        shenpiren: '傅毅',
-        memo: '',
-        createTime: 1511280000000
-      },{
-        payId: 'BQ2018090712',
-        projectId: 123,
-        projectName: '其他',
-        dayBuQian: '2018-09-04',
-        shenpiren: '傅毅',
-        memo: '',
-        createTime: 1511280000000
-      }],
-      pageLoad: {
-        trigger: 'always',
-        handle: () => {
-          console.log('我的审批')
-        }
+  export default {
+    config: {
+      navigationStyle: 'custom',
+      backgroundColor: '#fafafa',
+    },
+    data() {
+      return {
+        
+      }
+    },
+    methods: {
+      navigateBack() {
+        ui.navigateBack()
       },
-      items: [],
-      bottom: 30,
-      count:0
-    }
-  },
-  methods: {
-    navigateBack () {
-      ui.navigateBack()
+      // 我审批的
+      openApprovalRecord () {
+        ui.navigateTo({
+          url: '/pages/application/approval/approvalRecord'
+        })
+      },
+      // 我发出的审批
+      openMyApproval () {
+        ui.navigateTo({
+          url: '/pages/application/approval/myApproval'
+        })
+      },
+      // 考勤
+      openKaoQin () {
+        ui.navigateTo({
+          url: '/pages/application/kaoqin/kaoqin'
+        })
+      },
+      // 签到
+      openSignIn () {
+        ui.navigateTo({
+          url: '/pages/application/signIn/signIn'
+        })
+      },
+      // 请假
+      openAskOff() {
+        ui.navigateTo({
+          url: '/pages/application/askOff/askoff'
+        })
+      },
+      // 补卡
+      openBuKa () {
+        ui.navigateTo({
+          url: '/pages/application/supplement/buqian'
+        })
+      },
     },
-    handleLoadMore () {
-      this.count ++
-    },
-    // 解析后台返回的时间格式
-    getLocalTime (tm) {
-      let tt = new Date(tm).toLocaleDateString().replace(/\//g, '-')
-      return tt
+    mounted() {
+      console.log("我的审批 mounted")
     }
-  },
-  mounted() {
-    console.log("我的审批 mounted")
   }
-}
 </script>
 
 <style lang="less">
-.nav_bar {
-  background: linear-gradient(to right, #1F97FE, #126DFE);
-  .nav_title{
-    color: #fff;
-  }
-}
-.type-badge{
-  .ui-badge{
-    position: absolute;
-    right: 8px;
-    top: 2px;
-    font-size:20rpx;
-    &.ui-badge-dot {
-      padding: 3px;
-    }
-  }
-}
-.info_list{
-  .mix-1px(1, 0, 0, 0, #ccc);
-}
+  .nav_bar {
+    background: #fff;
 
-.top_tip{
-  background-color: #fff;
-  .left_icon{
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color:#FCB300; 
-    text-align: center;
-    line-height: 40px;
-    color: #fff;
-    font-size: 16px;
-    margin-top: 10px;
-  }
-  .left_icon2{
-    background-color: #FF7360;
-  }
-  .left_icon3{
-    background-color: #39CCC5;
-  }
-  .text{
-    .ui-text{
-      font-size: 14px;
-      color: #6d6d6d;
+    .ui-icon {
+      color: #1890ff;
     }
-    .ui-view{
-      color: #9C9FA4;
+
+    .nav_title {
+      color: #000;
+      font-size: 32rpx;
+      font-weight: bold;
+    }
+
+    .nav_right {
+      color: #1890ff;
+      font-size: 16px;
+    }
+  }
+
+  .app_box {
+    background-color: #fff;
+    padding-bottom: 15px;
+    // .mix-1px(0, 0, 1, 0, #ccc); /* 下边1像素细线 */
+    
+    .centerInfo {
+      height: 30px;
+      line-height: 30px;
+        .ui-col-content {
+          font-weight: bold;
+          font-size: 14px;
+        }
+    }
+    .app_list {
+      height:80px;
+    }
+    .app_text {
       font-size: 12px;
-      .mix-text-overflow();
     }
   }
-}
+
 </style>

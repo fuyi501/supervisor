@@ -1,0 +1,240 @@
+<!---->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">我审批的</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right">更多</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+
+    <ui-tab-view class="type-badge">
+      <template slot="header">
+        <ui-tab-view-header>
+          <ui-view>待审批的</ui-view>
+        </ui-tab-view-header>
+        <ui-tab-view-header>
+          <ui-view>已审批的</ui-view>
+        </ui-tab-view-header>
+      </template>
+      <template slot="body">
+        <ui-tab-view-body enable-reach-bottom-load="{{loadMore}}" on-load-more="{{ handleLoadMore }}">
+
+          <ui-view class="info_list">
+            <ui-row height="100" class="top_tip" border-bottom ui:for="{{ qingJiaList }}" ui:for-item="item">
+              <ui-col width="60" align="center" style="padding-top:6px">
+                <ui-view class="left_icon">假</ui-view>
+              </ui-col>
+              <ui-col class="text" align="left" vertical-align="middle" space="10">
+                <ui-view style="width: 100%;">
+                  <ui-row height="30">
+                    <ui-col align="left" vertical-align="middle">
+                      <ui-text>请假批号: {{ item.payId }}</ui-text>
+                    </ui-col>
+                    <ui-col align="right" width="100" vertical-align="middle" space-right="10">
+                      <ui-view>{{ getLocalTime(item.createTime) }}</ui-view>
+                    </ui-col>
+                  </ui-row>
+                  <ui-view>请假天数：{{ item.daynumber }}</ui-view>
+                  <ui-view>审批人：{{ item.shenpiren }}</ui-view>
+                  <ui-view style="color:red;">审批中</ui-view>
+                </ui-view>
+              </ui-col>
+            </ui-row>
+          </ui-view>
+
+          <ui-view style="width:200px;margin:0 auto;">
+            <ui-divider ui:show="{{!loadMore}}">没有新数据了</ui-divider>
+          </ui-view>
+        </ui-tab-view-body>
+        <ui-tab-view-body enable-reach-bottom-load="{{loadMore}}" on-load-more="{{ handleLoadMore }}">
+
+          <ui-view class="info_list">
+            <ui-row height="100" class="top_tip" border-bottom ui:for="{{ buQianList }}" ui:for-item="item">
+              <ui-col width="60" align="center" style="padding-top:6px">
+                <ui-view class="left_icon">补</ui-view>
+              </ui-col>
+              <ui-col class="text" align="left" vertical-align="middle" space="10">
+                <ui-view style="width: 100%;">
+                  <ui-row height="30">
+                    <ui-col align="left" vertical-align="middle">
+                      <ui-text>补签批号: {{ item.payId }}</ui-text>
+                    </ui-col>
+                    <ui-col align="right" width="100" vertical-align="middle" space-right="10">
+                      <ui-view>{{ getLocalTime(item.createTime) }}</ui-view>
+                    </ui-col>
+                  </ui-row>
+                  <ui-view>补签日期：{{ item.dayBuQian }}</ui-view>
+                  <ui-view>审批人：{{ item.shenpiren }}</ui-view>
+                  <ui-view style="color:#13c2c2;">审批通过</ui-view>
+                </ui-view>
+              </ui-col>
+            </ui-row>
+          </ui-view>
+
+
+          <ui-view style="width:200px;margin:0 auto;">
+            <ui-divider ui:show="{{!loadMore}}">没有新数据了</ui-divider>
+          </ui-view>
+        </ui-tab-view-body>
+      </template>
+    </ui-tab-view>
+  </ui-page>
+</template>
+
+<script>
+  export default {
+    config: {
+      navigationStyle: 'custom'
+    },
+    data() {
+      return {
+        loadMore: true,
+        qingJiaList: [{
+          payId: 'QJ2018090712',
+          projectId: 123,
+          projectName: '其他',
+          daynumber: 1,
+          shenpiren: '傅毅',
+          memo: '',
+          createTime: 1511280000000
+        }, {
+          payId: 'QJ2018090712',
+          projectId: 123,
+          projectName: '其他',
+          daynumber: 2,
+          shenpiren: '傅毅',
+          memo: '',
+          createTime: 1511280000000
+        }],
+        buQianList: [{
+          payId: 'BQ2018090712',
+          projectId: 123,
+          projectName: '其他',
+          dayBuQian: '2018-09-05',
+          shenpiren: '傅毅',
+          memo: '',
+          createTime: 1511280000000
+        }, {
+          payId: 'BQ2018090712',
+          projectId: 123,
+          projectName: '其他',
+          dayBuQian: '2018-09-04',
+          shenpiren: '傅毅',
+          memo: '',
+          createTime: 1511280000000
+        }],
+        pageLoad: {
+          trigger: 'always',
+          handle: () => {
+            console.log('我的审批')
+          }
+        },
+        items: [],
+        bottom: 30,
+        count: 0
+      }
+    },
+    methods: {
+      navigateBack() {
+        ui.navigateBack()
+      },
+      handleLoadMore() {
+        this.count++
+      },
+      // 解析后台返回的时间格式
+      getLocalTime(tm) {
+        let tt = new Date(tm).toLocaleDateString().replace(/\//g, '-')
+        return tt
+      }
+    },
+    mounted() {
+      console.log("我的审批 mounted")
+    }
+  }
+</script>
+
+<style lang="less">
+  .nav_bar {
+    background: #fff;
+
+    .ui-icon {
+      color: #1890ff;
+    }
+
+    .nav_title {
+      color: #000;
+      font-size: 32rpx;
+      font-weight: bold;
+    }
+
+    .nav_right {
+      color: #1890ff;
+      font-size: 16px;
+    }
+  }
+
+  .type-badge {
+    .ui-badge {
+      position: absolute;
+      right: 8px;
+      top: 2px;
+      font-size: 20rpx;
+
+      &.ui-badge-dot {
+        padding: 3px;
+      }
+    }
+  }
+
+  .info_list {
+    .mix-1px(1, 0, 0, 0, #ccc);
+  }
+
+  .top_tip {
+    background-color: #fff;
+
+    .left_icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #1890ff;
+      text-align: center;
+      line-height: 40px;
+      color: #fff;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .left_icon2 {
+      background-color: #FF7360;
+    }
+
+    .left_icon3 {
+      background-color: #39CCC5;
+    }
+
+    .text {
+      .ui-text {
+        font-size: 14px;
+        color: #6d6d6d;
+      }
+
+      .ui-view {
+        color: #9C9FA4;
+        font-size: 12px;
+        .mix-text-overflow();
+      }
+    }
+  }
+</style>

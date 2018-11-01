@@ -1,85 +1,87 @@
+<!---->
 <template>
-  <ui-view>
-    <ui-page>
-      <ui-nav-bar slot="nav-bar" class="nav_bar">
-        <ui-row height="46">
-          <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
-            <ui-view>
-              <ui-icon type="arrow-left" size="20" color="#3399ff"></ui-icon>
-            </ui-view>
-          </ui-col>
-          <ui-col vertical-align="middle" align="center">
-            <ui-view class="nav_title">项目日志</ui-view>
-          </ui-col>
-          <ui-col vertical-align="middle" align="center" width="50" bindtap="">
-            <ui-view class="nav-right">更多</ui-view>
-          </ui-col>
-        </ui-row>
-      </ui-nav-bar>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">我收到的监理通知单</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right">更多</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
 
-      <!-- 日志列表 -->
-      <ui-view class="list-view" ui:for="{{items}}" ui:for-item="item" >
-        <ui-row space="10">
-          <ui-col>
-            <ui-text class="titleName">{{item.titleName}}</ui-text>
-          </ui-col>
-          <ui-col vertical-align="middle" align="right" width=40 bindtap="openDetails(item)">
-            <ui-text class="titleName">详情</ui-text>
-          </ui-col>
-        </ui-row>
-        <ui-row space="10">
-          <ui-col>
-            <ui-text class="list-content">{{item.content}}</ui-text>
-          </ui-col>
-        </ui-row>
-        <ui-row space="20">
+    <!-- 我收到的通知单列表 -->
+    <ui-view class="list-view" ui:for="{{items}}" ui:for-item="item">
+      <ui-row space="10">
+        <ui-col>
+          <ui-text class="titleName">{{item.titleName}}</ui-text>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" width=40 bindtap="openDetails(item)">
+          <ui-text class="titleName">详情</ui-text>
+        </ui-col>
+      </ui-row>
+      <ui-row space="10">
+        <ui-col>
+          <ui-text class="list-content">{{item.content}}</ui-text>
+        </ui-col>
+      </ui-row>
+      <ui-row space="20">
+        <ui-col>
           <ui-view class="imageList_win">
             <ui-view class="image" ui:for="{{item.imgarr}}" ui:for-item="image" bindtap="previewImage(item.imgarr, image)">
               <ui-image src="{{image.imgsrc}}" width="75" height="75" mode="aspectFill"></ui-image>
             </ui-view>
           </ui-view>
-        </ui-row>
-        <ui-row space="10">
-          <ui-col vertical-align="bottom">
-            <ui-view>
-              <ui-text class="color6 small-font">{{item.source}} ·</ui-text>
-              <ui-text class="color6 small-font">{{item.datetime}}</ui-text>
-            </ui-view>
-          </ui-col>
-          <ui-col vertical-align="bottom" align="right" space-right="10">
-            <ui-view>
-              <ui-text class="color6 small-font">{{item.collect}}收藏</ui-text>
-            </ui-view>
-          </ui-col>
-        </ui-row>
-      </ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row space="10">
+        <ui-col vertical-align="bottom" span=8>
+          <ui-view>
+            <ui-text class="color6 small-font">{{item.source}} ·</ui-text>
+            <ui-text class="color6 small-font">{{item.datetime}}</ui-text>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="bottom" align="right" space-right="10">
+          <ui-view>
+            <ui-text class="color6 small-font">{{item.collect}}收藏</ui-text>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-view>
 
-    </ui-page>
-  </ui-view>
+    <ui-view class="divider">
+      <ui-divider>没有新数据了</ui-divider>
+    </ui-view>
+
+  </ui-page>
 </template>
 
 <script>
   export default {
     config: {
-      navigationStyle: "custom",
+      navigationStyle: 'custom',
       backgroundColor: '#F6F6F6',
-      navigationBarTextStyle: "black",
-      scrollType: "div"
     },
     data() {
       return {
-        items: [
-          {
-            "id": 2,
+        items: [{
+            "id": 1,
             "type": "1",
-            "titleName": "Velodyne推出了首款128线激光雷达",
-            "content": "Velodyne推出了首款128线激光雷达，据说它是全自动驾驶落地的利器-精选文章列表",
+            "titleName": "傅毅发出的通知单",
+            "content": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
             "datetime": "2018-10-22 13:33",
             "collect": "10",
-            "source": "共享经济",
+            "source": "待回复",
             "dataType": "hot",
             "imgarr": [{
-                "id": 2,
+                "id": 1,
                 "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
               },
               {
@@ -101,14 +103,14 @@
           {
             "id": 2,
             "type": "1",
-            "titleName": "Velodyne推出了首款128线激光雷达",
-            "content": "Velodyne推出了首款128线激光雷达，据说它是全自动驾驶落地的利器-精选文章列表",
+            "titleName": "傅毅发出的通知单",
+            "content": "这里有问题，需要修改",
             "datetime": "2018-10-22 13:33",
             "collect": "10",
-            "source": "共享经济",
+            "source": "已整改并回复",
             "dataType": "hot",
             "imgarr": [{
-                "id": 2,
+                "id": 1,
                 "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
               },
               {
@@ -116,15 +118,15 @@
                 "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
               },
               {
-                "id": 2,
+                "id": 3,
                 "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
               },
               {
-                "id": 2,
+                "id": 4,
                 "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
               },
               {
-                "id": 2,
+                "id": 5,
                 "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
               }
             ],
@@ -139,18 +141,12 @@
       }
     },
     methods: {
-      navigateBack () {
+      navigateBack() {
         ui.navigateBack()
       },
-      openDetails (val) {
-        console.log(val)
-        // ui.navigateTo({
-        //   url: '/pages/templeteDemo/information/details'
-        // })
-      },
-      previewImage (imgarr, img) {
+      previewImage(imgarr, img) {
         let imgUrls = []
-        for(let i in imgarr){
+        for (let i in imgarr) {
           console.log(imgarr[i])
           imgUrls.push(imgarr[i].imgsrc)
         }
@@ -167,7 +163,9 @@
         })
       }
     },
-    mounted() {}
+    mounted() {
+      console.log("我的审批 mounted")
+    }
   }
 </script>
 
@@ -175,15 +173,19 @@
   .nav_bar {
     background: #fff;
 
+    .ui-icon {
+      color: #1890ff;
+    }
+
     .nav_title {
       color: #000;
-      font-size: 16px;
+      font-size: 32rpx;
       font-weight: bold;
     }
 
-    .nav-right {
-      color: #3399ff;
-      font-size: 14px;
+    .nav_right {
+      color: #1890ff;
+      font-size: 16px;
     }
   }
 
@@ -207,7 +209,7 @@
     .imageList_win {
       display: flex;
       flex-wrap: wrap;
-      margin: 0 auto;
+      // margin: 0 auto;
 
       .image {
         margin: 3px;
@@ -232,5 +234,11 @@
     .small-font {
       font-size: 10px;
     }
+  }
+
+  .divider {
+    width: 200px;
+    margin: 0 auto;
+    margin-bottom: 10px;
   }
 </style>
