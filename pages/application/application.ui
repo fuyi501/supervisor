@@ -105,7 +105,7 @@
           <ui-row>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openRiZhi">
                 <ui-icon type="rizhi3" color="#ff525d" size="30"></ui-icon>    
-                <ui-view class="app_text">监理日志</ui-view>
+                <ui-view class="app_text">项目日志</ui-view>
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openPangZhan">
                 <ui-icon type="pangzhan" color="#28aa91" size="30"></ui-icon> 
@@ -314,7 +314,7 @@ export default {
     // 日志
     openRiZhi () {
       ui.navigateTo({
-        url: '/pages/application/rizhi/rizhi'
+        url: '/pages/application/rizhi/rizhiWrite'
       })
     },
     // 审批

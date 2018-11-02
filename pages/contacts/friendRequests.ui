@@ -1,0 +1,150 @@
+<!---->
+<template>
+  <ui-page>
+
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">好友申请</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right">更多</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="info_list">
+      <ui-row height="100" class="top_tip" border-bottom ui:for="{{ friendRequestsList }}" ui:for-item="item">
+        <ui-col width="60" align="center" style="padding-top:6px">
+          <ui-view class="left_icon">{{ getFirstName(item.friendName) }}</ui-view>
+        </ui-col>
+        <ui-col class="text" align="left" vertical-align="middle" space="10">
+          <ui-view style="width: 100%;">
+            <ui-row height="30">
+              <ui-col align="left" vertical-align="middle">
+                <ui-text>{{ item.friendName }}</ui-text>
+              </ui-col>
+              <ui-col align="right" width="100" vertical-align="middle" space-right="10">
+                <ui-view>{{ getLocalTime(item.createTime) }}</ui-view>
+              </ui-col>
+            </ui-row>
+            <ui-view>申请加入：{{ item.applyFor }}</ui-view>
+            <ui-view>申请理由：{{ item.applyForReason }}</ui-view>
+            <ui-view style="color:red;">待同意</ui-view>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+  </ui-page>
+</template>
+
+<script>
+import dayjs from '#/static/utils/dayjs'
+
+  export default {
+    config: {
+      navigationStyle: 'custom'
+    },
+    data() {
+      return {
+        friendRequestsList: [{
+          friendName: '傅毅',
+          applyFor: '平头哥工作室',
+          applyForReason: '工作室成员',
+          createTime: 1511280000000
+        }, {
+          friendName: '李思成',
+          applyFor: '平头哥工作室',
+          applyForReason: '工作室成员',
+          createTime: 1511280000000
+        }]
+      }
+    },
+    methods: {
+      navigateBack() {
+        ui.navigateBack()
+      },
+      // 解析姓氏
+      getFirstName(name) {
+        let firstName = name.substr(0,1)
+        return firstName
+      },
+      // 解析后台返回的时间格式
+      getLocalTime(time) {
+        let tt = dayjs(time).format('YYYY-MM-DD')
+        return tt
+      }
+    },
+    mounted() {
+      console.log(" mounted")
+    }
+  }
+</script>
+
+<style lang="less">
+  .nav_bar {
+    background: #fff;
+
+    .ui-icon {
+      color: #1890ff;
+    }
+
+    .nav_title {
+      color: #000;
+      font-size: 32rpx;
+      font-weight: bold;
+    }
+
+    .nav_right {
+      color: #1890ff;
+      font-size: 16px;
+    }
+  }
+
+  .info_list {
+    .mix-1px(1, 0, 0, 0, #ccc);
+  }
+
+  .top_tip {
+    background-color: #fff;
+
+    .left_icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #1890ff;
+      text-align: center;
+      line-height: 40px;
+      color: #fff;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .left_icon2 {
+      background-color: #FF7360;
+    }
+
+    .left_icon3 {
+      background-color: #39CCC5;
+    }
+
+    .text {
+      .ui-text {
+        font-size: 14px;
+        color: #6d6d6d;
+      }
+
+      .ui-view {
+        color: #9C9FA4;
+        font-size: 12px;
+        .mix-text-overflow();
+      }
+    }
+  }
+</style>

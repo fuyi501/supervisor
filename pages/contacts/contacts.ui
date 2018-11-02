@@ -28,7 +28,7 @@
       <ui-col width="15" vertical-align="middle" align="center"></ui-col>
     </ui-row>
 
-    <ui-row height="60" class="contacts_list1" space-top=10 space-bottom=10 bindtap="">
+    <ui-row height="60" class="contacts_list1" space-top=10 space-bottom=10 bindtap="openFriendRequests">
       <ui-col width="50" space-left=10 align="center" vertical-align="middle">
         <ui-view class="left_icon">
           <ui-icon type="haoyou2" color="#fff" size="24"></ui-icon>
@@ -56,6 +56,20 @@
       </ui-col>
     </ui-row>
 
+    <ui-row height="60" class="contacts_list2" bindtap="openContactBook">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon" style="background-color:#1890ff" >
+          <ui-icon type="lianxiren2" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">我的好友</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
+        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+      </ui-col>
+    </ui-row>
+
     <ui-row height="60" class="contacts_list2" bindtap="">
       <ui-col width="50" space-left=10 align="center" vertical-align="middle">
         <ui-view class="left_icon">
@@ -70,7 +84,7 @@
       </ui-col>
     </ui-row>
 
-    <ui-row height="60" class="contacts_list2" bindtap="">
+    <ui-row height="60" class="contacts_list1" bindtap="">
       <ui-col width="50" space-left=10 align="center" vertical-align="middle">
         <ui-view class="left_icon" style="background-color:#1890ff" >
           <ui-icon type="lianxiren2" color="#fff" size="24"></ui-icon>
@@ -83,21 +97,6 @@
         <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
       </ui-col>
     </ui-row>
-
-    <ui-row height="60" class="contacts_list1" bindtap="openContactBook">
-      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
-        <ui-view class="left_icon" style="background-color:#1890ff" >
-          <ui-icon type="lianxiren2" color="#fff" size="24"></ui-icon>
-        </ui-view>
-      </ui-col>
-      <ui-col vertical-align="middle" space-left="15">
-        <ui-view class="text_content">我的好友</ui-view>
-      </ui-col>
-      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
-        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
-      </ui-col>
-    </ui-row>
-
 
   </ui-page>
 </template>
@@ -117,6 +116,11 @@ export default {
     openContactBook () {
       ui.navigateTo({
         url: '/pages/contacts/contactBook'
+      })
+    },
+    openFriendRequests () {
+      ui.navigateTo({
+        url: '/pages/contacts/friendRequests'
       })
     }
   },

@@ -159,7 +159,7 @@ export default {
   data () {
     return {
       pageTitle: '巡查记录',
-      pageTitleRight: '更多',
+      pageTitleRight: '统计',
       itemName: '标段3',
       xunChaTime: '', // 巡查时间
       isReply: false, // 是否回复

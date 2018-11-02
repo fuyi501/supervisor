@@ -54,7 +54,21 @@ export default {
       ,"pages/application/approval/approvalRecord",
       "pages/application/approval/myApproval",
       "pages/application/contactLetter/contactIndex",
-      "pages/application/noticeLetter/noticeIndex","pages/application/noticeLetter/noticeReplyIndex","pages/application/contactLetter/contactReplyIndex","pages/application/noticeLetter/sendNoticeLetter","pages/application/noticeLetter/receiveNoticeLetter","pages/application/noticeLetter/sendNoticeReply","pages/application/noticeLetter/receiveNoticeReply","pages/application/contactLetter/sendContactLetter","pages/application/contactLetter/receiveContactLetter","pages/application/contactLetter/sendContactReply","pages/application/contactLetter/receiveContactReply"],
+      "pages/application/noticeLetter/noticeIndex",
+      "pages/application/noticeLetter/noticeReplyIndex",
+      "pages/application/contactLetter/contactReplyIndex",
+      "pages/application/noticeLetter/sendNoticeLetter",
+      "pages/application/noticeLetter/receiveNoticeLetter",
+      "pages/application/noticeLetter/sendNoticeReply",
+      "pages/application/noticeLetter/receiveNoticeReply",
+      "pages/application/contactLetter/sendContactLetter",
+      "pages/application/contactLetter/receiveContactLetter",
+      "pages/application/contactLetter/sendContactReply",
+      "pages/application/contactLetter/receiveContactReply",
+      // "pages/application/rizhi/rizhiWrite",
+      // "pages/application/rizhi/rizhiWatch",
+      // "pages/application/rizhi/rizhiStatistics"
+      ,"pages/contacts/friendRequests"],
     "theme": {
       "theme-color": "#3399ff"
     },
@@ -107,6 +121,30 @@ export default {
           },
           {
             "pagePath": "pages/application/kaoqin/kqStatistics",
+            "iconName": "daka4",
+            "text": "统计"
+          }
+        ]
+      },
+      {
+        "id": "rizhi",
+        "color": "#7a7e83",
+        "selectedColor": "#39f",
+        "borderColor": "rgba(231, 231, 231, 0.6)",
+        "backgroundColor": "#fff",
+        "list": [
+          {
+            "pagePath": "pages/application/rizhi/rizhiWrite",
+            "iconName": "daka2",
+            "text": "写日志"
+          },
+          {
+            "pagePath": "pages/application/rizhi/rizhiWatch",
+            "iconName": "daka4",
+            "text": "看日志"
+          },
+          {
+            "pagePath": "pages/application/rizhi/rizhiStatistics",
             "iconName": "daka4",
             "text": "统计"
           }

@@ -172,7 +172,7 @@ export default {
   data () {
     return {
       pageTitle: '旁站记录',
-      pageTitleRight: '更多',
+      pageTitleRight: '统计',
       itemName: '标段3',
       pangZhanPosition: '', // 旁站部位
       pangZhanTime: '', // 旁站时间
