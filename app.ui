@@ -68,7 +68,7 @@ export default {
       // "pages/application/rizhi/rizhiWrite",
       // "pages/application/rizhi/rizhiWatch",
       // "pages/application/rizhi/rizhiStatistics"
-      ,"pages/contacts/friendRequests"],
+      ,"pages/contacts/friendRequests","pages/application/kaoqin/kqSetting","pages/application/kaoqin/addKQZ"],
     "theme": {
       "theme-color": "#3399ff"
     },
@@ -123,6 +123,11 @@ export default {
             "pagePath": "pages/application/kaoqin/kqStatistics",
             "iconName": "daka4",
             "text": "统计"
+          },
+          {
+            "pagePath": "pages/application/kaoqin/kqSetting",
+            "iconName": "setting",
+            "text": "设置"
           }
         ]
       },
@@ -151,8 +156,8 @@ export default {
         ]
       }
     ],
-    // "networkBaseUrl":"https://api.estech.xyz:8533/"
-    "networkBaseUrl":"http://119.23.30.32:9999/"
+    "networkBaseUrl":"https://api.estech.xyz:8533/"
+    // "networkBaseUrl":"https://tramapi.fuwenwei.com:9999/"
   },
   data () {
     return {

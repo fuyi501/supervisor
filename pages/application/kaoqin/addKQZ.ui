@@ -1,0 +1,428 @@
+<!--note.ui-->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">新增考勤组</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right">更多</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="form_content">
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
+          <ui-view>
+            考勤组名称
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-picker title="" range="{{ typeList }}" value="{{ typeValue }}" bindchange="handleType"></ui-picker>
+        </ui-col>
+      </ui-row>
+
+      <!-- 抄送人 -->
+      <ui-view class="recipients">
+        <ui-view class="title">抄送人</ui-view>
+        <ui-view class="recipients_content">
+          <ui-view class="recipients_list" ui:for="{{ recipientsList }}" ui:for-item="item">
+            <ui-view class="list_content" bindtap="deleteRecipients(index)">
+              <ui-view class="close">x</ui-view>
+              <ui-image
+              src="{{ item.head }}"
+              ></ui-image>
+              <ui-text>{{ item.userName }}</ui-text>
+            </ui-view>
+          </ui-view>
+          <ui-view class="recipients_list" bindtap="addRecipients">
+            <ui-view class="add_recipients">
+              <ui-icon type="add" size="20" color="#B3B5B5"></ui-icon>
+            </ui-view>
+          </ui-view>
+        </ui-view>
+      </ui-view>
+
+      <ui-row height="60" space-top="10">
+        <ui-col vertical-align="middle" align="center" space="30">
+          <ui-button type="primary" bindtap="submit">下一步</ui-button>
+        </ui-col>
+      </ui-row>
+
+    </ui-view>
+
+  </ui-page>
+</template>
+
+<script>
+const getDoubleNumber = function (num) {
+  return num < 10 ? '0' + num : '' + num
+}
+const sourceType = [['camera'], ['album'], ['camera', 'album']]
+const sizeType = [['compressed'], ['original'], ['compressed', 'original']]
+export default {
+  config: {
+    navigationStyle: 'custom',
+    backgroundColor: '#F6F6F6',
+    disableIosGesture: true,
+    navigationBarTextStyle: 'white',
+    "delay":true
+  },
+  data () {
+    return {
+      typeList: ['事假','病假','外出','婚假','产检假','产假','其他'],
+      typeValue: 0,
+
+      userName: '傅毅',
+      userId: '10010',
+      // 日期选择 开始日期时间和结束日期时间
+      sdataValue: '',
+      stimeValue: '', 
+      edataValue: '',
+      etimeValue: '', 
+
+      // 请假天数
+      dayNumber: '',
+      
+      // 请假事由
+      askOffReason: '',
+
+      // 审批人
+      isApprover: false,
+      addroverHead: '',
+      approverName: '',
+      approverList: [],
+      approvalUserId: null,
+      approvalUserId2: null,
+
+      // 抄送人
+      recipientsList: [ ],
+      ccuserIds: []
+
+    }
+  },
+  methods: {
+    // 返回按钮
+    navigateBack () {
+      ui.showConfirm({
+        content: '表单尚未提交，你要离开么？',
+        confirmButtonText: '离开',
+        cancelButtonText: '继续填写',
+        success: (result) => {
+          if (result.confirm) {
+            ui.offBackButtonClick({
+              listener: this.navigateBack
+            })
+            ui.navigateBack()
+          }
+        }
+      })
+    },
+    handleType (val) { // 请假类型
+      this.typeValue = val
+    },
+    // 选择请假开始日期
+    choiceSDate (val) {
+      this.sdataValue = val
+    },
+    handleSTime (val) { // 请假开始时间
+      this.stimeValue = val
+    },
+    // 选择请假结束日期
+    choiceEDate (val) {
+      this.edataValue = val
+    },
+    handleETime (val) { // 请假结束时间
+      this.etimeValue = val
+    },
+    
+    // 添加抄送人
+    addRecipients () {
+      import(`#/pages/contacts/workers.ui`).then((content) => {
+        ui.showDialog({
+          content: content,
+          statusBarColor: 'black',
+          data: {},
+          // 接收ui.hideDialog回传的数据
+          onHide: (data) => {
+            console.log('接收返回的参数', data)
+            if (data && data.recipients) {
+              let isSame = false
+              data.recipients.forEach((item, index) => {
+                if (this.ccuserIds.length < 1) {
+                  this.recipientsList.push(item)
+                  this.ccuserIds.push(item.userId)
+                } else {
+                  for (let i = 0; i < this.ccuserIds.length; i++) {
+                    if (item.userId === this.ccuserIds[i]) {
+                      ui.showToast({ title: '请勿选择同一个抄送人！' })
+                      isSame = false
+                      return false
+                    } else {
+                      isSame = true
+                    }
+                  }
+                  if (isSame) {
+                    this.recipientsList.push(item)
+                    this.ccuserIds.push(item.userId)
+                  }
+                }
+              })
+            }
+          }
+        })
+      })
+    },
+    deleteRecipients (index) {
+      console.log(index)
+      this.recipientsList.splice(index, 1)
+      this.ccuserIds.splice(index, 1)
+    },
+    // 添加审批人
+    addApprovers () {
+      if (this.approverList.length > 0) {
+        ui.showToast({ title: '审批人只能为一人,请删除后添加' })
+      } else if (this.askOffReason === '') {
+        ui.showToast({ title: '请输入请假事由' })
+      } else {
+        import(`#/pages/contacts/workers.ui`).then((content) => {
+          console.log("进来了",content)
+          ui.showDialog({
+            content: content,
+            statusBarColor: 'black',
+            data: {
+              dayNumber: this.dayNumber
+            },
+            // 接收ui.hideDialog回传的数据
+            onHide: (data) => {
+              console.log('接收返回的参数', data)
+              if (data && data.approvers) {
+                this.approverList = []
+                data.approvers.forEach((item, index) => {
+                  this.approverList.push(item)
+                  this.approvalUserId = item.userId
+                })
+              }
+              if (data && data.approvers2) {
+                this.approvalUserId2 = null
+                data.approvers2.forEach((item, index) => {
+                  this.approvalUserId2 = item.userId
+                })
+              }
+            }
+          })
+        })
+      }
+    },
+    // 删除审批人
+    deleteApprovers (index) {
+      // console.log(index)
+      this.approverList.splice(index, 1)
+      this.approvalUserId = null
+    },
+    submit () {
+      if (this.askOffReason === '') {
+        ui.showToast({ title: '请输入请假事由' })
+      } else if (this.approvalUserId === null) {
+        ui.showToast({ title: '请选择审批人' })
+      } else {
+       this.paySubmit()
+      }
+    },
+    // 保存为草稿
+    saveDraft () {
+      if (this.askOffReason === '') {
+        ui.showToast({ title: '请输入请假事由' })
+      } else if (this.approvalUserId === null) {
+        ui.showToast({ title: '请选择审批人' })
+      } else {
+       this.paySubmit()
+      }
+    },
+    paySubmit () {
+      ui.showToast({ title: '提交成功', icon: 'success' })
+      setTimeout(() => {
+        ui.navigateBack()
+      }, 1000)
+    }
+  },
+  // 日期组件计算
+  created () {
+  },
+  mounted () {
+    // 获取上一个页面传递过来的参数
+    let getData = ui.getQuery()
+    console.log("参数",getData)
+    // 获取当前日期
+    let today = new Date()
+    let year = today.getFullYear()
+    let month = today.getMonth() + 1 
+    let day = today.getDate()
+    let hour = today.getHours()
+    let minute = today.getMinutes()
+    this.stimeValue = hour + ':' + minute
+    this.sdataValue = year + '-' + month + '-' + day
+    this.etimeValue = hour + ':' + minute
+    this.edataValue = year + '-' + month + '-' + day
+
+  }
+}
+</script>
+
+<style lang="less">
+
+.nav_bar {
+  background: #fff;
+  .ui-icon {
+    color: #1890ff;
+  }
+  .nav_title {
+    color: #000;
+    font-size: 32rpx;
+    font-weight: bold;
+  }
+  .nav_right{
+    color: #1890ff;
+    font-size: 16px;
+  }
+}
+
+.form_content{
+  padding-top: 10px;
+  // .mix-1px(1, 0, 1, 0, #ccc);
+
+  .ui-row{
+    background: #fff;
+    .mix-1px(0, 0, 1, 0, #ccc);
+    .ui-view{
+      font-size: 14px;
+      color: #1A1E23;
+      &.right_column{
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+      }
+    }
+    .ui-row{
+      width: 100%;
+      .right_column{
+        width: 95%;
+        font-size: 12px;
+      }
+      .ui-textarea-wrapper{
+        padding: 10px;
+      }
+    }
+    .weui-cell{
+      padding: 0;
+      .ui-picker-select{
+        font-size: 14px;
+      }
+    }
+    .ui-input{
+      border:0px;
+      padding: 0px;
+      .ui-input-inner{
+        height: 33px;
+        width: 100%;
+        text-align: right;
+      }
+    }
+  }
+}
+.weui-cell__hd{
+  display: none;
+}
+.detail_description{
+  margin-bottom: 10px;
+  background: #fff;
+  .ui-icon {
+    padding-left: 10px;
+  }
+  .ui-text{
+    // width: 70px;
+    text-align: left;
+    line-height: 30px;
+    color: #1A1E23;
+    font-size: 14px;
+  }
+  .ui-textarea-wrapper{
+    border: 0;
+    padding: 10px;
+  }
+}
+.recipients{
+  margin-top: 10px;
+  background-color: #fff;
+  .title{
+    text-align: left;
+    padding-left: 10px;
+    line-height: 40px;
+    .ui-text{
+      font-size: 14px;
+      color: #ccc;
+    }
+  }
+  .recipients_content{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    padding-bottom: 20px;
+    .recipients_list{
+      display: inline-flex;
+      text-align: center;
+      padding: 5px 15px;
+      .list_content{
+        position: relative;
+        .close{
+          position: absolute;
+          top: -3px;
+          right: -3px;
+          width: 13px;
+          height: 13px;
+          border-radius: 50%;
+          z-index: 9;
+          background-color: #14171B;
+          line-height:13px;
+          font-size: 12px;
+          color: #fff;
+        }
+        .ui-image{
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          margin-bottom: 10px;
+        }
+        .ui-text{
+          color: #060606;
+          font-size: 12px;
+        }
+      }
+      .add_recipients{
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #F4F4F4;
+        line-height: 40px;
+        text-align: center;
+      }
+    }
+
+  }
+}
+
+//弹窗
+.ui-confirm-content{
+  text-align: center;
+}
+
+</style>

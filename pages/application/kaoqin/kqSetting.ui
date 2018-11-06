@@ -1,0 +1,170 @@
+<!---->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">考勤设置</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right">更多</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <!-- 应用 -->
+    <ui-view class="app_box" style="margin-top: 10px;">
+      <!-- <ui-row space-top=10>
+        <ui-col width="5" align="center" vertical-align="middle">
+        </ui-col>
+        <ui-col class="centerInfo" space-left=10>
+          
+        </ui-col>
+      </ui-row> -->
+      <ui-row space-top=10 >
+        <ui-col span=12>
+          <ui-row>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="daka2" color="#28aa91" size="30"></ui-icon>    
+                <ui-view class="app_text">安全设置</ui-view>       
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="daka4" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">个性化</ui-view>           
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="qingjia1" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">人脸打卡</ui-view>           
+            </ui-col>
+          </ui-row>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+    <!-- 应用 -->
+    <ui-row height="50" class="contacts_list1" space-top=10 bindtap="addKaoQinZu">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon">
+          <ui-icon type="add" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">新增考勤组</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
+        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+      </ui-col>
+    </ui-row>
+
+
+  </ui-page>
+</template>
+
+<script>
+  export default {
+    config: {
+      navigationStyle: 'custom',
+      backgroundColor: '#fafafa',
+    },
+    data() {
+      return {
+        
+      }
+    },
+    methods: {
+      navigateBack() {
+        ui.navigateBack()
+      },
+      // 考勤
+      openKaoQin () {
+        ui.navigateTo({
+          url: '/pages/application/kaoqin/kaoqin'
+        })
+      },
+      // 签到
+      openSignIn () {
+        ui.navigateTo({
+          url: '/pages/application/signIn/signIn'
+        })
+      },
+      // 新增考勤组
+      addKaoQinZu() {
+        ui.navigateTo({
+          url: '/pages/application/kaoqin/addKQZ'
+        })
+      },
+    },
+    mounted() {
+      console.log("我的审批 mounted")
+    }
+  }
+</script>
+
+<style lang="less">
+  .nav_bar {
+    background: #fff;
+
+    .ui-icon {
+      color: #1890ff;
+    }
+
+    .nav_title {
+      color: #000;
+      font-size: 32rpx;
+      font-weight: bold;
+    }
+
+    .nav_right {
+      color: #1890ff;
+      font-size: 16px;
+    }
+  }
+
+  .app_box {
+    background-color: #fff;
+    padding-bottom: 15px;
+    // .mix-1px(0, 0, 1, 0, #ccc); /* 下边1像素细线 */
+    
+    .centerInfo {
+      height: 30px;
+      line-height: 30px;
+        .ui-col-content {
+          font-weight: bold;
+          font-size: 14px;
+        }
+    }
+    .app_list {
+      height:80px;
+    }
+    .app_text {
+      font-size: 12px;
+    }
+  }
+
+  
+.contacts_list1 {
+  background-color: #fff;
+  .left_icon{
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    border-radius: 50%;
+    background-color:#1890ff; 
+    text-align: center;
+    color: #fff;
+    font-size: 16px;
+  }
+  .text_content {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: #24292C;
+  }
+}
+
+</style>
