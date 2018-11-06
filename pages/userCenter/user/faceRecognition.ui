@@ -24,8 +24,8 @@
     <ui-view ui:else>
       <ui-view class="without_img" style="{{ { height: faceHeight + 'px'} }}">
         <ui-view class="show_tip">
-          <ui-icon type="renlian2" size="100" color="#F66542"></ui-icon>
-          <ui-view class="img_title">您还没有上传人脸照片</ui-view>
+          <ui-icon type="renlian2" size="100" color="#1F95FF"></ui-icon>
+          <ui-view class="img_title">上传人脸照片，体验智能签到</ui-view>
         </ui-view>
       </ui-view>
       <ui-view class="btn_content">

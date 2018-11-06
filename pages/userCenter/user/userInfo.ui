@@ -1,6 +1,6 @@
 <!--userinfo.ui-->
 <template>
-  <ui-page page-load="{{ pageLoad }}">
+  <ui-page >
 
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
@@ -109,7 +109,7 @@
         人脸签到
       </ui-col>
       <ui-col vertical-align="middle" align="right" space-right="15">
-        <ui-view style="color:red" class="active2" ui:if=" isface === '' ">
+        <ui-view style="color:red" class="active2" ui:if=" isHasFaceImg === '' ">
           <ui-icon type="setting2" size="16" color="red"></ui-icon>
           请上传人脸照片
           <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
@@ -147,8 +147,11 @@
     ['original'],
     ['compressed', 'original']
   ]
-  const uploadAvatarUrl = 'https://api.estech.xyz:8533/user/avatar/base64' // 上传用户头像照片
-  import lrz from '#/static/utils/lrz' // 压缩图片库
+  const uploadAvatarUrl = 'user/avatar/base64' // 上传用户头像照片
+  const getAvatarUrl = 'user/avatar/base64'
+
+  // 压缩图片库
+  import lrz from '#/static/utils/lrz'
 
   export default {
     config: {
@@ -163,49 +166,7 @@
         userTel: '',
         userId: '',
         tokenId: '',
-        isface: '',
-        pageLoad: { // 进入页面将用户信息显示在页面上
-          trigger: 'always',
-          handle: () => {
-            console.log("用户信息 pageLoad")
-            let userinfo = ui.getStorageSync('userinfo')
-            console.log("用户信息 userinfo:", userinfo)
-            if (userinfo !== null) {
-              if (userinfo.tokenId === '') {
-                this.isLogin = false
-                this.portraitUrl = require('#/images/portrait_bg.png')
-              } else {
-                this.isLogin = true
-                if (userinfo.userName === null) {
-                  this.userName = ''
-                } else {
-                  this.userName = userinfo.userName
-                }
-
-                if (userinfo.nickName === null) {
-                  this.userNick = ''
-                } else {
-                  this.userNick = userinfo.nickName
-                }
-
-                console.log("isface:", userinfo.isHasFaceImg)
-
-                this.userTel = userinfo.tel
-                this.userId = userinfo.userId
-                this.isface = userinfo.isHasFaceImg
-                this.tokenId = userinfo.tokenId
-                if (userinfo.head === null || userinfo.head === '') {
-                  this.portraitUrl = require('#/images/portrait_bg.png')
-                } else {
-                  this.portraitUrl = userinfo.head
-                }
-              }
-            } else if (userinfo === null) {
-              this.isLogin = false
-              this.portraitUrl = require('#/images/portrait_bg.png')
-            }
-          }
-        }
+        isHasFaceImg: ''
       }
     },
     methods: {
@@ -214,19 +175,9 @@
       },
       // 头像上传
       uploadPhoto() {
-        // ui.showActionSheet({
-        //   itemList: [
-        //     '拍摄',
-        //     '从手机相册选择'
-        //   ],
-        //   success: (index) => {
-        //     if (index > -1) {
-        //       this.chooseImage(index)
-        //     }
-        //   }
-        // })
         this.chooseImage(2)
       },
+      // 选择头像
       chooseImage(index) {
         let that = this
         ui.chooseImage({
@@ -256,41 +207,40 @@
                   },
                   success: (result) => {
                     if (result.data.code === 2000) {
-                      console.log("上传base64编码成功 result:", result)
+                      console.log("头像base64编码上传成功", result)
                       ui.showToast({
-                        title: '更新头像链接成功',
+                        title: '头像更新成功',
                         icon: 'success'
                       })
 
-                      // 获取 userinfo 数据，再添加一个值
-                      let userinfo = ui.getStorageSync('userinfo')
-                      userinfo.head = that.portraitUrl
-                      ui.setStorageSync('userinfo', userinfo)
+                      // 获取 LocalUserInfo 数据，将头像数据赋值给他
+                      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+                      LocalUserInfo.avatarBase64 = that.portraitUrl
+                      ui.setStorageSync('LocalUserInfo', LocalUserInfo)
 
-                      console.log("修改后的 userinfo :", userinfo)
+                      console.log("修改后的 LocalUserInfo :", LocalUserInfo)
                     } else {
                       ui.showToast({
-                        title: '请求失败' + result.data.code
+                        title: '头像更新失败' + result.data.code
                       })
                     }
-
 
                   },
                   fail: function ({
                     errMsg
                   }) {
                     ui.showToast({
-                      title: '更新头像链接失败'
+                      title: '头像更新失败' + errMsg
                     })
-                    console.log("更新头像链接失败", errMsg)
+                    console.log("头像更新失败", errMsg)
                   }
                 })
               })
               .catch(function (err) {
                 // 处理失败会执行
-                console.log("压缩失败", err)
+                console.log("头像压缩失败", err)
                 ui.showToast({
-                  title: '图片压缩失败'
+                  title: '头像压缩失败' + err
                 })
               })
               .always(function () {
@@ -298,9 +248,15 @@
                 console.log("执行压缩")
               });
           },
-          fail: function (res) {}
+          fail: function ({errMsg}) {
+            console.log("选择头像失败", errMsg)
+            ui.showToast({
+              title: '选择头像失败' + errMsg
+            })
+          }
         })
       },
+      // 设置用户 姓名和昵称
       setUserInfo(value) {
         console.log("设置用户信息", value)
         if (value === "用户名") {
@@ -322,31 +278,18 @@
       }
     },
     mounted() {
-      let userinfo = ui.getStorageSync('userinfo')
-      console.log("用户信息页面：", userinfo)
-      if (userinfo.userName === null) {
-        this.userName = ''
-      } else {
-        this.userName = userinfo.userName
-      }
+      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+      console.log("用户信息页面：", LocalUserInfo)
 
-      if (userinfo.nickName === null) {
-        this.userNick = ''
-      } else {
-        this.userNick = userinfo.nickName
-      }
+      this.userName = LocalUserInfo.userName
+      this.userNick = LocalUserInfo.nickName
+      this.userTel = LocalUserInfo.userTel
+      this.userId = LocalUserInfo.userId
+      this.tokenId = LocalUserInfo.tokenId
 
-      this.tokenId = userinfo.tokenId
-      this.userTel = userinfo.tel
-      this.userId = userinfo.userId
+      this.isHasFaceImg = LocalUserInfo.isHasFaceImg ? true : ''
+      this.portraitUrl = LocalUserInfo.avatarBase64 ? LocalUserInfo.avatarBase64 : require('#/images/portrait_bg.png')
 
-      console.log("用户名：", this.userName)
-
-      if (userinfo.head === null || userinfo.head === '') {
-        this.portraitUrl = require('#/images/portrait_bg.png')
-      } else {
-        this.portraitUrl = userinfo.head
-      }
     }
   }
 </script>

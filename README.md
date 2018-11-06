@@ -2,9 +2,11 @@
 ## 设计语言和风格
 
 #### 1. 设计语言
+
 [Ant Design](https://ant.design/docs/spec/lightweight-cn)
 
 #### 2. 设计风格
+
 - 白色标题栏，颜色为：#fff
 - 标题栏返回箭头，颜色为：#1890ff
 
@@ -14,6 +16,14 @@
 2. 日期时间处理：[day.js](https://github.com/iamkun/dayjs/blob/HEAD/docs/zh-cn/README.zh-CN.md)
 3. 图像压缩：[lrz](https://www.npmjs.com/package/lrz)
 4. 二维码生成：[qrious.js](https://github.com/neocotic/qrious)
+
+## API 文档
+
+[https://documenter.getpostman.com/view/5163609/RzZ6HLGK](https://documenter.getpostman.com/view/5163609/RzZ6HLGK)
+
+## 本地存储规范
+
+所有数据均保存在 LocalUserInfo 中，包括 BaseInfo，ItemsInfo。。。
 
 ## 项目计划安排
 

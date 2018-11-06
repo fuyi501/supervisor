@@ -1,8 +1,6 @@
 <!--userCenter.ui-->
 <template>
-  <ui-page 
-  page-load="{{ pageLoad }}"
-  >
+  <ui-page page-load="{{ pageLoad }}">
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
         <ui-col vertical-align="middle" align="left">
@@ -22,17 +20,15 @@
             <!-- 头像 -->
             <ui-image src="{{ portraitUrl }}" mode='aspectFill' width="60" height="60" class="head_portrait"></ui-image>
           </ui-col>
-          <ui-col vertical-align="middle" align="left" span=4 bindtap="openUserInfo">
-          </ui-col>
           <ui-col vertical-align="middle" align="right" space-right=15>
             <!-- <ui-view class="user_name">{{ isLogin ? userName : '傅毅' }}</ui-view> -->
             <ui-view class="user_name" bindtap="openUserQR">
               <ui-icon type="erweima1" size="18" color="#1F95FF"></ui-icon>
-              傅毅
+              {{ userName ? userName : userTel }}
             </ui-view>
             <ui-view class="user_phone">
               <ui-icon type="phone" size="14" color="#fff"></ui-icon>
-              {{ userTel }}13408468876
+              {{ userTel }}
             </ui-view>
           </ui-col>
         </ui-row>
@@ -115,21 +111,6 @@
           </ui-col>
         </ui-row>
 
-        <!-- 测试页面，只在开发环境下使用，生产环境下删除 -->
-        <ui-row height="50" class="user_content_list2" bindtap="testIndex">
-          <ui-col width="50" vertical-align="middle" align="center">
-            <ui-view class="left_icon">
-              <ui-icon type="test" color="#fff" size="24"></ui-icon>
-            </ui-view>
-          </ui-col>
-          <ui-col vertical-align="middle">
-            测试页面
-          </ui-col>
-          <ui-col vertical-align="middle" align="right" width="50" space-right="15">
-            <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
-          </ui-col>
-        </ui-row>
-
         <ui-row height="50" class="user_content_list2" space-top=10 bindtap="openSetting">
           <ui-col width="50" vertical-align="middle" align="center">
             <ui-view class="left_icon">
@@ -138,6 +119,19 @@
           </ui-col>
           <ui-col vertical-align="middle">
             设置
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" width="50" space-right="15">
+            <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+          </ui-col>
+        </ui-row>
+
+        <!-- 测试页面，只在开发环境下使用，生产环境下删除 -->
+        <ui-row height="50" class="user_content_list2" space-top=10 bindtap="testIndex">
+          <ui-col width="50" vertical-align="middle" align="center">
+            <ui-icon type="test" color="#1890ff" size="30"></ui-icon>
+          </ui-col>
+          <ui-col vertical-align="middle">
+            测试页面
           </ui-col>
           <ui-col vertical-align="middle" align="right" width="50" space-right="15">
             <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
@@ -159,95 +153,33 @@
     },
     data() {
       return {
-        isLogin: true,
         userName: '', // 用户名
         userTel: '', // 用户电话号码
-        userId: '', // 用户工号
-        currentNum: 0, // 这个值控制显示登录页面还是注册页面,0为登录页面,1为注册页面
         portraitUrl: require('#/images/portrait_bg.png'), //头像
-        pageLoad: { // 进入页面通过缓存tokenId来判断是否是登录状态
+        pageLoad: { // 进入页面将用户信息显示在页面上
           trigger: 'always',
           handle: () => {
             console.log("个人中心 pageLoad")
-            // let userinfo = ui.getStorageSync('userinfo')
-            // console.log("个人中心 userinfo:", userinfo)
-            // if (userinfo !== null) {
-            //   if (userinfo.tokenId === '') {
-            //     this.isLogin = false
-            //     this.portraitUrl = require('#/images/portrait_bg.png')
-            //   } else {
-            //     console.log("个人中心 配置用户信息")
-            //     this.isLogin = true
+            let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+            console.log("LocalUserInfo:", LocalUserInfo)
+            if (LocalUserInfo !== null && LocalUserInfo.tokenId !== '') {
 
-            //     if (userinfo.userName === null) {
-            //       this.userName = userinfo.tel
-            //     } else {
-            //       this.userName = userinfo.userName
-            //     }
+              this.userName = LocalUserInfo.userName
+              this.userNick = LocalUserInfo.nickName
+              this.userTel = LocalUserInfo.userTel
 
-            //     this.userTel = userinfo.tel
-            //     this.userId = userinfo.userId
-            //     if (userinfo.head === null || userinfo.head === '') {
-            //       this.portraitUrl = require('#/images/portrait_bg.png')
-            //     } else {
-            //       this.portraitUrl = userinfo.head
-            //     }
-            //   }
-            // } else if (userinfo === null) {
-            //   this.isLogin = false
-            //   this.portraitUrl = require('#/images/portrait_bg.png')
-            // }
+              this.portraitUrl = LocalUserInfo.avatarBase64 ? LocalUserInfo.avatarBase64 : require('#/images/portrait_bg.png')
+            }
           }
         }
       }
     },
     methods: {
-      // 登录页面
-      loginPage() {
-        import(`#/pages/userCenter/login/loginInterface.ui`).then((content) => {
-          ui.showDialog({
-            content: content, // dialog 内容
-            statusBarColor: 'black', // 打开窗体时，设置状态栏的字体颜色，有white和black两种可选
-            // 向loginInterface.ui传入数据
-            data: {
-              currentNum: this.currentNum
-            },
-            // 接收ui.hideDialog回传的数据，隐藏 dialog 时调用
-            onHide: (data) => {
-              console.log("登录页面关闭返回的数据：", data)
-              if (data && data.userinfo) {
-                this.isLogin = data.userinfo.isLogin
-                if (data.userinfo.userName === null) {
-                  this.userName = data.userinfo.tel // 用户名改电话
-                } else {
-                  this.userName = data.userinfo.userName // 用户名
-                }
-                this.userTel = data.userinfo.tel // 用户电话
-                this.userId = data.userinfo.userId // 用户工号
-                if (data.userinfo.head === null || data.userinfo.head === '') {
-                  this.portraitUrl = require('#/images/portrait_bg.png')
-                } else {
-                  // this.portraitUrl = data.userinfo.data.head // 有头像应该请求头像，这里先注释掉
-                  this.portraitUrl = require('#/images/portrait_bg.png')
-                }
-              } else {
-                this.isLogin = false
-                console.log('没有接收到数据')
-              }
-            }
-          })
-        })
-      },
       // 用户信息
       openUserInfo() {
-        if (this.isLogin) {
-          // 如果已经登录，则跳转到用户信息页面
-          ui.navigateTo({
-            url: '/pages/userCenter/user/userInfo'
-          })
-        } else {
-          this.loginPage()
-        }
+        ui.navigateTo({
+          url: '/pages/userCenter/user/userInfo'
+        })
       },
       openUserQR () {
         ui.navigateTo({
@@ -262,23 +194,9 @@
       },
       // 设置
       openSetting() {
-        if (this.isLogin) {
-          ui.navigateTo({
-            url: '/pages/userCenter/setting/setting'
-          })
-        } else {
-          this.loginPage()
-        }
-      },
-      // 收藏
-      collect() {
-        if (this.isLogin) {
-          ui.navigateTo({
-            url: '/pages/userCenter/collect'
-          })
-        } else {
-          this.loginPage()
-        }
+        ui.navigateTo({
+          url: '/pages/userCenter/setting/setting'
+        })
       },
       shoppingMall() {
         ui.showToast({
@@ -288,23 +206,19 @@
       },
       // 客服
       Meiqia() {
-        if (this.isLogin) {
-          ui.startMeiqia({
-            info: {
-              name: '张三',
-              tel: '123456',
-              weixin: '5201314',
-              '爱好': '吃苹果'
-            },
-            message: '你好',
-            success: function (data) {},
-            fail: function (data) {}
-          })
-        } else {
-          this.loginPage()
-        }
+        ui.startMeiqia({
+          info: {
+            name: '张三',
+            tel: '123456',
+            weixin: '5201314',
+            '爱好': '吃苹果'
+          },
+          message: '你好',
+          success: function (data) {},
+          fail: function (data) {}
+        })
       },
-      //测试页面
+      // 测试页面
       testIndex() {
         ui.navigateTo({
           url: '/pages/testPages/testIndex'
@@ -312,7 +226,17 @@
       }
     },
     mounted() {
-      console.log('userCenter mounted')
+      console.log('个人中心 mounted')
+      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+      console.log(" LocalUserInfo:", LocalUserInfo)
+      if (LocalUserInfo !== null && LocalUserInfo.tokenId !== '') {
+
+        this.userName = LocalUserInfo.userName
+        this.userNick = LocalUserInfo.nickName
+        this.userTel = LocalUserInfo.userTel
+
+        this.portraitUrl = LocalUserInfo.avatarBase64 ? LocalUserInfo.avatarBase64 : require('#/images/portrait_bg.png')
+      }
     }
   }
 </script>

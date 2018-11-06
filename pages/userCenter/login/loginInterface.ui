@@ -82,21 +82,21 @@
   const loginUrl = 'auth/login'
   // 密码加密
   import encryptRSA from '#/static/utils/security'
+  // 时间处理js库
   import dayjs from '#/static/utils/dayjs'
 
   export default {
     config: {
-      'navigationBarVisible': false, //导航栏不可见
+      // 'navigationBarVisible': false, // 导航栏不可见
       "scrollType": "div",
       "disableScroll": true
     },
     data() {
       return {
-        barHeight: ui.STATUS_BAR_HEIGHT, // 状态栏高度
         swiperHeight: ui.DEFAULT_CONTENT_HEIGHT, // 
-        currentNum: 0, // 控制显示 登陆页面还是 注册页面
-        loginTel: '', // 登陆电话
-        loginCode: '', // 登录验证码
+        currentNum: 0, // 控制显示 登陆页面还是 注册页面，0 为登录页面
+        loginTel: '13412341234', // 登陆电话
+        loginCode: '123456', // 登录验证码
         registerTel: '', // 注册电话
         registerCode: '', // 注册验证码
         registerPassword: '', // 注册密码
@@ -139,11 +139,7 @@
       },
       // 点击登录按钮触发 操作
       login() {
-        console.log("登录")
-        // 登录成功后关闭 dialog ，并将 userinfo 传递回去
-        ui.hideDialog({
-          userinfo: {userinfo:'123'}
-        })
+        console.log("登录请求")
         // 登录请求
         ui.request({
           url: loginUrl,
@@ -157,12 +153,10 @@
             'Content-Type': 'application/json'
           },
           success: function (result) {
+
             console.log("登录请求返回的数据", result)
-            if (result.data.code === -1) {
-              ui.showToast({
-                title: '接口失败'
-              })
-            } else if (result.data.code === 10001) {
+
+            if (result.data.code === 10001) {
               ui.showToast({
                 title: '用户名或密码错误'
               })
@@ -171,56 +165,56 @@
                 title: '手机号未注册'
               })
             } else if (result.data.code === 2000) { // 状态码为 2000 表示登录成功
-              // 登录成功
-              let userinfo = {
+              
+              console.log('登录成功')
+
+              let userInfo = result.data.data.profile
+              let token = result.data.data.token
+
+              // 登录成功后，封装成 本地数据
+              let LocalUserInfo = {
                 isLogin: true,
-                userName: result.data.data.profile.username,
-                nickName: result.data.data.profile.nickname,
-                userId: result.data.data.profile.employee_id,
-                tel: result.data.data.profile.tel,
-                tokenId: result.data.data.token,
-                isHasAvatar: result.data.data.profile.has_avatar,
-                registerTime: dayjs(result.data.data.profile.create_at).format("YYYY-MM-DD HH:mm:ss"),
-                loginTime: result.data.data.loginTime,
+                userName: userInfo.username ? userInfo.username : '',
+                nickName: userInfo.nickname ? userInfo.nickname : '',
+                userId: userInfo.employee_id ? userInfo.employee_id : '',
+                userTel: userInfo.tel,
+                tokenId: token,
+
+                registerTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+                loginTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+
+                isHasAvatar: false,
+                avatarBase64: '',
+
+                isHasFaceImg: false,
                 faceImgBase64: '',
-                isHasFaceImg: false
+                
               }
-              // 判断是否有头像
-              if (result.data.data.profile.hasAvatar) {
-                userinfo.head = null
-              } else {
-                userinfo.head = ''
-              }
-              console.log("登录成功封装的数据 userinfo：", userinfo)
+              console.log("登录成功封装的数据 LocalUserInfo", LocalUserInfo)
+
+              // 同时将请求的数据保存到本地，这里有问题，稍后再看
+              ui.setStorageSync('LocalUserInfo', LocalUserInfo)
 
               ui.showToast({
                 title: '登录成功',
                 icon: 'success'
               })
 
-              // 登录成功后关闭 dialog ，并将 userinfo 传递回去
-              // ui.hideDialog({
-              //   userinfo: userinfo
-              // })
-              console.log('成功')
-              
               ui.switchTab({
                 url: '/pages/index',
                 success: () => {
-                  console.log('成功')
+                  console.log('跳转到首页 成功')
                 },
                 fail: ({errMsg}) => {
-                  console.log("登录失败：", errMsg)
+                  console.log("跳转到首页 失败：", errMsg)
                 },
                 complete: () => {
-                  console.log('complete')
+                  console.log('跳转到首页 complete')
                 }
               })
-
-              // 同时将请求的数据保存到本地，这里有问题，稍后再看
-              ui.setStorageSync('userinfo', userinfo)
               
             } else {
+              // 登录失败其他的返回码。
               ui.showToast({
                 title: result.data.desc
               })
@@ -233,8 +227,8 @@
             console.log("登录失败：", errMsg)
           }
         })
-
       },
+      // 注册
       register() {
         let that = this
         let pwd = this.registerPassword.toString().length
@@ -257,7 +251,9 @@
               'Content-Type': 'application/json'
             },
             success: function (result) {
+
               console.log("注册成功返回的数据:", result)
+
               if (result.data.code === 20003) {
                 ui.showToast({
                   title: '手机号格式不正确'
@@ -272,7 +268,8 @@
                   icon: 'success'
                 })
                 that.currentNum = 0
-              } else {
+
+              } else { // 注册失败其他的返回码。
                 ui.showToast({
                   title: '注册失败\n 状态码:' + result.data.code,
                   icon: 'success'
@@ -289,13 +286,7 @@
       }
     },
     mounted() {
-      this.$DialogOpen((data) => {
-        console.log("打开 dialog 时的回调函数", data)
-      })
-      this.$DialogClose((data) => {
-        console.log("关闭 dialog 时的回调函数", data)
-        this.currentNum = 0
-      })
+
     }
   }
 </script>

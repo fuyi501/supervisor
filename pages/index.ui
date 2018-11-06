@@ -296,47 +296,46 @@
       }
     },
     mounted() {
-      this.getItems()
+      // this.getItems()
       
-      // 监听推送消息
-      ui.onPushClick(function (res) {
-        console.log("监听成功:",res)
-        let proName = res.payload.split(':')[1]
+      // // 监听推送消息
+      // ui.onPushClick(function (res) {
+      //   console.log("监听成功:",res)
+      //   let proName = res.payload.split(':')[1]
 
-        ui.request({
-          url: "tram/getitems",
-          data: {
-            projectName: proName
-          },
-          method: 'GET',
-          dataType: 'jsonp',
-          success: function (result) {
-            console.log("推送监听请求结果result:",result)
-            ui.setStorageSync('itemInfo', result.data)
-            ui.navigateTo({
-              url: '/pages/attend/itemDetail'
-            })
-          },
-          fail: function ({ errMsg }) {
-          }
-        })
-      })
+      //   ui.request({
+      //     url: "tram/getitems",
+      //     data: {
+      //       projectName: proName
+      //     },
+      //     method: 'GET',
+      //     dataType: 'jsonp',
+      //     success: function (result) {
+      //       console.log("推送监听请求结果result:",result)
+      //       ui.setStorageSync('itemInfo', result.data)
+      //       ui.navigateTo({
+      //         url: '/pages/attend/itemDetail'
+      //       })
+      //     },
+      //     fail: function ({ errMsg }) {
+      //     }
+      //   })
+      // })
 
-      let userinfo = ui.getStorageSync('userinfo')
-      console.log("工作首页 userinfo:", userinfo)
-      if(userinfo === null){
+      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+      console.log("工作首页 LocalUserInfo:", LocalUserInfo)
+      if(LocalUserInfo === null){
         ui.navigateTo({
           url: '/pages/userCenter/login/loginInterface'
         })
       }else{
-        if(!userinfo.isLogin){
+        if(!LocalUserInfo.isLogin){
           ui.navigateTo({
             url: '/pages/userCenter/login/loginInterface'
           })
         }
       }
       
-
       window.setTimeout(() => {
         ui.closeSplashscreen()
       }, 1000)

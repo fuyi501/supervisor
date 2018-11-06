@@ -23,7 +23,7 @@
 
 <script>
 
-const confirmUrl = 'https://api.estech.xyz:8533/user/profile' // 更新用户信息
+const confirmUrl = 'user/profile' // 更新用户信息
 
 export default {
   config: {
@@ -42,9 +42,9 @@ export default {
     },
     confirm () {
       var self = this
-      let userinfo = ui.getStorageSync('userinfo')
-      console.log("修改用户名和昵称 userinfo:",userinfo)
-      if(userinfo !== null){
+      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+      console.log("修改用户名和昵称 LocalUserInfo:",LocalUserInfo)
+      if(LocalUserInfo !== null){
         if(this.confirmInfo === ''){
           ui.showToast({ title: this.text , icon: 'success' })
         }else{
@@ -53,21 +53,21 @@ export default {
             ui.request({
               url: confirmUrl,
               data: {
-                username: this.confirmInfo,
-                nickname: userinfo.nickName
+                realName: this.confirmInfo,
+                nickname: LocalUserInfo.nickName
               },
               method: 'POST',
               header: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + userinfo.tokenId
+                'Authorization': 'Bearer ' + LocalUserInfo.tokenId
               },
               success: function (result) {
                 console.log("修改请求返回的数据", result)
                 if(result.data.code === 2000){
 
-                  let userinfo = ui.getStorageSync('userinfo')
-                  userinfo.userName = self.confirmInfo
-                  ui.setStorageSync('userinfo', userinfo)
+                  let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+                  LocalUserInfo.userName = self.confirmInfo
+                  ui.setStorageSync('LocalUserInfo', LocalUserInfo)
 
                   ui.showToast({ title: '修改成功', icon: 'success' })
                   ui.navigateBack()
@@ -75,10 +75,9 @@ export default {
                   ui.showToast({ title: '修改失败' + result.data.desc })
                 }
                 
-                // ui.setStorageSync('userinfo', result.data.result)
               },
               fail: function ({ errMsg }) {
-                ui.showToast({ title: '修改失败' })
+                ui.showToast({ title: '修改失败' + errMsg })
                 console.log("修改失败：",errMsg)
               }
             })
@@ -88,35 +87,34 @@ export default {
               url: confirmUrl,
               data: {
                 nickname: this.confirmInfo,
-                username: userinfo.userName
+                realName: LocalUserInfo.userName
               },
               method: 'POST',
               header: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + userinfo.tokenId
+                'Authorization': 'Bearer ' + LocalUserInfo.tokenId
               },
               success: function (result) {
                 console.log("修改请求返回的数据", result)
                 if(result.data.code === 2000){
 
-                  let userinfo = ui.getStorageSync('userinfo')
-                  userinfo.nickName = self.confirmInfo
-                  ui.setStorageSync('userinfo', userinfo)
+                  let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+                  LocalUserInfo.nickName = self.confirmInfo
+                  ui.setStorageSync('LocalUserInfo', LocalUserInfo)
                   
                   ui.showToast({ title: '修改成功', icon: 'success' })
                   ui.navigateBack()
                 }else{
                   ui.showToast({ title: '修改失败' + result.data.desc })
                 }
-                // ui.setStorageSync('userinfo', result.data.result)
+                
               },
               fail: function ({ errMsg }) {
-                ui.showToast({ title: '修改失败' })
+                ui.showToast({ title: '修改失败' + errMsg})
                 console.log("修改失败：",errMsg)
               }
             })
           }
-
         }
       }
     }
