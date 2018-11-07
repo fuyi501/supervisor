@@ -42,17 +42,54 @@
       </ui-col>
     </ui-row>
 
-    <ui-row height="60" class="contacts_list2" bindtap="">
+    <ui-row height="60" class="contacts_list3" bindtap="">
       <ui-col width="50" space-left=10 align="center" vertical-align="middle">
         <ui-view class="left_icon">
           <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
         </ui-view>
       </ui-col>
       <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">平头哥有限责任公司</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" width="80" space-right="15" class="right_icon">
+        <ui-view style="width:100%; color:#1890ff">
+          管理
+          <ui-icon type="setting" size="18" color="#1890ff"></ui-icon>
+        </ui-view>
+      </ui-col>
+    </ui-row>
+    <ui-row height="50" class="contacts_list4" bindtap="">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <!-- <ui-view class="left_icon" style="background-color:#1890ff" > -->
+          <ui-icon type="zuzhi" color="#1890ff" size="20"></ui-icon>
+        <!-- </ui-view> -->
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
         <ui-view class="text_content">组织架构</ui-view>
       </ui-col>
       <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
-        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+        <!-- <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon> -->
+      </ui-col>
+    </ui-row>
+
+    <ui-row height="60" class="contacts_list1" space-top=10 space-bottom=10 bindtap="">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon">
+          <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">创建团队</ui-view>
+      </ui-col>
+      <ui-col span="6" vertical-align="middle" align="right" space-right="15" class="right_icon">
+        <ui-row style="width: 100%;">
+          <ui-col vertical-align="middle" align="left" span="10">
+            <ui-view class="right_text">团队/组织/公司</ui-view>
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" span=2>
+            <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+          </ui-col>
+        </ui-row>
       </ui-col>
     </ui-row>
 
@@ -163,6 +200,7 @@ export default {
     }
   }
 }
+// 没有下划线
 .contacts_list1 {
   background-color: #fff;
   .left_icon{
@@ -181,8 +219,15 @@ export default {
     line-height: 50px;
     color: #24292C;
   }
+  .right_text {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: #BAB9BF;
+  }
 }
 
+// 有一半下划线
 .contacts_list2 {
   background-color: #fff;
   .left_icon{
@@ -204,6 +249,54 @@ export default {
   }
   .right_icon {
     .mix-1px(0, 0, 1, 0, #ccc);
+  }
+}
+// 有全部的下划线
+.contacts_list3 {
+  background-color: #fff;
+  .ui-col{
+    .mix-1px(0, 0, 1, 0, #ccc);
+  }
+  .left_icon{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color:#1890ff; 
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    font-size: 16px;
+  }
+  .text_content {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #24292C;
+  }
+}
+// 有一部分下划线，高度降低
+.contacts_list4 {
+  background-color: #fff;
+  // .ui-col{
+  //   .mix-1px(0, 0, 1, 0, #ccc);
+  // }
+  .left_icon{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color:#1890ff; 
+    text-align: center;
+    line-height: 30px;
+    color: #fff;
+    font-size: 16px;
+  }
+  .text_content {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: #24292C;
   }
 }
 </style>
