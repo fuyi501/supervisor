@@ -27,11 +27,11 @@
     </ui-row>
     <ui-row height="50" class="userInfo_list2" bindtap="setUserInfo('用户名')">
       <ui-col vertical-align="middle" space-left="15">
-        姓名
+        真实姓名
       </ui-col>
       <ui-col vertical-align="middle" align="right" space-right="15">
-        <ui-view class="active2" ui:if=" userName === '' "> 未设置 </ui-view>
-        <ui-view class="active" ui:else> {{ userName }} </ui-view>
+        <ui-view class="active2" ui:if=" userRealName === '' "> 未设置 </ui-view>
+        <ui-view class="active" ui:else> {{ userRealName }} </ui-view>
       </ui-col>
     </ui-row>
     <ui-row height="50" class="userInfo_list2" bindtap="setUserInfo('昵称')">
@@ -39,8 +39,8 @@
         昵称
       </ui-col>
       <ui-col vertical-align="middle" align="right" space-right="15">
-        <ui-view class="active2" ui:if=" userNick === '' "> 未设置 </ui-view>
-        <ui-view class="active" ui:else> {{ userNick }} </ui-view>
+        <ui-view class="active2" ui:if=" userNickName === '' "> 未设置 </ui-view>
+        <ui-view class="active" ui:else> {{ userNickName }} </ui-view>
       </ui-col>
     </ui-row>
     <ui-row height="50" class="userInfo_list">
@@ -52,7 +52,11 @@
       </ui-col>
     </ui-row>
 
-    <ui-view class="list_title">账号绑定</ui-view>
+    <ui-row height="40">
+      <ui-col vertical-align="middle" align="left">
+        <ui-view class="list_title">账号绑定</ui-view>
+      </ui-col>
+    </ui-row>
     <ui-row height="50" class="userInfo_list2">
       <ui-col width="50" vertical-align="middle" align="center">
         <ui-icon type="phone1" color="#1E94FF" size="20"></ui-icon>
@@ -93,7 +97,11 @@
       </ui-col>
     </ui-row>
 
-    <ui-view class="list_title">安全设置</ui-view>
+    <ui-row height="40">
+      <ui-col vertical-align="middle" align="left">
+        <ui-view class="list_title">安全设置</ui-view>
+      </ui-col>
+    </ui-row>
     <ui-row height="50" class="userInfo_list2">
       <ui-col vertical-align="middle" space-left="15">
         登录密码
@@ -115,7 +123,7 @@
           <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
         </ui-view>
         <ui-view class="active" ui:else>
-          <ui-icon type="renlian2" size="16" color="green"></ui-icon>
+          <ui-icon type="renlian2" size="16" color="#1890ff"></ui-icon>
           已上传
           <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
         </ui-view>
@@ -148,25 +156,54 @@
     ['compressed', 'original']
   ]
   const uploadAvatarUrl = 'user/avatar/base64' // 上传用户头像照片
-  const getAvatarUrl = 'user/avatar/base64'
+  const getAvatarUrl = 'user/avatar/base64' // 获取用户头像照片
 
   // 压缩图片库
   import lrz from '#/static/utils/lrz'
 
   export default {
     config: {
-      backgroundColor: '#F2F2F2',
-      delay: false
+      navigationStyle: "custom",
+      backgroundColor: '#F2F2F2'
     },
     data() {
       return {
         portraitUrl: require('#/images/portrait_bg.png'),
-        userName: '',
-        userNick: '',
+        userRealName: '',
+        userNickName: '',
         userTel: '',
         userId: '',
         tokenId: '',
-        isHasFaceImg: ''
+        isHasFaceImg: '',
+        pageLoad: { // 进入页面将用户信息显示在页面上
+          trigger: 'always',
+          handle: () => {
+            console.log("用户信息 pageLoad")
+            let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+            console.log("LocalUserInfo:", LocalUserInfo)
+            if (LocalUserInfo !== null && LocalUserInfo.tokenId !== '') {
+
+              this.userRealName = LocalUserInfo.realName
+              this.userNickName = LocalUserInfo.nickName
+              this.userTel = LocalUserInfo.userTel
+              this.userId = LocalUserInfo.userId
+              this.tokenId = LocalUserInfo.tokenId
+
+              this.isHasFaceImg = LocalUserInfo.isHasFaceImg ? LocalUserInfo.isHasFaceImg : ''
+
+              if(LocalUserInfo.isHasAvatar){
+                if(LocalUserInfo.avatarBase64 === ''){
+                  this.getUserAvatar()
+                }else{
+                  this.portraitUrl = LocalUserInfo.avatarBase64
+                }
+              }else{
+                this.portraitUrl = require('#/images/portrait_bg.png')
+              }
+
+            }
+          }
+        }
       }
     },
     methods: {
@@ -182,9 +219,10 @@
         let that = this
         ui.chooseImage({
           clip: true,
-          sourceType: sourceType[index],
-          sizeType: sizeType[1],
+          sourceType: sourceType[index], // 拍照和相册
+          sizeType: sizeType[0], // 压缩
           success: function (res) {
+
             let imagePath = res.tempFilePaths[0]
 
             // 开始压缩
@@ -197,7 +235,7 @@
                 ui.request({
                   url: uploadAvatarUrl,
                   data: {
-                    'img': that.portraitUrl,
+                    'img': that.portraitUrl.split(',')[1], // 上传去掉头部
                     // 'base64Len': base64Len
                   },
                   method: 'POST',
@@ -207,7 +245,9 @@
                   },
                   success: (result) => {
                     if (result.data.code === 2000) {
+
                       console.log("头像base64编码上传成功", result)
+
                       ui.showToast({
                         title: '头像更新成功',
                         icon: 'success'
@@ -215,10 +255,12 @@
 
                       // 获取 LocalUserInfo 数据，将头像数据赋值给他
                       let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+                      LocalUserInfo.isHasAvatar = true
                       LocalUserInfo.avatarBase64 = that.portraitUrl
                       ui.setStorageSync('LocalUserInfo', LocalUserInfo)
 
                       console.log("修改后的 LocalUserInfo :", LocalUserInfo)
+
                     } else {
                       ui.showToast({
                         title: '头像更新失败' + result.data.code
@@ -226,9 +268,7 @@
                     }
 
                   },
-                  fail: function ({
-                    errMsg
-                  }) {
+                  fail: function ({errMsg}) {
                     ui.showToast({
                       title: '头像更新失败' + errMsg
                     })
@@ -253,6 +293,38 @@
             ui.showToast({
               title: '选择头像失败' + errMsg
             })
+          }
+        })
+      },
+      // 获取用户头像
+      getUserAvatar () {
+        console.log('获取用户头像')
+        ui.request({
+          url: getAvatarUrl,
+          header: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.tokenId
+          },
+          method: 'GET',
+          success: (result) => {
+            console.log("获取用户头像:",result)
+            if(result.data.code === 2000){
+              // console.log("获取用户头像成功:",result.data.data.img)
+              this.portraitUrl = 'data:image;base64,' + result.data.data.img
+
+              // 获取 LocalUserInfo 数据，将头像数据赋值给他
+              let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+              LocalUserInfo.isHasAvatar = true
+              LocalUserInfo.avatarBase64 = this.portraitUrl
+              ui.setStorageSync('LocalUserInfo', LocalUserInfo)
+              
+            }else{
+              console.log("获取用户头像失败:",result)
+            }
+            
+          },
+          fail: ({ errMsg }) => {
+            console.log("获取用户头像失败:",errMsg)
           }
         })
       },
@@ -281,15 +353,26 @@
       let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
       console.log("用户信息页面：", LocalUserInfo)
 
-      this.userName = LocalUserInfo.userName
-      this.userNick = LocalUserInfo.nickName
+      this.userRealName = LocalUserInfo.realName
+      this.userNickName = LocalUserInfo.nickName
       this.userTel = LocalUserInfo.userTel
       this.userId = LocalUserInfo.userId
       this.tokenId = LocalUserInfo.tokenId
 
-      this.isHasFaceImg = LocalUserInfo.isHasFaceImg ? true : ''
-      this.portraitUrl = LocalUserInfo.avatarBase64 ? LocalUserInfo.avatarBase64 : require('#/images/portrait_bg.png')
+      this.isHasFaceImg = LocalUserInfo.isHasFaceImg ? LocalUserInfo.isHasFaceImg : ''
 
+      if(LocalUserInfo.isHasAvatar){
+        if(LocalUserInfo.avatarBase64 === ''){
+          this.getUserAvatar()
+        }else{
+          this.portraitUrl = LocalUserInfo.avatarBase64
+        }
+      }else{
+        this.portraitUrl = require('#/images/portrait_bg.png')
+      }
+      
+
+      
     }
   }
 </script>
@@ -349,8 +432,7 @@
 
   .list_title {
     font-size: 12px;
-    color: #656565;
+    color: #8c8c8c;
     padding-left: 15px;
-    line-height: 40px;
   }
 </style>

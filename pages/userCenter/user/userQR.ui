@@ -16,10 +16,10 @@
     <ui-view class="qr_info">
       <ui-row height="70" class="qr_header">
         <ui-col vertical-align="middle" align="left" width="90" space-left=20>
-          <ui-image src="{{ portraitUrl }}" mode='aspectFill' width="45" height="45" class="head_portrait"></ui-image>
+          <ui-image src="{{ portraitUrl }}" mode='aspectFill' width="45" height="45"></ui-image>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right=20>
-          <ui-view class="user_name">傅毅的名片</ui-view>
+          <ui-view class="user_name">{{ userRealName ? userRealName : (userNickName ? userNickName : '您')}}的名片</ui-view>
         </ui-col>
       </ui-row>
       <ui-row height="280">
@@ -57,6 +57,8 @@ import qrious from '#/static/utils/qrious'
     },
     data() {
       return {
+        userRealName: '',
+        userNickName: '',
         portraitUrl: require('#/images/portrait_bg.png'),
         qrcode: '',
         screenValue: 0
@@ -110,6 +112,18 @@ import qrious from '#/static/utils/qrious'
     },
     mounted() {
 
+      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+      console.log("二维码页面：", LocalUserInfo)
+
+      this.userRealName = LocalUserInfo.realName
+      this.userNickName = LocalUserInfo.nickName
+
+      if(LocalUserInfo.isHasAvatar){
+        this.portraitUrl = LocalUserInfo.avatarBase64
+      }else{
+        this.portraitUrl = require('#/images/portrait_bg.png')
+      }
+
       this.getScreenBrightness()
 
       this.qrcode = this.makeQRCode2("https://github.com/neocotic/qrious")    
@@ -157,6 +171,10 @@ import qrious from '#/static/utils/qrious'
       background: #fff;
       border-radius: 10px 10px 0px 0px;
       .mix-1px(0, 0, 1, 0, #e8e8e8);
+
+      .ui-image {
+        border-radius: 50%;
+      }
 
       .user_name {
         color: #000;

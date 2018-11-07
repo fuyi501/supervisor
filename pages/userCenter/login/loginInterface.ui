@@ -174,7 +174,7 @@
               // 登录成功后，封装成 本地数据
               let LocalUserInfo = {
                 isLogin: true,
-                userName: userInfo.username ? userInfo.username : '',
+                realName: userInfo.realName ? userInfo.realName : '',
                 nickName: userInfo.nickname ? userInfo.nickname : '',
                 userId: userInfo.employee_id ? userInfo.employee_id : '',
                 userTel: userInfo.tel,
@@ -183,7 +183,7 @@
                 registerTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
                 loginTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
 
-                isHasAvatar: false,
+                isHasAvatar: userInfo.hasAvatar,
                 avatarBase64: '',
 
                 isHasFaceImg: false,
@@ -192,7 +192,7 @@
               }
               console.log("登录成功封装的数据 LocalUserInfo", LocalUserInfo)
 
-              // 同时将请求的数据保存到本地，这里有问题，稍后再看
+              // 同时将请求的数据保存到本地
               ui.setStorageSync('LocalUserInfo', LocalUserInfo)
 
               ui.showToast({
@@ -200,16 +200,11 @@
                 icon: 'success'
               })
 
-              ui.switchTab({
+              // app 端不允许使用swithTab 跳转到 tabBar 页面，解决方案可能就只能使用 dialog 了
+              ui.redirectTo({
                 url: '/pages/index',
                 success: () => {
                   console.log('跳转到首页 成功')
-                },
-                fail: ({errMsg}) => {
-                  console.log("跳转到首页 失败：", errMsg)
-                },
-                complete: () => {
-                  console.log('跳转到首页 complete')
                 }
               })
               

@@ -1,6 +1,6 @@
 <!---->
 <template>
-  <ui-page>
+  <ui-page page-load="{{ pageLoad }}">
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
         <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
@@ -15,7 +15,7 @@
 
     <ui-view ui:if="{{ isHasFaceImg }}">
       <ui-view style="{{ { height:faceHeight + 'px'} }}" class="preview">
-        <ui-image src="{{imageSrc}}"  mode="aspectFit"></ui-image>
+        <ui-image src="{{ faceImgBase64 }}"  mode="aspectFit"></ui-image>
       </ui-view>
       <ui-view class="btn_content">
         <ui-button form-type="submit" type="primary" class="submit" bindtap="uploadFaceImg">更新人脸照片</ui-button>
@@ -38,7 +38,19 @@
 
 <script>
 
-const uploadFaceUrl = 'https://api.estech.xyz:8533/face/upload/base64' // 上传用户基准照片
+const sourceType = [
+  ['camera'],
+  ['album'],
+  ['camera', 'album']
+]
+const sizeType = [
+  ['compressed'],
+  ['original'],
+  ['compressed', 'original']
+]
+const uploadFaceUrl = 'face/upload/base64' // 上传用户基准照片
+const getFaceImgUrl = 'face/upload/base64' // 获取用户基准照片
+
 import lrz from '#/static/utils/lrz' // 压缩图片库
 
 export default {
@@ -47,10 +59,10 @@ export default {
   },
   data() {
     return {
-      imageSrc: '',
       faceHeight: ui.DEFAULT_CONTENT_HEIGHT * 0.7,
-      tokenid: '',
-      isHasFaceImg: false
+      tokenId: '',
+      isHasFaceImg: false,
+      faceImgBase64: ''
     }
   },
   methods: {
@@ -58,54 +70,46 @@ export default {
       ui.navigateBack()
     },
     uploadFaceImg () {
-      this.chooseImage()
+      this.chooseImage(2)
     },
-    chooseImage () {
-      var self = this
+    chooseImage (index) {
+      console.log("选择人脸照片")
       ui.chooseImage({
-        count: 1,
-        sizeType: ['compressed'],
-        sourceType: ['album','camera'],
+        sourceType: sourceType[index],
+        sizeType: sizeType[0],
         success: function (res) {
           var imagePath = res.tempFilePaths[0]
           console.log("图片路径：", imagePath)
-          console.log("上传token：",self.tokenid)
           // 开始压缩
           lrz(imagePath)
-            .then(function (rst) {
+            .then((rst) => {
                 // 处理成功会执行
                 console.log("压缩成功",rst)
-                self.imageSrc = rst.base64
-                var imageH = self.imageSrc.split(',')[1]
-                console.log("去掉头部的长度：",imageH.length," 去掉头部：",imageH)
-
-                // 获取 userinfo 数据，再添加一个值
-                let userinfo = ui.getStorageSync('userinfo')
-                userinfo.faceImgBase64 = rst.base64
-                ui.setStorageSync('userinfo',userinfo)
 
                 ui.request({
                   url: uploadFaceUrl,
                   data: {
-                    'img': imageH,
+                    'img': rst.base64.split(',')[1],
                     // 'base64Len': base64Len
                   },
                   method: 'POST',
                   header: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + self.tokenid
+                    'Authorization': 'Bearer ' + this.tokenId
                   },
                   success: (result) => {
                     console.log("上传base64编码成功 result:",result)
                     ui.showToast({ title: '上传成功' , icon: 'success' })
 
-                    self.isHasFaceImg = true
-                    // 添加是否有 人脸照片 
-                    let userinfo = ui.getStorageSync('userinfo')
-                    userinfo.isHasFaceImg = self.isHasFaceImg
-                    ui.setStorageSync('userinfo', userinfo)
+                    this.isHasFaceImg = true
+                    this.faceImgBase64 = rst.base64
 
-                    console.log("修改后的 userinfo :" , userinfo)
+                    // 更新本地信息
+                    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+                    LocalUserInfo.isHasFaceImg = true
+                    LocalUserInfo.faceImgBase64 = rst.base64
+                    ui.setStorageSync('LocalUserInfo', LocalUserInfo)
+                    console.log("修改后的 LocalUserInfo :" , LocalUserInfo)
 
                   },
                   fail: function ({ errMsg }) {
@@ -131,19 +135,50 @@ export default {
         }
       })
     },
+    // 获取用户人脸照片
+    getUserAvatar () {
+      console.log('获取用户人脸照片')
+      ui.request({
+        url: getFaceImgUrl,
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.tokenId
+        },
+        method: 'GET',
+        success: (result) => {
+          console.log("获取用户人脸照片:",result)
+          if(result.data.code === 2000){
+            // console.log("获取用户人脸照片成功:",result.data.data.img)
+            this.isHasFaceImg = true
+            this.faceImgBase64 = 'data:image;base64,' + result.data.data.img
+
+            // 获取 LocalUserInfo 数据，将头像数据赋值给他
+            let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+            LocalUserInfo.isHasFaceImg = true
+            LocalUserInfo.faceImgBase64 = this.faceImgBase64
+            ui.setStorageSync('LocalUserInfo', LocalUserInfo)
+            
+          }else{
+            console.log("获取用户头像失败:", result)
+          }
+          
+        },
+        fail: ({ errMsg }) => {
+          console.log("获取用户头像失败:", errMsg)
+        }
+      })
+    }
   },
   mounted() {
-    console.log('上传人脸照片 mounted')
-    let userinfo = ui.getStorageSync('userinfo')
-    console.log("人脸照片上传 mounted userinfo:",userinfo)
-    if (userinfo !== null){
-      if(userinfo.tokenId !== '') {
-        this.tokenid = userinfo.tokenId
-      }else{
-        console.log("token 错误")
-      }
-      if(userinfo.faceImgBase64 !== ''){
-        this.imageSrc = userinfo.faceImgBase64 
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("人脸照片上传 mounted LocalUserInfo:",LocalUserInfo)
+
+    if (LocalUserInfo !== null){
+      this.tokenId = LocalUserInfo.tokenId
+      
+      if(LocalUserInfo.isHasFaceImg && LocalUserInfo.faceImgBase64 !== ''){
+        this.isHasFaceImg = true
+        this.faceImgBase64 = LocalUserInfo.faceImgBase64 
       }
     }
   }

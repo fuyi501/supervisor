@@ -41,7 +41,6 @@ export default {
       ui.navigateBack()
     },
     confirm () {
-      var self = this
       let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
       console.log("修改用户名和昵称 LocalUserInfo:",LocalUserInfo)
       if(LocalUserInfo !== null){
@@ -61,22 +60,24 @@ export default {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + LocalUserInfo.tokenId
               },
-              success: function (result) {
+              success: (result) => {
                 console.log("修改请求返回的数据", result)
                 if(result.data.code === 2000){
 
+                  // 更新本地存储的信息
                   let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
-                  LocalUserInfo.userName = self.confirmInfo
+                  LocalUserInfo.realName = this.confirmInfo
                   ui.setStorageSync('LocalUserInfo', LocalUserInfo)
 
                   ui.showToast({ title: '修改成功', icon: 'success' })
                   ui.navigateBack()
+
                 }else{
                   ui.showToast({ title: '修改失败' + result.data.desc })
                 }
                 
               },
-              fail: function ({ errMsg }) {
+              fail: ({ errMsg }) => {
                 ui.showToast({ title: '修改失败' + errMsg })
                 console.log("修改失败：",errMsg)
               }
@@ -94,22 +95,24 @@ export default {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + LocalUserInfo.tokenId
               },
-              success: function (result) {
+              success: (result) => {
                 console.log("修改请求返回的数据", result)
                 if(result.data.code === 2000){
 
+                  // 更新本地存储的信息
                   let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
-                  LocalUserInfo.nickName = self.confirmInfo
+                  LocalUserInfo.nickName = this.confirmInfo
                   ui.setStorageSync('LocalUserInfo', LocalUserInfo)
                   
                   ui.showToast({ title: '修改成功', icon: 'success' })
                   ui.navigateBack()
+                  
                 }else{
                   ui.showToast({ title: '修改失败' + result.data.desc })
                 }
                 
               },
-              fail: function ({ errMsg }) {
+              fail: ({ errMsg }) => {
                 ui.showToast({ title: '修改失败' + errMsg})
                 console.log("修改失败：",errMsg)
               }
@@ -124,10 +127,10 @@ export default {
     // ui.showToast({ title: getData })
     if(getData.type === '用户名'){
       this.nameOrNick = getData.type
-      this.text = '请输入您要修改的用户名'
+      this.text = '请输入新的用户名'
     }else {
       this.nameOrNick = getData.type
-      this.text = '请输入您要修改的昵称'
+      this.text = '请输入新的昵称'
     }
   }
 }

@@ -23,6 +23,8 @@
 
 ## 本地存储规范
 
+base64图片头部信息：data:image;base64,
+
 所有数据均保存在 LocalUserInfo 中，包括 BaseInfo，ItemsInfo。。。
 
 ## 项目计划安排

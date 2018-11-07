@@ -24,7 +24,7 @@
             <!-- <ui-view class="user_name">{{ isLogin ? userName : '傅毅' }}</ui-view> -->
             <ui-view class="user_name" bindtap="openUserQR">
               <ui-icon type="erweima1" size="18" color="#1F95FF"></ui-icon>
-              {{ userName ? userName : userTel }}
+              {{ realName ? realName : (nickName ? nickName : (userTel ? userTel : '请设置您的名称')) }}
             </ui-view>
             <ui-view class="user_phone">
               <ui-icon type="phone" size="14" color="#fff"></ui-icon>
@@ -146,15 +146,19 @@
 
 <script>
   // userCenter.js
+  const getAvatarUrl = 'user/avatar/base64' // 获取用户头像照片
+
   export default {
     config: {
       navigationStyle: "custom",
-      backgroundColor: '#F2F2F2',
+      backgroundColor: '#F2F2F2'
     },
     data() {
       return {
-        userName: '', // 用户名
+        realName: '', // 用户名
+        nickName: '', // 昵称
         userTel: '', // 用户电话号码
+        tokenId: '',
         portraitUrl: require('#/images/portrait_bg.png'), //头像
         pageLoad: { // 进入页面将用户信息显示在页面上
           trigger: 'always',
@@ -164,11 +168,21 @@
             console.log("LocalUserInfo:", LocalUserInfo)
             if (LocalUserInfo !== null && LocalUserInfo.tokenId !== '') {
 
-              this.userName = LocalUserInfo.userName
-              this.userNick = LocalUserInfo.nickName
+              this.realName = LocalUserInfo.realName
+              this.nickName = LocalUserInfo.nickName
               this.userTel = LocalUserInfo.userTel
+              this.tokenId = LocalUserInfo.tokenId
 
-              this.portraitUrl = LocalUserInfo.avatarBase64 ? LocalUserInfo.avatarBase64 : require('#/images/portrait_bg.png')
+              if(LocalUserInfo.isHasAvatar){
+                if(LocalUserInfo.avatarBase64 === ''){
+                  this.getUserAvatar()
+                }else{
+                  this.portraitUrl = LocalUserInfo.avatarBase64
+                }
+              }else{
+                this.portraitUrl = require('#/images/portrait_bg.png')
+              }
+
             }
           }
         }
@@ -223,6 +237,38 @@
         ui.navigateTo({
           url: '/pages/testPages/testIndex'
         })
+      },
+      // 获取用户头像
+      getUserAvatar () {
+        console.log('获取用户头像')
+        ui.request({
+          url: getAvatarUrl,
+          header: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.tokenId
+          },
+          method: 'GET',
+          success: (result) => {
+            console.log("获取用户头像:",result)
+            if(result.data.code === 2000){
+              // console.log("获取用户头像成功:",result.data.data.img)
+              this.portraitUrl = 'data:image;base64,' + result.data.data.img
+
+              // 获取 LocalUserInfo 数据，将头像数据赋值给他
+              let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+              LocalUserInfo.isHasAvatar = true
+              LocalUserInfo.avatarBase64 = this.portraitUrl
+              ui.setStorageSync('LocalUserInfo', LocalUserInfo)
+              
+            }else{
+              console.log("获取用户头像失败:",result)
+            }
+            
+          },
+          fail: ({ errMsg }) => {
+            console.log("获取用户头像失败:",errMsg)
+          }
+        })
       }
     },
     mounted() {
@@ -231,11 +277,21 @@
       console.log(" LocalUserInfo:", LocalUserInfo)
       if (LocalUserInfo !== null && LocalUserInfo.tokenId !== '') {
 
-        this.userName = LocalUserInfo.userName
-        this.userNick = LocalUserInfo.nickName
+        this.realName = LocalUserInfo.realName
+        this.nickName = LocalUserInfo.nickName
         this.userTel = LocalUserInfo.userTel
+        this.tokenId = LocalUserInfo.tokenId
 
-        this.portraitUrl = LocalUserInfo.avatarBase64 ? LocalUserInfo.avatarBase64 : require('#/images/portrait_bg.png')
+        if(LocalUserInfo.isHasAvatar){
+          if(LocalUserInfo.avatarBase64 === ''){
+            this.getUserAvatar()
+          }else{
+            this.portraitUrl = LocalUserInfo.avatarBase64
+          }
+        }else{
+          this.portraitUrl = require('#/images/portrait_bg.png')
+        }
+
       }
     }
   }
