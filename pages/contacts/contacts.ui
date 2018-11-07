@@ -72,7 +72,7 @@
       </ui-col>
     </ui-row>
 
-    <ui-row height="60" class="contacts_list1" space-top=10 space-bottom=10 bindtap="">
+    <ui-row height="60" class="contacts_list1" space-top=10 space-bottom=10 bindtap="openCreateTeam">
       <ui-col width="50" space-left=10 align="center" vertical-align="middle">
         <ui-view class="left_icon">
           <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
@@ -150,14 +150,22 @@ export default {
     }
   },
   methods: {
+    // 好友列表
     openContactBook () {
       ui.navigateTo({
         url: '/pages/contacts/contactBook'
       })
     },
+    // 好友申请
     openFriendRequests () {
       ui.navigateTo({
         url: '/pages/contacts/friendRequests'
+      })
+    },
+    // 创建团队
+    openCreateTeam () {
+      ui.navigateTo({
+        url: '/pages/contacts/organization/createTeam'
       })
     }
   },

@@ -1,0 +1,109 @@
+<!--note.ui-->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="20" color="#126DFE"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">选择行业</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="demo-content">
+      <ui-radio-group bindchange="selected">
+        <ui-label class="radio">
+          <ui-radio value="监理单位" />监理单位
+        </ui-label>
+        <ui-label class="radio">
+          <ui-radio value="施工单位" />施工单位
+        </ui-label>
+        <ui-label class="radio">
+          <ui-radio value="其他" />其他
+        </ui-label>
+      </ui-radio-group>
+    </ui-view>
+
+  </ui-page>
+</template>
+
+<script>
+  export default {
+    config: {
+      navigationStyle: 'custom',
+      backgroundColor: '#F6F6F6'
+    },
+    data() {
+      return {
+        // 行业名称
+        industryName: '',
+
+      }
+    },
+    methods: {
+      // 返回按钮
+      navigateBack() {
+        ui.navigateBack()
+      },
+      selected (value) {
+        this.industryName = value
+        console.log(this.industryName)
+        ui.setStorageSync('selectedIndustry', this.industryName)
+        ui.navigateBack()
+      }
+    },
+    mounted() {
+
+    }
+  }
+</script>
+
+<style lang="less">
+  .ui-actionsheet-menu-cell {
+    font-size: 14px;
+    color: #666;
+  }
+
+  .nav_bar {
+    background: #fff;
+
+    .nav_title {
+      color: #000;
+      font-size: 36rpx;
+      font-weight: bold;
+    }
+  }
+
+  .demo-content {
+    background-color: #fff;
+    margin-top: 10px;
+    .radio {
+      display: block;
+      margin-left: 15px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      &:not(:first-of-type) {
+        .mix-1px(1, 0, 0, 0, #d4d4d4);
+      }
+      .ui-radio {
+        margin-right: 6px;
+      }
+    }
+    .paybox{
+      text-align:left;
+      margin:0;
+      padding:0
+    }
+    .title{
+      color:#333;
+      font-size:14px;
+    }
+    .msg{
+      color:#666;
+      font-size:12px
+    }
+  }
+</style>

@@ -68,7 +68,11 @@ export default {
       // "pages/application/rizhi/rizhiWrite",
       // "pages/application/rizhi/rizhiWatch",
       // "pages/application/rizhi/rizhiStatistics"
-      ,"pages/contacts/friendRequests","pages/application/kaoqin/kqSetting","pages/application/kaoqin/addKQZ","pages/testPages/example/clearUserInfo"],
+      ,"pages/contacts/friendRequests",
+      "pages/application/kaoqin/kqSetting",
+      "pages/application/kaoqin/addKQZ",
+      "pages/testPages/example/clearUserInfo",
+      "pages/contacts/organization/createTeam","pages/contacts/organization/selectIndustry"],
     "theme": {
       "theme-color": "#3399ff"
     },
