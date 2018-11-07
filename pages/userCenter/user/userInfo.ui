@@ -1,6 +1,6 @@
 <!--userinfo.ui-->
 <template>
-  <ui-page >
+  <ui-page page-load="{{ pageLoad }}">
 
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
@@ -370,8 +370,6 @@
       }else{
         this.portraitUrl = require('#/images/portrait_bg.png')
       }
-      
-
       
     }
   }

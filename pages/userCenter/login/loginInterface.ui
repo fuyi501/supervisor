@@ -93,6 +93,7 @@
     },
     data() {
       return {
+        isLogin: false,
         swiperHeight: ui.DEFAULT_CONTENT_HEIGHT, // 
         currentNum: 0, // 控制显示 登陆页面还是 注册页面，0 为登录页面
         loginTel: '13412341234', // 登陆电话
@@ -139,6 +140,7 @@
       },
       // 点击登录按钮触发 操作
       login() {
+        let that = this
         console.log("登录请求")
         // 登录请求
         ui.request({
@@ -168,6 +170,8 @@
               
               console.log('登录成功')
 
+              that.isLogin = true
+
               let userInfo = result.data.data.profile
               let token = result.data.data.token
 
@@ -186,7 +190,7 @@
                 isHasAvatar: userInfo.hasAvatar,
                 avatarBase64: '',
 
-                isHasFaceImg: false,
+                isHasFaceImg: userInfo.hasFace,
                 faceImgBase64: '',
                 
               }
@@ -195,10 +199,16 @@
               // 同时将请求的数据保存到本地
               ui.setStorageSync('LocalUserInfo', LocalUserInfo)
 
-              ui.showToast({
-                title: '登录成功',
-                icon: 'success'
-              })
+              ui.showToast({title: '登录成功', icon: 'success'})
+
+              // 取消监听安卓返回按键
+              // ui.offBackButtonClick({
+              //   listener: that.closeApp,
+              //   success () {
+              //     console.log('取消监听')
+              //     ui.showToast({ title: '取消监听', icon: 'success' })
+              //   }
+              // })
 
               // app 端不允许使用swithTab 跳转到 tabBar 页面，解决方案可能就只能使用 dialog 了
               ui.redirectTo({
@@ -278,10 +288,23 @@
             }
           })
         }
-      }
+      },
+      // closeApp() {
+      //   ui.offBackButtonClick({
+      //     listener: this.closeApp,
+      //     success () {
+      //       console.log('取消监听')
+      //       ui.showToast({ title: '关闭app', icon: 'success' })
+      //       window.setTimeout(()=>{
+      //         ui.closeApp() // 关闭app
+      //       }, 1000)
+      //     }
+      //   })
+      // }
     },
     mounted() {
-
+      // 监听安卓手机返回按键
+      // ui.onBackButtonClick(this.closeApp)
     }
   }
 </script>

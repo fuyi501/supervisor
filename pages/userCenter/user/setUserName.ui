@@ -41,18 +41,19 @@ export default {
       ui.navigateBack()
     },
     confirm () {
+      let that = this
       let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
       console.log("修改用户名和昵称 LocalUserInfo:",LocalUserInfo)
-      if(LocalUserInfo !== null){
-        if(this.confirmInfo === ''){
-          ui.showToast({ title: this.text , icon: 'success' })
+      if(LocalUserInfo !== null) {
+        if(that.confirmInfo === ''){
+          ui.showToast({ title: that.text , icon: 'success' })
         }else{
-          if(this.nameOrNick === '用户名'){
+          if(that.nameOrNick === '用户名'){
             // 确认修改用户名
             ui.request({
               url: confirmUrl,
               data: {
-                realName: this.confirmInfo,
+                realName: that.confirmInfo,
                 nickname: LocalUserInfo.nickName
               },
               method: 'POST',
@@ -66,7 +67,7 @@ export default {
 
                   // 更新本地存储的信息
                   let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
-                  LocalUserInfo.realName = this.confirmInfo
+                  LocalUserInfo.realName = that.confirmInfo
                   ui.setStorageSync('LocalUserInfo', LocalUserInfo)
 
                   ui.showToast({ title: '修改成功', icon: 'success' })
@@ -87,7 +88,7 @@ export default {
             ui.request({
               url: confirmUrl,
               data: {
-                nickname: this.confirmInfo,
+                nickname: that.confirmInfo,
                 realName: LocalUserInfo.userName
               },
               method: 'POST',
@@ -101,7 +102,7 @@ export default {
 
                   // 更新本地存储的信息
                   let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
-                  LocalUserInfo.nickName = this.confirmInfo
+                  LocalUserInfo.nickName = that.confirmInfo
                   ui.setStorageSync('LocalUserInfo', LocalUserInfo)
                   
                   ui.showToast({ title: '修改成功', icon: 'success' })

@@ -1,6 +1,6 @@
 <!---->
 <template>
-  <ui-page page-load="{{ pageLoad }}">
+  <ui-page>
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
         <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
@@ -48,8 +48,8 @@ const sizeType = [
   ['original'],
   ['compressed', 'original']
 ]
-const uploadFaceUrl = 'face/upload/base64' // 上传用户基准照片
-const getFaceImgUrl = 'face/upload/base64' // 获取用户基准照片
+const uploadFaceUrl = 'user/face/base64' // 上传用户基准照片
+const getFaceImgUrl = 'user/face/base64' // 获取用户基准照片
 
 import lrz from '#/static/utils/lrz' // 压缩图片库
 
@@ -138,26 +138,27 @@ export default {
       })
     },
     // 获取用户人脸照片
-    getUserAvatar () {
+    getUserFaceImg () {
+      let that = this
       console.log('获取用户人脸照片')
       ui.request({
         url: getFaceImgUrl,
         header: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + this.tokenId
+          'Authorization': 'Bearer ' + that.tokenId
         },
         method: 'GET',
         success: (result) => {
           console.log("获取用户人脸照片:",result)
           if(result.data.code === 2000){
             // console.log("获取用户人脸照片成功:",result.data.data.img)
-            this.isHasFaceImg = true
-            this.faceImgBase64 = 'data:image;base64,' + result.data.data.img
+            that.isHasFaceImg = true
+            that.faceImgBase64 = 'data:image;base64,' + result.data.data.img
 
             // 获取 LocalUserInfo 数据，将头像数据赋值给他
             let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
             LocalUserInfo.isHasFaceImg = true
-            LocalUserInfo.faceImgBase64 = this.faceImgBase64
+            LocalUserInfo.faceImgBase64 = that.faceImgBase64
             ui.setStorageSync('LocalUserInfo', LocalUserInfo)
             
           }else{
@@ -175,12 +176,16 @@ export default {
     let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
     console.log("人脸照片上传 mounted LocalUserInfo:",LocalUserInfo)
 
-    if (LocalUserInfo !== null){
+    if (LocalUserInfo !== null) {
       this.tokenId = LocalUserInfo.tokenId
-      
-      if(LocalUserInfo.isHasFaceImg && LocalUserInfo.faceImgBase64 !== ''){
+
+      if(LocalUserInfo.isHasFaceImg){
         this.isHasFaceImg = true
-        this.faceImgBase64 = LocalUserInfo.faceImgBase64 
+        if(LocalUserInfo.faceImgBase64 === '') {
+          this.getUserFaceImg()
+        }else{
+          this.faceImgBase64 = LocalUserInfo.faceImgBase64
+        }
       }
     }
   }
