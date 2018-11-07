@@ -74,6 +74,8 @@ export default {
     },
     chooseImage (index) {
       console.log("选择人脸照片")
+      let that = this
+      // console.log('之前的：',that.faceImgBase64)
       ui.chooseImage({
         sourceType: sourceType[index],
         sizeType: sizeType[0],
@@ -85,29 +87,29 @@ export default {
             .then((rst) => {
                 // 处理成功会执行
                 console.log("压缩成功",rst)
+                that.isHasFaceImg = true
+                that.faceImgBase64 = rst.base64
+                // console.log('之后的：',that.faceImgBase64)
 
                 ui.request({
                   url: uploadFaceUrl,
                   data: {
-                    'img': rst.base64.split(',')[1],
+                    'img': that.faceImgBase64.split(',')[1],
                     // 'base64Len': base64Len
                   },
                   method: 'POST',
                   header: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + this.tokenId
+                    'Authorization': 'Bearer ' + that.tokenId
                   },
                   success: (result) => {
                     console.log("上传base64编码成功 result:",result)
                     ui.showToast({ title: '上传成功' , icon: 'success' })
 
-                    this.isHasFaceImg = true
-                    this.faceImgBase64 = rst.base64
-
                     // 更新本地信息
                     let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
                     LocalUserInfo.isHasFaceImg = true
-                    LocalUserInfo.faceImgBase64 = rst.base64
+                    LocalUserInfo.faceImgBase64 = that.faceImgBase64
                     ui.setStorageSync('LocalUserInfo', LocalUserInfo)
                     console.log("修改后的 LocalUserInfo :" , LocalUserInfo)
 
