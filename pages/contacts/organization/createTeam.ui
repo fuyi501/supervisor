@@ -55,7 +55,7 @@
 
       <ui-row height="50" bindtap="openArea">
         <ui-col vertical-align="middle" align="left" width="70" space-left="10">
-          <ui-view>地区</ui-view>
+          <ui-view>所在地区</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
@@ -118,6 +118,8 @@
           handle: () => {
             console.log("创建团队 pageLoad")
             this.industry = ui.getStorageSync('selectedIndustry')
+            this.staffSize = ui.getStorageSync('selectedStaffSize')
+            this.duty = ui.getStorageSync('selectedDuty')
             
           }
         },
@@ -145,13 +147,17 @@
         })
       },
       openStaffSize () {
-
+        ui.navigateTo({
+          url: '/pages/contacts/organization/selectStaffSize'
+        })
       },
       openArea () {
 
       },
       openDuty() {
-        
+        ui.navigateTo({
+          url: '/pages/contacts/organization/selectDuty'
+        })
       },
       openAddManager () {
 

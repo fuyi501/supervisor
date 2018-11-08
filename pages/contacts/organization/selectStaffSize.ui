@@ -7,7 +7,7 @@
           <ui-icon type="arrow-left" size="20" color="#126DFE"></ui-icon>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <ui-view class="nav_title">选择行业</ui-view>
+          <ui-view class="nav_title">选择人员规模</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="50"></ui-col>
       </ui-row>
@@ -16,13 +16,28 @@
     <ui-view class="demo-content">
       <ui-radio-group bindchange="selected">
         <ui-label class="radio">
-          <ui-radio value="监理单位" />监理单位
+          <ui-radio value="1-9" />1-9
         </ui-label>
         <ui-label class="radio">
-          <ui-radio value="施工单位" />施工单位
+          <ui-radio value="10-20" />10-20
         </ui-label>
         <ui-label class="radio">
-          <ui-radio value="其他" />其他
+          <ui-radio value="21-50" />21-50
+        </ui-label>
+        <ui-label class="radio">
+          <ui-radio value="51-100" />51-100
+        </ui-label>
+        <ui-label class="radio">
+          <ui-radio value="101-200" />101-200
+        </ui-label>
+        <ui-label class="radio">
+          <ui-radio value="201-500" />201-500
+        </ui-label>
+        <ui-label class="radio">
+          <ui-radio value="510-2000" />510-2000
+        </ui-label>
+        <ui-label class="radio">
+          <ui-radio value=">2000" />>2000
         </ui-label>
       </ui-radio-group>
     </ui-view>
@@ -38,8 +53,8 @@
     },
     data() {
       return {
-        // 行业名称
-        industryName: '',
+        // 人员规模
+        staffSize: '',
 
       }
     },
@@ -49,9 +64,9 @@
         ui.navigateBack()
       },
       selected (value) {
-        this.industryName = value
-        console.log(this.industryName)
-        ui.setStorageSync('selectedIndustry', this.industryName)
+        this.staffSize = value
+        console.log(this.staffSize)
+        ui.setStorageSync('selectedStaffSize', this.staffSize)
         ui.navigateBack()
       }
     },

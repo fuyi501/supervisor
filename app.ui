@@ -72,7 +72,7 @@ export default {
       "pages/application/kaoqin/kqSetting",
       "pages/application/kaoqin/addKQZ",
       "pages/testPages/example/clearUserInfo",
-      "pages/contacts/organization/createTeam","pages/contacts/organization/selectIndustry"],
+      "pages/contacts/organization/createTeam","pages/contacts/organization/selectIndustry","pages/contacts/organization/selectStaffSize","pages/contacts/organization/selectArea","pages/contacts/organization/selectDuty"],
     "theme": {
       "theme-color": "#3399ff"
     },

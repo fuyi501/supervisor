@@ -7,7 +7,7 @@
           <ui-icon type="arrow-left" size="20" color="#126DFE"></ui-icon>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <ui-view class="nav_title">选择行业</ui-view>
+          <ui-view class="nav_title">选择职位</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="50"></ui-col>
       </ui-row>
@@ -16,10 +16,25 @@
     <ui-view class="demo-content">
       <ui-radio-group bindchange="selected">
         <ui-label class="radio">
-          <ui-radio value="监理单位" />监理单位
+          <ui-radio value="负责人" />负责人
         </ui-label>
         <ui-label class="radio">
-          <ui-radio value="施工单位" />施工单位
+          <ui-radio value="管理层" />管理层
+        </ui-label>
+        <ui-label class="radio">
+          <ui-radio value="总监" />总监
+        </ui-label>
+        <ui-label class="radio">
+          <ui-radio value="副总监" />副总监
+        </ui-label>
+        <ui-label class="radio">
+          <ui-radio value="监理组长" />监理组长
+        </ui-label>
+        <ui-label class="radio">
+          <ui-radio value="监理工程师" />监理工程师
+        </ui-label>
+        <ui-label class="radio">
+          <ui-radio value="监理员" />监理员
         </ui-label>
         <ui-label class="radio">
           <ui-radio value="其他" />其他
@@ -38,8 +53,8 @@
     },
     data() {
       return {
-        // 行业名称
-        industryName: '',
+        // 选择职位
+        duty: '',
 
       }
     },
@@ -49,9 +64,9 @@
         ui.navigateBack()
       },
       selected (value) {
-        this.industryName = value
-        console.log(this.industryName)
-        ui.setStorageSync('selectedIndustry', this.industryName)
+        this.duty = value
+        console.log(this.duty)
+        ui.setStorageSync('selectedDuty', this.duty)
         ui.navigateBack()
       }
     },
