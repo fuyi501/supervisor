@@ -53,15 +53,19 @@
         </ui-col>
       </ui-row>
 
-      <ui-row height="50" bindtap="openArea">
+      <ui-row height="50">
         <ui-col vertical-align="middle" align="left" width="70" space-left="10">
           <ui-view>所在地区</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
-          <ui-view class="right_column">
-            {{ area ? area : '必填' }}
-            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
-          </ui-view>
+          <ui-row >
+            <ui-col vertical-align="middle" align="right" style="color:#999B9E">
+              <ui-picker mode="region" value="{{ area }}" range="{{ cityList }}" hide-district bindchange="openArea"></ui-picker>
+            </ui-col>
+            <ui-col vertical-align="middle" align="right" width=20>
+              <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+            </ui-col>
+          </ui-row>
         </ui-col>
       </ui-row>
 
@@ -102,6 +106,10 @@
 </template>
 
 <script>
+
+const createTeamUrl = 'unit'
+import cityList from '#/static/data/address'
+
   export default {
     config: {
       navigationStyle: 'custom',
@@ -120,15 +128,23 @@
             this.industry = ui.getStorageSync('selectedIndustry')
             this.staffSize = ui.getStorageSync('selectedStaffSize')
             this.duty = ui.getStorageSync('selectedDuty')
+
+            let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+            console.log("LocalUserInfo:", LocalUserInfo)
+         
+            this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
             
           }
         },
+        tokenId: '',
         //团队名称
         teamName: '',
 
         industry: '', // 行业
         staffSize: '', // 人员规模
-        area: '', // 地区
+        cityList: cityList,
+        area: ['510000', '510100'], // 地区
         duty: '', // 职务
 
         managerList: [], // 管理员列表
@@ -151,8 +167,9 @@
           url: '/pages/contacts/organization/selectStaffSize'
         })
       },
-      openArea () {
-
+      openArea (val) {
+        console.log(val)
+        this.area = val
       },
       openDuty() {
         ui.navigateTo({
@@ -166,11 +183,60 @@
 
       },
       submit () {
-        
+        if(this.teamName === '') {
+          ui.showToast({title: '请输入团队名称'})
+        }else{
+          this.createTeam()
+        }
+      },
+      createTeam () {
+        console.log('创建团队')
+        ui.request({
+          url: createTeamUrl,
+          data: {
+            'name': this.teamName, 
+            "desc":"test",
+            "type":"supervisor",
+            "innerType":"company"
+          },
+          method: 'POST',
+          header: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.tokenId
+          },
+          success: (result) => {
+            console.log("创建团队:",result)
+            if(result.data.code === 2000){
+              console.log("创建团队成功:",result.data)
+            
+            }else{
+              console.log("创建团队失败:",result)
+            }
+            
+          },
+          fail: ({ errMsg }) => {
+            console.log("创建团队失败:",errMsg)
+          }
+        })
+      },
+      getPosition(){
+        ui.request({
+          url: 'http://apis.map.qq.com/ws/location/v1/ip', 
+          data: {
+            key: 'RHGBZ-S2LAU-5MRV7-4QPTZ-JI25K-HVBDV'
+          },
+          success: (res) => {
+            console.log(res.data)
+            this.text = res.data.result.ad_info
+            console.log(this.text)
+            ui.showToast({title: this.text})
+
+          }
+        })
       }
     },
     mounted() {
-
+      this.getPosition()
     }
   }
 </script>

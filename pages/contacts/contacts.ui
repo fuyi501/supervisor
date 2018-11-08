@@ -93,6 +93,27 @@
       </ui-col>
     </ui-row>
 
+    <ui-row height="60" class="contacts_list1" space-top=10 space-bottom=10 bindtap="openCreateItems">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon">
+          <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">新建项目</ui-view>
+      </ui-col>
+      <ui-col span="6" vertical-align="middle" align="right" space-right="15" class="right_icon">
+        <ui-row style="width: 100%;">
+          <ui-col vertical-align="middle" align="left" span="10">
+            <ui-view class="right_text">铁路/建筑</ui-view>
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" span=2>
+            <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+          </ui-col>
+        </ui-row>
+      </ui-col>
+    </ui-row>
+
     <ui-row height="60" class="contacts_list2" bindtap="openContactBook">
       <ui-col width="50" space-left=10 align="center" vertical-align="middle">
         <ui-view class="left_icon" style="background-color:#1890ff" >
@@ -142,7 +163,7 @@
 export default {
   config: {
     navigationStyle: 'custom',
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   data() {
     return {
@@ -166,6 +187,11 @@ export default {
     openCreateTeam () {
       ui.navigateTo({
         url: '/pages/contacts/organization/createTeam'
+      })
+    },
+    openCreateItems () {
+      ui.navigateTo({
+        url: '/pages/application/items/createItems'
       })
     }
   },
@@ -279,7 +305,7 @@ export default {
     width: 100%;
     height: 60px;
     line-height: 60px;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: bold;
     color: #24292C;
   }

@@ -140,6 +140,12 @@
       },
       // 点击登录按钮触发 操作
       login() {
+
+        // 取消监听安卓返回按键
+        ui.offBackButtonClick({
+          listener: this.closeApp
+        })
+
         let that = this
         console.log("登录请求")
         // 登录请求
@@ -200,15 +206,6 @@
               ui.setStorageSync('LocalUserInfo', LocalUserInfo)
 
               ui.showToast({title: '登录成功', icon: 'success'})
-
-              // 取消监听安卓返回按键
-              // ui.offBackButtonClick({
-              //   listener: that.closeApp,
-              //   success () {
-              //     console.log('取消监听')
-              //     ui.showToast({ title: '取消监听', icon: 'success' })
-              //   }
-              // })
 
               // app 端不允许使用swithTab 跳转到 tabBar 页面，解决方案可能就只能使用 dialog 了
               ui.redirectTo({
@@ -289,22 +286,26 @@
           })
         }
       },
-      // closeApp() {
-      //   ui.offBackButtonClick({
-      //     listener: this.closeApp,
-      //     success () {
-      //       console.log('取消监听')
-      //       ui.showToast({ title: '关闭app', icon: 'success' })
-      //       window.setTimeout(()=>{
-      //         ui.closeApp() // 关闭app
-      //       }, 1000)
-      //     }
-      //   })
-      // }
+      closeApp() {
+        ui.showConfirm({
+          content: '确认要退出App吗？',
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          success: (result) => {
+            if (result.confirm) {
+              ui.offBackButtonClick({
+                listener: this.closeApp
+              })
+              ui.closeApp()
+            }
+          }
+        })
+        
+      }
     },
     mounted() {
       // 监听安卓手机返回按键
-      // ui.onBackButtonClick(this.closeApp)
+      ui.onBackButtonClick(this.closeApp)
     }
   }
 </script>
