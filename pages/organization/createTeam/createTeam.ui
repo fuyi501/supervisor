@@ -159,12 +159,12 @@ import cityList from '#/static/data/address'
       },
       openIndustry () {
         ui.navigateTo({
-          url: '/pages/organization/selectIndustry'
+          url: '/pages/organization/createTeam/selectIndustry'
         })
       },
       openStaffSize () {
         ui.navigateTo({
-          url: '/pages/organization/selectStaffSize'
+          url: '/pages/organization/createTeam/selectStaffSize'
         })
       },
       openArea (val) {
@@ -173,7 +173,7 @@ import cityList from '#/static/data/address'
       },
       openDuty() {
         ui.navigateTo({
-          url: '/pages/organization/selectDuty'
+          url: '/pages/organization/createTeam/selectDuty'
         })
       },
       openAddManager () {

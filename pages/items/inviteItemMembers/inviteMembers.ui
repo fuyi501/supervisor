@@ -1,0 +1,232 @@
+<!---->
+<template>
+  <ui-page >
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="20" color="#126DFE"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">添加员工加入项目</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-row height="60" class="contacts_list2" space-top=10 bindtap="">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon">
+          <ui-icon type="haoyou2" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">通过微信邀请</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
+        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+      </ui-col>
+    </ui-row>
+
+    <ui-row height="60" class="contacts_list2" bindtap="">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon">
+          <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">通过QQ邀请</ui-view>
+      </ui-col>
+      <ui-col span="6" vertical-align="middle" align="right" space-right="15" class="right_icon">
+        <ui-row style="width: 100%;">
+          <ui-col vertical-align="middle" align="left" span="10">
+            <ui-view class="right_text">邀请QQ好友</ui-view>
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" span=2>
+            <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+          </ui-col>
+        </ui-row>
+      </ui-col>
+    </ui-row>
+
+    <ui-row height="60" class="contacts_list1" bindtap="">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon" style="background-color:#1890ff" >
+          <ui-icon type="lianxiren2" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">通过短信邀请</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
+        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+      </ui-col>
+    </ui-row>
+
+    <ui-row height="60" class="contacts_list2" space-top=10 bindtap="">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon">
+          <ui-icon type="lianxiren1" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">从手机通讯录添加</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
+        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+      </ui-col>
+    </ui-row>
+
+    <ui-row height="60" class="contacts_list1" bindtap="openAddMembersManually">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon" style="background-color:#1890ff" >
+          <ui-icon type="lianxiren2" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">手动输入添加</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
+        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+      </ui-col>
+    </ui-row>
+
+    <ui-row height="60" class="contacts_list2" space-top=10 bindtap="">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon" style="background-color:#1890ff" >
+          <ui-icon type="lianxiren2" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">面对面扫描二维码添加</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" space-right="15" class="right_icon">
+        <ui-row style="width: 100%;">
+          <ui-col vertical-align="middle" align="right" span="10">
+            <ui-icon type="erweima1" size="24" color="#1890ff"></ui-icon>
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" span=2>
+            <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+          </ui-col>
+        </ui-row>
+      </ui-col>
+    </ui-row>
+
+    <ui-row height="60" class="contacts_list2" bindtap="">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon" style="background-color:#1890ff" >
+          <ui-icon type="lianxiren2" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">员工搜索团队号加入</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" space-right="15" class="right_icon">
+        <ui-row style="width: 100%;">
+          <ui-col vertical-align="middle" align="left" span="10">
+            <ui-view class="right_text">CDBN2018</ui-view>
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" span=2>
+            <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+          </ui-col>
+        </ui-row>
+      </ui-col>
+    </ui-row>
+
+  </ui-page>
+</template>
+
+<script>
+export default {
+  config: {
+    navigationStyle: 'custom',
+    backgroundColor: '#f5f5f5'
+  },
+  data() {
+    return {
+      
+    }
+  },
+  methods: {
+    navigateBack () {
+      ui.navigateBack()
+    },
+    // 手动输入添加
+    openAddMembersManually () {
+      ui.navigateTo({
+        url: '/pages/items/inviteItemMembers/addMembersManually'
+      })
+    }
+  },
+  mounted() {}
+}
+</script>
+
+<style lang="less">
+.nav_bar {
+  background: #fff;
+  .nav_title {
+    color: #000;
+    padding-left: 20rpx;
+    font-size: 36rpx;
+    font-weight: bold;
+  }
+}
+// 没有下划线
+.contacts_list1 {
+  background-color: #fff;
+  .left_icon{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color:#FCB300; 
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    font-size: 16px;
+  }
+  .text_content {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: #24292C;
+  }
+  .right_text {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: #BAB9BF;
+  }
+}
+
+// 有一半下划线
+.contacts_list2 {
+  background-color: #fff;
+  .left_icon{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color:#1890ff; 
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    font-size: 16px;
+  }
+  .text_content {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    color: #24292C;
+    .mix-1px(0, 0, 1, 0, #ccc);
+  }
+  .right_text {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: #BAB9BF;
+  }
+  .right_icon {
+    .mix-1px(0, 0, 1, 0, #ccc);
+  }
+}
+
+</style>

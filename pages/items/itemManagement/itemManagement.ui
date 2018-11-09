@@ -39,7 +39,7 @@
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-            {{ duty ? duty : '详情' }}
+            <!-- {{ duty ? duty : '详情' }} -->
             <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
           </ui-view>
         </ui-col>
@@ -58,7 +58,7 @@
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-            {{ duty ? duty : '详情' }}
+            <!-- {{ duty ? duty : '详情' }} -->
             <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
           </ui-view>
         </ui-col>
@@ -69,7 +69,7 @@
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-            {{ duty ? duty : '未完善' }}
+            <!-- {{ duty ? duty : '未完善' }} -->
             <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
           </ui-view>
         </ui-col>
@@ -88,18 +88,18 @@
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-            {{ duty ? duty : '详情' }}
+            <!-- {{ duty ? duty : '详情' }} -->
             <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
           </ui-view>
         </ui-col>
       </ui-row>
-      <ui-row height="50" border-bottom>
+      <ui-row height="50" border-bottom bindtap="openInviteMembers">
         <ui-col vertical-align="middle" align="left" space-left="10">
           <ui-view>邀请成员加入</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-            {{ duty ? duty : '未完善' }}
+            <!-- {{ duty ? duty : '未完善' }} -->
             <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
           </ui-view>
         </ui-col>
@@ -110,19 +110,19 @@
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-            {{ duty ? duty : '未完善' }}
+            <!-- {{ duty ? duty : '未完善' }} -->
             <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
           </ui-view>
         </ui-col>
       </ui-row>
     </ui-view>
     
-
-
   </ui-page>
 </template>
 
 <script>
+const getItemsInfoUrl = 'project/list'
+
 export default {
   config: {
     navigationStyle: 'custom',
@@ -130,15 +130,58 @@ export default {
   },
   data() {
     return {
-      duty: ''
+      tokenId: '',
+      teamUnitId: '',
+      itemName: '', // 项目名称
+      itemSectionName: '四川成都郫都区地铁六号线一标段', // 副标题
+      itemDesc: '简介：六号线一标段',
     }
   },
   methods: {
     navigateBack () {
       ui.navigateBack()
+    },
+    openInviteMembers () {
+      ui.navigateTo({
+        url: '/pages/items/inviteItemMembers/inviteMembers'
+      })
+    },
+    getItemsInfo (unitId) {
+      console.log('查询项目信息')
+      ui.request({
+        url: getItemsInfoUrl,
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.tokenId
+        },
+        method: 'GET',
+        success: (result) => {
+          console.log("返回结果:",result)
+          if(result.data.code === 2000){
+            
+            let itemInfo = result.data.data
+
+          }else{
+            console.log("查询项目信息失败:",result)
+          }
+        },
+        fail: ({ errMsg }) => {
+          console.log("查询项目信息失败:",errMsg)
+        }
+      })
     }
   },
-  mounted() {}
+  mounted() {
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("项目管理页面：", LocalUserInfo)
+    this.tokenId = LocalUserInfo.tokenId
+
+    let LocalTeamUnitInfo = ui.getStorageSync('LocalTeamUnitInfo')
+    console.log("团队组织单元信息：", LocalTeamUnitInfo)
+    this.teamUnitId = LocalTeamUnitInfo.teamUnitId
+    
+    this.getItemsInfo(this.teamUnitId)
+  }
 }
 </script>
 

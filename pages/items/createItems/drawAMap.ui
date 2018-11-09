@@ -149,13 +149,13 @@
             })
           }
 
-          let aMapInfo = {
+          let LocalProjectAMapInfo = {
             isamap: true,
             polyPoints: polyPoints,
             polyArea: this.polyArea
           }
-          console.log("aMapInfo:", aMapInfo)
-          ui.setStorageSync('aMapInfo', aMapInfo)
+          console.log("LocalProjectAMapInfo:", LocalProjectAMapInfo)
+          ui.setStorageSync('LocalProjectAMapInfo', LocalProjectAMapInfo)
 
           ui.showToast({
             title: '保存成功',
@@ -359,11 +359,11 @@
           });
 
           // 获取地理数据
-          let aMapInfo = ui.getStorageSync('aMapInfo')
-          console.log("绘制地图 aMapInfo:", aMapInfo)
-          if (aMapInfo !== null) {
+          let LocalProjectAMapInfo = ui.getStorageSync('LocalProjectAMapInfo')
+          console.log("绘制地图 LocalProjectAMapInfo:", LocalProjectAMapInfo)
+          if (LocalProjectAMapInfo !== null) {
             console.log("配置地图数据")
-            var points = aMapInfo.polyPoints
+            var points = LocalProjectAMapInfo.polyPoints
             var setPoints = []
             for (let i = 0; i < points.length; i++) {
               setPoints.push([points[i].lon, points[i].lat])

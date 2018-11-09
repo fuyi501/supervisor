@@ -25,7 +25,59 @@
 
 base64图片头部信息：data:image;base64,
 
-所有数据均保存在 LocalUserInfo 中，包括 BaseInfo，ItemsInfo。。。
+用户信息均保存在 LocalUserInfo 中，包括 
+```js
+// 登录成功后，封装成 本地数据
+let LocalUserInfo = {
+    isLogin: true,
+    realName: 
+    nickName: 
+    userId: 
+    userTel: 
+    tokenId: 
+
+    registerTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+    loginTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+
+    isHasAvatar: userInfo.hasAvatar,
+    avatarBase64: '',
+
+    isHasFaceImg: userInfo.hasFace,
+    faceImgBase64: '',
+}
+```              
+
+团队组织树信息保存在 LocalTeamTreeInfo 中，
+```js
+let LocalTeamTreeInfo = {
+    teamTreeName: ,
+    teamTreeId: ,
+    teamTreeStaff: ,
+    teamTreeSubs: ,
+    teamTreeType: 
+}
+```
+
+团队组织单元信息保存在 LocalTeamUnitInfo 中，
+```js
+let LocalTeamTreeInfo = {
+    teamUnitName: 
+    teamUnitDesc: 
+    teamUnitId: 
+    teamUnitInviteCode: 
+    teamUnitType: 
+    teamUnitInnerType: 
+}
+```
+
+创建项目地图信息保存在 LocalProjectAMapInfo 中，
+```js
+let LocalProjectAMapInfo = {
+    isamap: true,
+    polyPoints: 
+    polyArea: 
+}
+```
 
 ## 项目计划安排
 

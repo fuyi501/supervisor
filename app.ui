@@ -33,12 +33,12 @@ export default {
       "pages/messages/notices",
 
       // 项目页面
-      "pages/items/addItems",
-      "pages/items/itemDetail",
+      "pages/items/createItems/addItems",
+      "pages/items/itemManagement/itemDetail",
       "pages/items/createOrJoin",
-      "pages/items/createItems",
-      "pages/items/itemManagement",
-      "pages/items/drawAMap",
+      "pages/items/createItems/createItems",
+      "pages/items/itemManagement/itemManagement",
+      "pages/items/createItems/drawAMap",
 
       // 应用页面
       "pages/application/application",
@@ -77,14 +77,16 @@ export default {
       "pages/application/kaoqin/addKQZ",
 
       // 组织页面
-      "pages/organization/createTeam",
-      "pages/organization/selectIndustry",
-      "pages/organization/selectStaffSize",
-      "pages/organization/selectDuty",
-      "pages/organization/teamManagement",
-      "pages/organization/teamSetting",
+      "pages/organization/createTeam/createTeam",
+      "pages/organization/createTeam/selectIndustry",
+      "pages/organization/createTeam/selectStaffSize",
+      "pages/organization/createTeam/selectDuty",
+      "pages/organization/teamManagement/teamManagement",
+      "pages/organization/teamManagement/teamSetting",
       "pages/organization/inviteEmployees/InviteEmployees",
-      "pages/organization/inviteEmployees/addManually"],
+      "pages/organization/inviteEmployees/addManually",
+      "pages/items/inviteItemMembers/inviteMembers",
+      "pages/items/inviteItemMembers/addMembersManually"],
     "theme": {
       "theme-color": "#3399ff"
     },

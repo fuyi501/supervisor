@@ -139,7 +139,7 @@ export default {
     // 打开团队设置
     openTeamSetting () {
       ui.navigateTo({
-        url: '/pages/organization/teamSetting'
+        url: '/pages/organization/teamManagement/teamSetting'
       })
     },
     getTeamTreeInfo () {
