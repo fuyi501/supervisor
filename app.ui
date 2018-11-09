@@ -21,19 +21,27 @@ export default {
       "pages/testPages/example/indexTest",
       "pages/testPages/example/qrcodeTest",
       "pages/testPages/example/statusBarTest",
+      "pages/testPages/example/clearUserInfo",
 
       // 通讯录
       "pages/contacts/contacts",
       "pages/contacts/workers",
       "pages/contacts/contactBook",
+      "pages/contacts/friendRequests",
 
       // 消息页面
       "pages/messages/notices",
 
+      // 项目页面
+      "pages/items/addItems",
+      "pages/items/itemDetail",
+      "pages/items/createOrJoin",
+      "pages/items/createItems",
+      "pages/items/itemManagement",
+      "pages/items/drawAMap",
+
       // 应用页面
       "pages/application/application",
-      "pages/application/items/addItems",
-      "pages/application/items/itemDetail",
       "pages/application/askOff/askoff",
       "pages/application/supplement/buqian",
       "pages/application/approval/approval",
@@ -44,9 +52,6 @@ export default {
       "pages/application/noticeLetter/writeNoticeReply",
       "pages/application/contactLetter/writeContactReply",
       "pages/application/rizhi/rizhi",
-      "pages/application/items/createOrJoin",
-      "pages/application/items/createItems",
-      "pages/application/items/drawAMap",
       // "pages/application/kaoqin/kaoqin",
       // "pages/application/kaoqin/kqStatistics",
       "pages/application/signIn/signIn",
@@ -67,15 +72,19 @@ export default {
       "pages/application/contactLetter/receiveContactReply",
       // "pages/application/rizhi/rizhiWrite",
       // "pages/application/rizhi/rizhiWatch",
-      // "pages/application/rizhi/rizhiStatistics"
-      ,"pages/contacts/friendRequests",
+      // "pages/application/rizhi/rizhiStatistics",
       "pages/application/kaoqin/kqSetting",
       "pages/application/kaoqin/addKQZ",
-      "pages/testPages/example/clearUserInfo",
-      "pages/contacts/organization/createTeam",
-      "pages/contacts/organization/selectIndustry",
-      "pages/contacts/organization/selectStaffSize",
-      "pages/contacts/organization/selectDuty"],
+
+      // 组织页面
+      "pages/organization/createTeam",
+      "pages/organization/selectIndustry",
+      "pages/organization/selectStaffSize",
+      "pages/organization/selectDuty",
+      "pages/organization/teamManagement",
+      "pages/organization/teamSetting",
+      "pages/organization/inviteEmployees/InviteEmployees",
+      "pages/organization/inviteEmployees/addManually"],
     "theme": {
       "theme-color": "#3399ff"
     },

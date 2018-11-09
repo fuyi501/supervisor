@@ -1,0 +1,195 @@
+<!---->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="20" color="#126DFE"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">项目管理</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <!-- 项目标题 -->
+    <ui-view class="item_title">
+      <ui-row height=80 class="title">
+        <ui-col vertical-align="bottom" align="center">
+          地铁六号线一标段
+        </ui-col>
+      </ui-row>
+      <ui-row height=70 class="sub_title">
+        <ui-col vertical-align="top" align="center">
+          地铁六号线一标段
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+    <ui-view class="form_content">
+      <ui-row height="30" space-top=10>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view class="list_title">基本信息</ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" border-bottom>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view>项目信息</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ duty ? duty : '详情' }}
+            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+    <ui-view class="form_content">
+      <ui-row height="30" space-top=10>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view class="list_title">组织与人员维护</ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" border-bottom>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view>监理单位及人员维护</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ duty ? duty : '详情' }}
+            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" border-bottom>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view>施工单位与人员维护</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ duty ? duty : '未完善' }}
+            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+    <ui-view class="form_content">
+      <ui-row height="30" space-top=10>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view class="list_title">项目设置</ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" border-bottom>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view>管理员设置</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ duty ? duty : '详情' }}
+            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" border-bottom>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view>邀请成员加入</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ duty ? duty : '未完善' }}
+            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" border-bottom>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view>更多设置</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ duty ? duty : '未完善' }}
+            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+    
+
+
+  </ui-page>
+</template>
+
+<script>
+export default {
+  config: {
+    navigationStyle: 'custom',
+    backgroundColor: '#fff',
+  },
+  data() {
+    return {
+      duty: ''
+    }
+  },
+  methods: {
+    navigateBack () {
+      ui.navigateBack()
+    }
+  },
+  mounted() {}
+}
+</script>
+
+<style lang="less">
+.nav_bar {
+  background: #fff;
+  .nav_title {
+    color: #000;
+    padding-left: 30rpx;
+    font-size: 36rpx;
+    font-weight: bold;
+  }
+}
+.item_title {
+  background-color: #40a9ff;
+  height: 150px;
+  .title {
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .sub_title {
+    color: #fff;
+    font-size: 16px;
+    padding-top: 10px;
+  }
+}
+
+.form_content{
+  padding-top: 10px;
+  // .mix-1px(1, 0, 1, 0, #ccc);
+  .list_title {
+    font-size: 16px; 
+    font-weight: bold; 
+    color: #1890ff !important;
+  }
+  .ui-row{
+    background: #fff;
+    // .mix-1px(0, 0, 1, 0, #ccc);
+    .ui-view{
+      font-size: 14px;
+      color: #1A1E23;
+      &.right_column{
+        color: #999B9E;
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+      }
+    }
+  }
+}
+
+
+</style>

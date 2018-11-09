@@ -1,0 +1,355 @@
+<!--note.ui-->
+<template>
+  <ui-page page-load="{{ pageLoad }}">
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="20" color="#126DFE"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">创建团队</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="form_content">
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
+          <ui-view>团队名称</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="left" space="20">
+          <ui-input type="text" 
+            placeholder="请填写真实名称" 
+            placeholder-style="color:#999B9E" 
+            show-clear="{{false}}" 
+            ui:model="{{ teamName }}"
+          >
+          </ui-input>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50" bindtap="openIndustry">
+        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
+          <ui-view>行业</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ industry ? industry : '必填' }}
+            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50" bindtap="openStaffSize">
+        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
+          <ui-view>人员规模</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ staffSize ? staffSize : '必填' }}
+            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
+          <ui-view>所在地区</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-row >
+            <ui-col vertical-align="middle" align="right" style="color:#999B9E">
+              <ui-picker mode="region" value="{{ area }}" range="{{ cityList }}" hide-district bindchange="openArea"></ui-picker>
+            </ui-col>
+            <ui-col vertical-align="middle" align="right" width=20>
+              <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+            </ui-col>
+          </ui-row>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50" bindtap="openDuty">
+        <ui-col vertical-align="middle" align="left" width="80" space-left="10">
+          <ui-view>我的职位</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ duty ? duty : '必填' }}
+            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50" space-top=10 bindtap="openAddManager">
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view>添加团队管理员</ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50" space-top=10 bindtap="openAddTeamMember">
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view>添加团队成员</ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-fixed-view bottom="0" left="0" right="0" bindtap="submit">
+        <ui-row height="50" class="fixed_bottom">
+          <ui-col vertical-align="middle">
+            <ui-view class="form_list">立即创建团队</ui-view>
+          </ui-col>
+        </ui-row>
+      </ui-fixed-view>
+
+    </ui-view>
+  </ui-page>
+</template>
+
+<script>
+
+const createTeamUrl = 'unit'
+import cityList from '#/static/data/address'
+
+  export default {
+    config: {
+      navigationStyle: 'custom',
+      backgroundColor: '#F6F6F6',
+      disableIosGesture: true,
+      navigationBarTextStyle: 'white',
+      delay: true,
+      cache: true
+    },
+    data() {
+      return {
+        pageLoad: { // 进入页面先判断是否有地理数据保存在 本地存储中
+          trigger: 'always',
+          handle: () => {
+            console.log("创建团队 pageLoad")
+            this.industry = ui.getStorageSync('selectedIndustry')
+            this.staffSize = ui.getStorageSync('selectedStaffSize')
+            this.duty = ui.getStorageSync('selectedDuty')
+
+            let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+            console.log("LocalUserInfo:", LocalUserInfo)
+         
+            this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
+            
+          }
+        },
+        tokenId: '',
+        //团队名称
+        teamName: '',
+
+        industry: '', // 行业
+        staffSize: '', // 人员规模
+        cityList: cityList,
+        area: ['510000', '510100'], // 地区
+        duty: '', // 职务
+
+        managerList: [], // 管理员列表
+        teamMemberList: [] // 团队成员列表
+
+      }
+    },
+    methods: {
+      // 返回按钮
+      navigateBack() {
+        ui.navigateBack()
+      },
+      openIndustry () {
+        ui.navigateTo({
+          url: '/pages/organization/selectIndustry'
+        })
+      },
+      openStaffSize () {
+        ui.navigateTo({
+          url: '/pages/organization/selectStaffSize'
+        })
+      },
+      openArea (val) {
+        console.log(val)
+        this.area = val
+      },
+      openDuty() {
+        ui.navigateTo({
+          url: '/pages/organization/selectDuty'
+        })
+      },
+      openAddManager () {
+        ui.showToast({title: '敬请期待'})
+      },
+      openAddTeamMember () {
+        ui.showToast({title: '敬请期待'})
+      },
+      submit () {
+        if(this.teamName === '') {
+          ui.showToast({title: '请输入团队名称'})
+        }else{
+          this.createTeam()
+        }
+      },
+      createTeam () {
+        console.log('创建团队')
+        ui.request({
+          url: createTeamUrl,
+          data: {
+            'name': this.teamName, 
+            "desc":"傅毅的团队",
+            "type":"supervisor", // 监理公司
+            "innerType":"company"
+          },
+          method: 'POST',
+          header: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.tokenId
+          },
+          success: (result) => {
+            console.log("创建团队:",result)
+            if(result.data.code === 2000){
+              console.log("创建团队成功:",result.data)
+              // 跳转到团队管理页面
+              ui.redirectTo({
+                url: '/pages/organization/teamManagement'
+              })
+            }else{
+              console.log("创建团队失败:",result)
+            }
+            
+          },
+          fail: ({ errMsg }) => {
+            console.log("创建团队失败:",errMsg)
+          }
+        })
+      },
+      getPosition(){
+        ui.request({
+          url: 'http://apis.map.qq.com/ws/location/v1/ip', 
+          data: {
+            key: 'RHGBZ-S2LAU-5MRV7-4QPTZ-JI25K-HVBDV'
+          },
+          success: (res) => {
+            console.log(res.data)
+            this.text = res.data.result.ad_info
+            console.log(this.text)
+            ui.showToast({title: this.text})
+
+          }
+        })
+      }
+    },
+    mounted() {
+      // this.getPosition()
+    }
+  }
+</script>
+
+<style lang="less">
+  .ui-actionsheet-menu-cell {
+    font-size: 14px;
+    color: #666;
+  }
+
+  .nav_bar {
+    background: #fff;
+
+    .nav_title {
+      color: #000;
+      font-size: 36rpx;
+      font-weight: bold;
+    }
+  }
+
+  .form_content {
+    // padding: 15px 0;
+    margin-top: 10px;
+
+    .ui-row {
+      background: #fff;
+      .mix-1px(0, 0, 1, 0, #ccc);
+
+      .ui-view {
+        font-size: 14px;
+        color: #1A1E23;
+
+        &.right_column {
+          width: 100%;
+          height: 35px;
+          color: #999B9E;
+          line-height: 35px;
+        }
+      }
+
+      .ui-row {
+        width: 100%;
+
+        .right_column {
+          width: 95%;
+          font-size: 12px;
+        }
+
+        .ui-textarea-wrapper {
+          padding: 10px;
+        }
+      }
+
+      .weui-cell {
+        padding: 0;
+
+        .ui-picker-select {
+          font-size: 14px;
+        }
+      }
+
+      .ui-input {
+        border: 0px;
+        padding: 0px;
+
+        .ui-input-inner {
+          height: 33px;
+          width: 100%;
+          text-align: left;
+        }
+      }
+
+      &.payee {
+        &:before {
+          border-bottom-width: 0px;
+        }
+
+        .ui-button {
+          line-height: 30px;
+        }
+      }
+
+    }
+
+    .payee_content {
+      margin-bottom: 10px;
+      // width: 95%;
+      // margin: 0 auto;
+      // border-radius: 5px;
+      // overflow: hidden;
+      // box-shadow: 0px 0px 13px 0px #d6d7d8;
+    }
+  }
+
+  .weui-cell__hd {
+    display: none;
+  }
+
+  //提交按钮
+  .fixed_bottom {
+    background: #fff;
+
+    // box-shadow: 0 -8px 10px 0 #eaeaea;
+    .form_list {
+      background: #1F97FE;
+      color: #fff !important;
+      height: 50px;
+      text-align: center;
+      line-height: 50px;
+      font-size: 18px;
+    }
+  }
+</style>

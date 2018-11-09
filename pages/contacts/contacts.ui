@@ -51,7 +51,7 @@
       <ui-col vertical-align="middle" space-left="15">
         <ui-view class="text_content">平头哥有限责任公司</ui-view>
       </ui-col>
-      <ui-col vertical-align="middle" align="right" width="80" space-right="15" class="right_icon">
+      <ui-col vertical-align="middle" align="right" width="80" space-right="15" class="right_icon" bindtap="openTeamManagement">
         <ui-view style="width:100%; color:#1890ff">
           管理
           <ui-icon type="setting" size="18" color="#1890ff"></ui-icon>
@@ -93,6 +93,23 @@
       </ui-col>
     </ui-row>
 
+    <ui-row height="60" class="contacts_list3" bindtap="">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon">
+          <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">地铁六号线标段一</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" width="80" space-right="15" class="right_icon" bindtap="openItemsManagement">
+        <ui-view style="width:100%; color:#1890ff">
+          管理
+          <ui-icon type="setting" size="18" color="#1890ff"></ui-icon>
+        </ui-view>
+      </ui-col>
+    </ui-row>
+
     <ui-row height="60" class="contacts_list1" space-top=10 space-bottom=10 bindtap="openCreateItems">
       <ui-col width="50" space-left=10 align="center" vertical-align="middle">
         <ui-view class="left_icon">
@@ -105,7 +122,7 @@
       <ui-col span="6" vertical-align="middle" align="right" space-right="15" class="right_icon">
         <ui-row style="width: 100%;">
           <ui-col vertical-align="middle" align="left" span="10">
-            <ui-view class="right_text">铁路/建筑</ui-view>
+            <ui-view class="right_text">监理/施工</ui-view>
           </ui-col>
           <ui-col vertical-align="middle" align="right" span=2>
             <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
@@ -186,12 +203,25 @@ export default {
     // 创建团队
     openCreateTeam () {
       ui.navigateTo({
-        url: '/pages/contacts/organization/createTeam'
+        url: '/pages/organization/createTeam'
       })
     },
+    // 团队管理
+    openTeamManagement () {
+      ui.navigateTo({
+        url: '/pages/organization/teamManagement'
+      })
+    },
+    // 创建项目
     openCreateItems () {
       ui.navigateTo({
-        url: '/pages/application/items/createItems'
+        url: '/pages/items/createItems'
+      })
+    },
+    // 项目管理
+    openItemsManagement () {
+      ui.navigateTo({
+        url: '/pages/items/itemManagement'
       })
     }
   },

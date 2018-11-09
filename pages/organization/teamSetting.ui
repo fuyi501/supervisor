@@ -7,7 +7,7 @@
           <ui-icon type="arrow-left" size="20" color="#126DFE"></ui-icon>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <ui-view class="nav_title">创建团队</ui-view>
+          <ui-view class="nav_title">团队设置</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="50"></ui-col>
       </ui-row>
@@ -18,20 +18,28 @@
         <ui-col vertical-align="middle" align="left" width="70" space-left="10">
           <ui-view>团队名称</ui-view>
         </ui-col>
-        <ui-col vertical-align="middle" align="left" space="20">
-          <ui-input type="text" 
-            placeholder="请填写真实名称" 
-            placeholder-style="color:#999B9E" 
-            show-clear="{{false}}" 
-            ui:model="{{ teamName }}"
-          >
-          </ui-input>
+        <ui-col vertical-align="middle" align="right" space="20">
+          
+          <ui-row >
+            <ui-col vertical-align="middle" align="right" style="color:#999B9E">
+              <ui-input type="text" 
+                placeholder="请填写真实名称" 
+                placeholder-style="color:#999B9E" 
+                show-clear="{{true}}" 
+                ui:model="{{ teamName }}"
+              >
+              </ui-input>
+            </ui-col>
+            <ui-col vertical-align="middle" align="right" width=20>
+              <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+            </ui-col>
+          </ui-row>
         </ui-col>
       </ui-row>
 
       <ui-row height="50" bindtap="openIndustry">
         <ui-col vertical-align="middle" align="left" width="70" space-left="10">
-          <ui-view>行业</ui-view>
+          <ui-view>所在行业</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
@@ -53,9 +61,9 @@
         </ui-col>
       </ui-row>
 
-      <ui-row height="50">
+      <ui-row height="50" space-top=10>
         <ui-col vertical-align="middle" align="left" width="70" space-left="10">
-          <ui-view>所在地区</ui-view>
+          <ui-view>办公地点</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-row >
@@ -69,34 +77,10 @@
         </ui-col>
       </ui-row>
 
-      <ui-row height="50" bindtap="openDuty">
-        <ui-col vertical-align="middle" align="left" width="80" space-left="10">
-          <ui-view>我的职位</ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" space="20">
-          <ui-view class="right_column">
-            {{ duty ? duty : '必填' }}
-            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
-          </ui-view>
-        </ui-col>
-      </ui-row>
-
-      <ui-row height="50" space-top=10 bindtap="openAddManager">
-        <ui-col vertical-align="middle" align="left" space-left="10">
-          <ui-view>添加团队管理员</ui-view>
-        </ui-col>
-      </ui-row>
-
-      <ui-row height="50" space-top=10 bindtap="openAddTeamMember">
-        <ui-col vertical-align="middle" align="left" space-left="10">
-          <ui-view>添加团队成员</ui-view>
-        </ui-col>
-      </ui-row>
-
       <ui-fixed-view bottom="0" left="0" right="0" bindtap="submit">
         <ui-row height="50" class="fixed_bottom">
           <ui-col vertical-align="middle">
-            <ui-view class="form_list">立即创建团队</ui-view>
+            <ui-view class="form_list">解散团队</ui-view>
           </ui-col>
         </ui-row>
       </ui-fixed-view>
@@ -139,7 +123,7 @@ import cityList from '#/static/data/address'
         },
         tokenId: '',
         //团队名称
-        teamName: '',
+        teamName: '平头哥工作室',
 
         industry: '', // 行业
         staffSize: '', // 人员规模
@@ -175,12 +159,6 @@ import cityList from '#/static/data/address'
         ui.navigateTo({
           url: '/pages/contacts/organization/selectDuty'
         })
-      },
-      openAddManager () {
-
-      },
-      openAddTeamMember () {
-
       },
       submit () {
         if(this.teamName === '') {
@@ -218,25 +196,10 @@ import cityList from '#/static/data/address'
             console.log("创建团队失败:",errMsg)
           }
         })
-      },
-      getPosition(){
-        ui.request({
-          url: 'http://apis.map.qq.com/ws/location/v1/ip', 
-          data: {
-            key: 'RHGBZ-S2LAU-5MRV7-4QPTZ-JI25K-HVBDV'
-          },
-          success: (res) => {
-            console.log(res.data)
-            this.text = res.data.result.ad_info
-            console.log(this.text)
-            ui.showToast({title: this.text})
-
-          }
-        })
       }
     },
     mounted() {
-      this.getPosition()
+      
     }
   }
 </script>
@@ -305,7 +268,8 @@ import cityList from '#/static/data/address'
         .ui-input-inner {
           height: 33px;
           width: 100%;
-          text-align: left;
+          color: #999B9E;
+          text-align: right;
         }
       }
 
@@ -341,8 +305,8 @@ import cityList from '#/static/data/address'
 
     // box-shadow: 0 -8px 10px 0 #eaeaea;
     .form_list {
-      background: #1F97FE;
-      color: #fff !important;
+      background: #fff;
+      color: red !important;
       height: 50px;
       text-align: center;
       line-height: 50px;

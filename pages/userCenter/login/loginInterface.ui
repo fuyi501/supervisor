@@ -142,9 +142,9 @@
       login() {
 
         // 取消监听安卓返回按键
-        ui.offBackButtonClick({
-          listener: this.closeApp
-        })
+        // ui.offBackButtonClick({
+        //   listener: this.closeApp
+        // })
 
         let that = this
         console.log("登录请求")
@@ -300,12 +300,11 @@
             }
           }
         })
-        
       }
     },
     mounted() {
       // 监听安卓手机返回按键
-      ui.onBackButtonClick(this.closeApp)
+      // ui.onBackButtonClick(this.closeApp)
     }
   }
 </script>

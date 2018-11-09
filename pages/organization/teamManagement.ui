@@ -1,0 +1,306 @@
+<!---->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="20" color="#126DFE"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">团队管理</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <!-- 项目标题 -->
+    <ui-view class="item_title">
+      <ui-row height=80 class="title">
+        <ui-col vertical-align="bottom" align="center">
+          {{ teamUnitName }}
+        </ui-col>
+      </ui-row>
+      <ui-row height=70 class="sub_title">
+        <ui-col vertical-align="top" align="center">
+          团队号：{{ teamUnitInviteCode }}
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+    <ui-view class="form_content">
+      <ui-row height="50" space-top=5 bindtap="openInviteEmployee">
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view>添加员工加入团队</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            <!-- {{ duty ? duty : '详情' }} -->
+            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+    <ui-view class="form_content">
+      <ui-row height="30" space-top=5>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view class="list_title">通讯录管理</ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view>员工使用数据</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+    <ui-view class="form_content">
+      <ui-row height="30" space-top=5>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view class="list_title">专属服务</ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view>我的客服</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+    
+    <ui-view class="form_content">
+      <ui-row height="50" space-top=5>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view>管理员设置</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" space=30 bindtap="openTeamSetting">
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view>更多设置</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+  </ui-page>
+</template>
+
+<script>
+
+// 查询组织树
+const getTeamTreeInfoUrl = 'unit/tree'
+// 查询组织单元信息
+const getTeamUnitInfoUrl = 'unit/'
+
+export default {
+  config: {
+    navigationStyle: 'custom',
+    backgroundColor: '#f5f5f5'
+  },
+  data() {
+    return {
+      tokenId: '',
+      teamUnitName: '',
+      teamUnitDesc: '',
+      teamUnitId: '',
+      teamUnitInviteCode: '',
+      teamUnitType: '',
+      teamUnitInnerType: ''
+    }
+  },
+  methods: {
+    navigateBack () {
+      ui.navigateBack()
+    },
+    // 打开邀请员工加入团队
+    openInviteEmployee () {
+      ui.navigateTo({
+        url: '/pages/organization/inviteEmployees/InviteEmployees'
+      })
+    },
+    // 打开团队设置
+    openTeamSetting () {
+      ui.navigateTo({
+        url: '/pages/organization/teamSetting'
+      })
+    },
+    getTeamTreeInfo () {
+      console.log('查询组织树')
+      ui.request({
+        url: getTeamTreeInfoUrl,
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.tokenId
+        },
+        method: 'GET',
+        success: (result) => {
+          console.log("返回结果:",result)
+          if(result.data.code === 2000){
+            
+            let teamTreeInfo = result.data.data
+
+            // 设置 LocalTeamTreeInfo 数据
+            let LocalTeamTreeInfo = {
+              teamTreeName: teamTreeInfo.name,
+              teamTreeId: teamTreeInfo.id,
+              teamTreeStaff: teamTreeInfo.chars,
+              teamTreeSubs: teamTreeInfo.subs,
+              teamTreeType: teamTreeInfo.type
+            }
+            
+            ui.setStorageSync('LocalTeamTreeInfo', LocalTeamTreeInfo)
+
+            this.getTeamUnitInfo(teamTreeInfo.id)
+            
+          }else{
+            console.log("查询组织树失败:",result)
+          }
+        },
+        fail: ({ errMsg }) => {
+          console.log("查询组织树失败:",errMsg)
+        }
+      })
+    },
+    getTeamUnitInfo (unitId) {
+      console.log('查询组织单元信息')
+      ui.request({
+        url: getTeamUnitInfoUrl + unitId,
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.tokenId
+        },
+        method: 'GET',
+        success: (result) => {
+          console.log("返回结果:",result)
+          if(result.data.code === 2000){
+            
+            console.log("查询组织单元信息成功:",result.data.data)
+
+            let teamUnitInfo = result.data.data
+
+            this.teamUnitName = teamUnitInfo.name
+            this.teamUnitDesc = teamUnitInfo.desc
+            this.teamUnitId = teamUnitInfo.id
+            this.teamUnitInviteCode = teamUnitInfo.inviteCode
+            this.teamUnitType = teamUnitInfo.type
+            this.teamUnitInnerType = teamUnitInfo.innerType
+
+            // 设置 LocalTeamUnitInfo 数据
+            let LocalTeamUnitInfo = {
+              teamUnitName: teamUnitInfo.name,
+              teamUnitDesc: teamUnitInfo.desc,
+              teamUnitId: teamUnitInfo.id,
+              teamUnitInviteCode: teamUnitInfo.inviteCode,
+              teamUnitType: teamUnitInfo.type,
+              teamUnitInnerType: teamUnitInfo.innerType
+            }
+            
+            ui.setStorageSync('LocalTeamUnitInfo', LocalTeamUnitInfo)
+            
+          }else{
+            console.log("查询组织单元信息失败:",result)
+          }
+          
+        },
+        fail: ({ errMsg }) => {
+          console.log("查询组织单元信息失败:",errMsg)
+        }
+      })
+    }
+  },
+  mounted() {
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("团队管理页面：", LocalUserInfo)
+
+    this.tokenId = LocalUserInfo.tokenId
+
+    let LocalTeamTreeInfo = ui.getStorageSync('LocalTeamTreeInfo')
+    console.log("团队组织树信息：", LocalTeamTreeInfo)
+
+    if( LocalTeamTreeInfo === null ) {
+      this.getTeamTreeInfo()
+    } else {
+      let LocalTeamUnitInfo = ui.getStorageSync('LocalTeamUnitInfo')
+      console.log("团队组织单元信息：", LocalTeamUnitInfo)
+      this.teamUnitName = LocalTeamUnitInfo.teamUnitName
+      this.teamUnitDesc = LocalTeamUnitInfo.teamUnitDesc
+      this.teamUnitId = LocalTeamUnitInfo.teamUnitId
+      this.teamUnitInviteCode = LocalTeamUnitInfo.teamUnitInviteCode
+      this.teamUnitType = LocalTeamUnitInfo.teamUnitType
+      this.teamUnitInnerType = LocalTeamUnitInfo.teamUnitInnerType
+    }
+
+  }
+}
+</script>
+
+<style lang="less">
+.nav_bar {
+  background: #fff;
+  .mix-1px(1, 0, 1, 0, #ccc);
+  .nav_title {
+    color: #000;
+    padding-left: 30rpx;
+    font-size: 36rpx;
+    font-weight: bold;
+  }
+}
+.item_title {
+  background-color: #fff;
+  height: 150px;
+  .title {
+    color: #000;
+    font-size: 22px;
+    font-weight: bold;
+  }
+  .sub_title {
+    color: #595959;
+    font-size: 14px;
+    padding-top: 10px;
+  }
+}
+
+.form_content{
+  padding-top: 10px;
+  // .mix-1px(1, 0, 1, 0, #ccc);
+  .list_title {
+    font-size: 16px; 
+    font-weight: bold; 
+    color: #1890ff !important;
+  }
+  .ui-row{
+    background: #fff;
+    // .mix-1px(0, 0, 1, 0, #ccc);
+    .ui-view{
+      font-size: 14px;
+      color: #1A1E23;
+      &.right_column{
+        color: #999B9E;
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+      }
+    }
+  }
+}
+
+
+</style>
