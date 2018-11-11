@@ -95,20 +95,20 @@
         </ui-col>
       </ui-row>
 
-      <ui-row height="50" border-bottom>
+      <ui-row height="50" border-bottom bindtap="openSelectConTeam">
         <ui-col vertical-align="middle" align="left" width="140" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            项目所属监理公司
+            项目所属施工公司
           </ui-view>
         </ui-col>
-        <ui-col vertical-align="middle" align="right" space="20">
-          <ui-input type="text"
-          placeholder="请输入项目所属监理公司"
-          placeholder-style="color:#999B9E"
-          show-clear="{{false}}"
-          ui:model="{{ itemSupervisionCompany }}"
-          ></ui-input>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-view class="active2" ui:if=" itemConCompany === null "> 请选择
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
+          <ui-view class="active" ui:else> {{ itemConCompany.name }}
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
         </ui-col>
       </ui-row>
 
@@ -128,7 +128,7 @@
       
       <ui-row height="60" space-top="10">
         <ui-col vertical-align="middle" align="center" space="30">
-          <ui-button type="primary" bindtap="submitCreateItems">立即创建项目</ui-button>
+          <ui-button type="primary" bindtap="submitCreateItems">下一步</ui-button>
         </ui-col>
       </ui-row>
 
@@ -167,13 +167,17 @@ export default {
           }else {
             this.isamap = ''
           }
+          
+          this.itemConCompany = ui.getStorageSync('selectedConTeam')
+          ui.removeStorageSync('selectedConTeam')
+
         }
       },
       tokenId: '',
       itemName: '', // 项目名称
       itemSectionName: '四川成都郫都区地铁六号线一标段', // 副标题
       itemDesc: '简介：六号线一标段', // 项目描述
-      teamUnitId: '', // 团队组织 ID 号
+      teamUnitId: '', // 团队组织 ID 号，这里指监理方id号
       cityList: cityList,
       atCity: ['110000', '110101'], // 所在地区
       create_at: '', // 项目创建时间
@@ -186,7 +190,8 @@ export default {
       // 选择职位
       positionList: ['请选择', '总监', '分管副总监', '监理组长', '监理工程师', '监理员'],
       positionValue: 0, 
-      itemSupervisionCompany: '', // 项目所属监理公司
+      itemConCompany: null, // 项目所属施工公司
+      conUnitId: '', // 施工公司 ID 号
 
       // 地理围栏
       isamap: '',
@@ -237,6 +242,12 @@ export default {
       console.log(val)
       this.positionValue = val
     },
+    // 选择施工公司
+    openSelectConTeam () {
+      ui.navigateTo({
+        url: '/pages/items/createItems/selectProjectSupTeam'
+      })
+    },
     // 设置地理围栏
     setAMAP () {
       ui.showActionSheet({
@@ -263,12 +274,15 @@ export default {
       })
     },
     submitCreateItems () {
-      if(this.itemName === '') {
+      if(!this.itemName) {
         ui.showToast({title: '请输入项目名称'})
-      }else{
+      } else if(!this.itemConCompany) {
+        ui.showToast({title: '请选择施工公司'})
+      }{
         this.createItems()
       }
     },
+    // 创建项目，基本项目，包含 施工单位 id 号 
     createItems () {
       console.log('创建项目')
       ui.request({
@@ -277,7 +291,7 @@ export default {
           "name": this.itemName, 
           "sectionName": this.itemSectionName,
           "desc": this.itemDesc,
-          "conId": this.teamUnitId, // 团队组织 ID 号
+          "conId": this.itemConCompany.id, // 施工公司 ID 号
           "area": this.geoInfo,
           "startTime": this.sDataValue,
 	        "endTime": this.eDataValue,
@@ -291,9 +305,9 @@ export default {
           console.log("创建项目:",result)
           if(result.data.code === 2000){
             console.log("创建项目成功:",result.data)
-            // 跳转到团队管理页面
-            ui.redirectTo({
-              url: '/pages/items/itemManagement'
+            // 跳转到确认监理公司信息页面
+            ui.navigateTo({
+              url: '/pages/items/createItems/selectProjectSupTeam'
             })
           }else{
             console.log("创建项目失败:",result)
@@ -304,7 +318,40 @@ export default {
           console.log("创建项目失败:",errMsg)
         }
       })
-    }
+    },
+    // 提交施工方信息
+    submitConInfo () {
+      console.log('提交施工方信息')
+      ui.request({
+        url: 'project/pre/sup',
+        data: {
+          "taskId": this.taskId, // 项目 ID 号
+          "unitId": this.itemConCompany.id // 施工公司 ID 号
+        },
+        method: 'POST',
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.tokenId
+        },
+        success: (result) => {
+          console.log("提交施工方信息:",result)
+          if(result.data.code === 2000){
+            console.log("提交施工方信息成功:",result.data)
+            // 跳转到项目管理页面
+            // ui.redirectTo({
+            //   url: '/pages/items/itemManagement/itemManagement'
+            // })
+          }else{
+            console.log("提交施工方信息失败:",result)
+          }
+        },
+        fail: ({ errMsg }) => {
+          console.log("提交施工方信息失败:",errMsg)
+        }
+      })
+    },
+    
+
   },
   mounted () {
     console.log("创建项目页面")
@@ -319,6 +366,10 @@ export default {
     let LocalTeamUnitInfo = ui.getStorageSync('LocalTeamUnitInfo')
     console.log("团队组织单元信息：", LocalTeamUnitInfo)
     this.teamUnitId = LocalTeamUnitInfo.teamUnitId
+    // this.conUnitId = 'e8186122f3394a6a986122f339aa6a68' // 施工公司 ID 号
+
+    // this.submitSupInfo()
+    // this.getConTeamInfo()
 
   }
 }

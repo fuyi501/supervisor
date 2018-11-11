@@ -34,7 +34,8 @@
         <ui-view class="active" ui:else> {{ userRealName }} </ui-view>
       </ui-col>
     </ui-row>
-    <ui-row height="50" class="userInfo_list2" bindtap="setUserInfo('昵称')">
+    <!-- 注释掉昵称 -->
+    <!-- <ui-row height="50" class="userInfo_list2" bindtap="setUserInfo('昵称')">
       <ui-col vertical-align="middle" space-left="15">
         昵称
       </ui-col>
@@ -42,7 +43,7 @@
         <ui-view class="active2" ui:if=" userNickName === '' "> 未设置 </ui-view>
         <ui-view class="active" ui:else> {{ userNickName }} </ui-view>
       </ui-col>
-    </ui-row>
+    </ui-row> -->
     <ui-row height="50" class="userInfo_list">
       <ui-col vertical-align="middle" space-left="15">
         工号

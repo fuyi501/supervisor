@@ -17,8 +17,8 @@
 
     <ui-view class="form_content">
       <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
-          <ui-view>姓名</ui-view>
+        <ui-col vertical-align="middle" align="left" width="80" space-left="10">
+          <ui-view>真实姓名</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="left" space="20">
           <ui-input type="text" 
@@ -32,8 +32,8 @@
       </ui-row>
 
       <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="70" space-left="10">
-          <ui-view>电话</ui-view>
+        <ui-col vertical-align="middle" align="left" width="80" space-left="10">
+          <ui-view>手机号码</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="left" space="20">
           <ui-input type="text" 
@@ -41,6 +41,36 @@
             placeholder-style="color:#999B9E" 
             show-clear="{{true}}" 
             ui:model="{{ staffTel }}"
+          >
+          </ui-input>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="80" space-left="10">
+          <ui-view>员工号</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="left" space="20">
+          <ui-input type="text" 
+            placeholder="选填" 
+            placeholder-style="color:#999B9E" 
+            show-clear="{{true}}" 
+            ui:model="{{ jobNumber }}"
+          >
+          </ui-input>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="80" space-left="10">
+          <ui-view>职位</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="left" space="20">
+          <ui-input type="text" 
+            placeholder="选填" 
+            placeholder-style="color:#999B9E" 
+            show-clear="{{true}}" 
+            ui:model="{{ jobTitle }}"
           >
           </ui-input>
         </ui-col>
@@ -71,10 +101,11 @@ const addManuallyUrl = 'unit/char'
       return {
         tokenId: '',
         teamUnitId: '',
-        // 员工姓名
-        staffName: '李思成',
-        // 员工电话
-        staffTel: '13512341234'
+        staffName: '李思成', // 员工姓名
+        staffTel: '13512341234', // 员工电话
+        jobNumber: '00002', // 公司员工号
+        jobTitle: '监理员', // 职位
+        role: 'casual_employee' // 职位决定角色
 
       }
     },
@@ -96,15 +127,15 @@ const addManuallyUrl = 'unit/char'
       },
       saveAndContinue () {
         console.log('保存并继续添加')
+        console.log(this.teamUnitId, this.staffName, this.staffTel, this.jobNumber, this.role)
         ui.request({
           url: addManuallyUrl,
           data: {
-            'chars': [
-              {
-                "name": this.staffName,
-                "tel": this.staffTel
-              }
-            ]
+            "unitId": this.teamUnitId,
+            "name": this.staffName,
+            "tel": this.staffTel,
+            "jobNumber": this.jobNumber,
+            "role": this.role
           },
           method: 'POST',
           header: {
@@ -117,6 +148,7 @@ const addManuallyUrl = 'unit/char'
               console.log("保存并继续添加成功:",result.data)
               this.staffName = ''
               this.staffTel = ''
+              this.jobNumber = '00003'
             }else{
               console.log("保存并继续添加失败:",result)
             }
@@ -132,12 +164,11 @@ const addManuallyUrl = 'unit/char'
         ui.request({
           url: addManuallyUrl,
           data: {
-            'chars': [
-              {
-                "name": this.staffName,
-                "tel": this.staffTel
-              }
-            ]
+            "unitId": this.teamUnitId,
+            "name": this.staffName,
+            "tel": this.staffTel,
+            "jobNumber": this.jobNumber,
+            "role": this.role
           },
           method: 'POST',
           header: {

@@ -17,7 +17,6 @@
       </ui-row>
     </ui-nav-bar>
 
-
     <ui-tab-view class="type-badge">
       <template slot="header">
         <ui-tab-view-header>
@@ -89,6 +88,8 @@
         </ui-tab-view-body>
       </template>
     </ui-tab-view>
+
+
   </ui-page>
 </template>
 

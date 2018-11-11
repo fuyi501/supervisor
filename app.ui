@@ -86,7 +86,14 @@ export default {
       "pages/organization/inviteEmployees/InviteEmployees",
       "pages/organization/inviteEmployees/addManually",
       "pages/items/inviteItemMembers/inviteMembers",
-      "pages/items/inviteItemMembers/addMembersManually"],
+      "pages/items/inviteItemMembers/addMembersManually",
+      "pages/organization/teamManagement/teamStaffList",
+      "pages/items/createItems/selectProjectSupTeam",
+      "pages/items/createItems/selectProjectConTeam",
+      "pages/items/itemsIndex",
+      "pages/organization/organizationIndex",
+      "pages/items/itemManagement/itemsTodoList",
+      "pages/items/itemManagement/itemsReviewList"],
     "theme": {
       "theme-color": "#3399ff"
     },

@@ -35,7 +35,7 @@
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-            {{ industry ? industry : '必填' }}
+            {{ industry.name ? industry.name : '必填' }}
             <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
           </ui-view>
         </ui-col>
@@ -134,14 +134,16 @@ import cityList from '#/static/data/address'
          
             this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
 
-            
           }
         },
         tokenId: '',
         //团队名称
         teamName: '',
 
-        industry: '', // 行业
+        industry: {
+          name: '',
+          type: ''
+        }, // 行业
         staffSize: '', // 人员规模
         cityList: cityList,
         area: ['510000', '510100'], // 地区
@@ -196,7 +198,7 @@ import cityList from '#/static/data/address'
           data: {
             'name': this.teamName, 
             "desc":"傅毅的团队",
-            "type":"supervisor", // 监理公司
+            "type":this.industry.type, // 监理公司
             "innerType":"company"
           },
           method: 'POST',
@@ -210,7 +212,7 @@ import cityList from '#/static/data/address'
               console.log("创建团队成功:",result.data)
               // 跳转到团队管理页面
               ui.redirectTo({
-                url: '/pages/organization/teamManagement'
+                url: '/pages/organization/teamManagement/teamManagement'
               })
             }else{
               console.log("创建团队失败:",result)

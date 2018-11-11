@@ -121,7 +121,7 @@
 </template>
 
 <script>
-const getItemsInfoUrl = 'project/list'
+const getItemsInfoUrl = 'project/'
 
 export default {
   config: {
@@ -149,7 +149,7 @@ export default {
     getItemsInfo (unitId) {
       console.log('查询项目信息')
       ui.request({
-        url: getItemsInfoUrl,
+        url: getItemsInfoUrl + unitId,
         header: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + this.tokenId

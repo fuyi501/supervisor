@@ -1,0 +1,328 @@
+<!---->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="20" color="#126DFE"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">我的项目</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50" bindtap="submit('finish')">
+          <ui-view class="nav_right"></ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <!-- 应用 -->
+    <ui-view class="app_box">
+      <ui-row space-top=0 >
+        <ui-col span=12>
+          <ui-row>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openProjectTodoList">
+              <ui-icon type="zuzhi" color="#ffa940" size="40"></ui-icon>    
+              <ui-view class="app_text">待确认</ui-view>           
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openProjectReviewList">
+              <ui-icon type="items3" color="#ffa940" size="40"></ui-icon>    
+              <ui-view class="app_text">待审核</ui-view>       
+            </ui-col>
+          </ui-row>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+    <ui-row height="60" class="contacts_list1" space-top=10 space-bottom=10 bindtap="openCreateItems">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon">
+          <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">新建项目</ui-view>
+      </ui-col>
+      <ui-col span="6" vertical-align="middle" align="right" space-right="15" class="right_icon">
+        <ui-row style="width: 100%;">
+          <ui-col vertical-align="middle" align="left" span="10">
+            <ui-view class="right_text">监理/施工</ui-view>
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" span=2>
+            <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
+          </ui-col>
+        </ui-row>
+      </ui-col>
+    </ui-row>
+
+    <ui-row height="60" class="contacts_list3" bindtap="">
+      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+        <ui-view class="left_icon">
+          <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
+        </ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-view class="text_content">地铁六号线标段一</ui-view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="right" width="80" space-right="15" class="right_icon" bindtap="openItemsManagement">
+        <ui-view style="width:100%; color:#1890ff">
+          管理
+          <ui-icon type="setting" size="18" color="#1890ff"></ui-icon>
+        </ui-view>
+      </ui-col>
+    </ui-row>
+
+  </ui-page>
+</template>
+
+<script>
+export default {
+  config: {
+    navigationStyle: 'custom',
+    backgroundColor: '#f5f5f5'
+  },
+  data() {
+    return {
+      tokenId: '',
+      teamUnitName: '',
+      teamUnitDesc: '',
+      teamUnitId: '',
+      teamUnitInviteCode: '',
+      teamUnitType: '',
+      teamUnitInnerType: ''
+    }
+  },
+  methods: {
+    navigateBack () {
+      ui.navigateBack()
+    },
+    openProjectTodoList () {
+      ui.navigateTo({
+        url: '/pages/items/itemManagement/itemsTodoList'
+      })
+    },
+    openProjectReviewList () {
+      ui.navigateTo({
+        url: '/pages/items/itemManagement/itemsReviewList'
+      })
+    },
+    // 创建项目
+    openCreateItems () {
+      ui.navigateTo({
+        url: '/pages/items/createItems/createItems'
+      })
+    },
+    // 项目管理
+    openItemsManagement () {
+      ui.navigateTo({
+        url: '/pages/items/itemManagement/itemManagement'
+      })
+    },
+    // 查询项目
+    getItemsInfo () {
+      console.log('查询项目信息')
+      ui.request({
+        url: searchSupTeamUrl,
+        method: 'GET',
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.tokenId
+        },
+        success: (result) => {
+          console.log("查询项目信息:",result)
+          if(result.data.code === 2000){
+            console.log("查询项目成功:",result.data)
+            
+
+          }else{
+            console.log("查询项目信息失败:",result)
+          }
+          
+        },
+        fail: ({ errMsg }) => {
+          console.log("查询项目信息失败:",errMsg)
+        }
+      })
+    },
+    // 查询公司项目列表
+    getItemsInfo () {
+      console.log('查询公司项目列表信息')
+      ui.request({
+        url: 'project/list/top',
+        method: 'GET',
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.tokenId
+        },
+        success: (result) => {
+          console.log("查询公司项目列表信息:",result)
+          if(result.data.code === 2000){
+            console.log("查询公司项目列表成功:",result.data)
+            
+
+          }else{
+            console.log("查询公司项目列表信息失败:",result)
+          }
+          
+        },
+        fail: ({ errMsg }) => {
+          console.log("查询公司项目列表信息失败:",errMsg)
+        }
+      })
+    }
+  },
+  mounted() {
+    console.log("我的项目")
+
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("选择监理公司页面：", LocalUserInfo)
+    this.tokenId = LocalUserInfo.tokenId
+
+    let LocalTeamTreeInfo = ui.getStorageSync('LocalTeamTreeInfo')
+    console.log("团队组织树信息：", LocalTeamTreeInfo)
+
+    if( LocalTeamTreeInfo !== null ) {
+      let LocalTeamUnitInfo = ui.getStorageSync('LocalTeamUnitInfo')
+      console.log("团队组织单元信息：", LocalTeamUnitInfo)
+      this.teamUnitName = LocalTeamUnitInfo.teamUnitName
+      this.teamUnitDesc = LocalTeamUnitInfo.teamUnitDesc
+      this.teamUnitId = LocalTeamUnitInfo.teamUnitId
+      this.teamUnitInviteCode = LocalTeamUnitInfo.teamUnitInviteCode
+      this.teamUnitType = LocalTeamUnitInfo.teamUnitType
+      this.teamUnitInnerType = LocalTeamUnitInfo.teamUnitInnerType
+    }
+
+    this.getItemsInfo()
+  }
+}
+</script>
+
+<style lang="less">
+
+.nav_bar {
+  background: #fff;
+  .nav_title {
+    color: #000;
+    padding-left: 20rpx;
+    font-size: 36rpx;
+    font-weight: bold;
+  }
+}
+.search_box {
+  width: 100%;
+  background-color: #fff;
+  .search_content {
+    background-color: #F4F4F4;
+    height: 35px;
+    border-radius: 25px;
+    overflow: hidden;
+    width: 100%;
+    .ui-input {
+      border: 0;
+      padding: 0;
+      background: transparent;
+      width: 95%;
+    }
+    .ui-input-inner {
+      height: 35px;
+    }
+  }
+}
+
+  .app_box {
+    background-color: #fff;
+    padding-bottom: 15px;
+    // .mix-1px(0, 0, 1, 0, #ccc); /* 下边1像素细线 */
+    
+    .centerInfo {
+      height: 30px;
+      line-height: 30px;
+        .ui-col-content {
+          font-weight: bold;
+          font-size: 14px;
+        }
+    }
+    .app_list {
+      height:80px;
+    }
+    .app_text {
+      font-size: 12px;
+    }
+  }
+
+// 没有下划线
+.contacts_list1 {
+  background-color: #fff;
+  .left_icon{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color:#FCB300; 
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    font-size: 16px;
+  }
+  .text_content {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: #24292C;
+  }
+  .right_text {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: #BAB9BF;
+  }
+}
+
+// 有一半下划线
+.contacts_list2 {
+  background-color: #fff;
+  .left_icon{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color:#1890ff; 
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    font-size: 16px;
+  }
+  .text_content {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    color: #24292C;
+    .mix-1px(0, 0, 1, 0, #ccc);
+  }
+  .right_icon {
+    .mix-1px(0, 0, 1, 0, #ccc);
+  }
+}
+// 有全部的下划线
+.contacts_list3 {
+  background-color: #fff;
+  .ui-col{
+    .mix-1px(0, 0, 1, 0, #ccc);
+  }
+  .left_icon{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color:#1890ff; 
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    font-size: 16px;
+  }
+  .text_content {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    font-size: 17px;
+    font-weight: bold;
+    color: #24292C;
+  }
+}
+</style>

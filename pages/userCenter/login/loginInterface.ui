@@ -48,6 +48,12 @@
           <ui-view class="login_content2">
             <ui-row height="50" border-bottom>
               <ui-col vertical-align="bottom">
+                <ui-input type="" ui:model="{{ realName }}" name="name" placeholder="请输入您的真实姓名" maxlength="11"
+                  placeholder-style="color:#9C9C9C"></ui-input>
+              </ui-col>
+            </ui-row>
+            <ui-row height="50" border-bottom>
+              <ui-col vertical-align="bottom">
                 <ui-input type="number" ui:model="{{ registerTel }}" name="tel" placeholder="请输入手机号码" maxlength="11"
                   placeholder-style="color:#9C9C9C"></ui-input>
               </ui-col>
@@ -98,9 +104,10 @@
         currentNum: 0, // 控制显示 登陆页面还是 注册页面，0 为登录页面
         loginTel: '13412341234', // 登陆电话
         loginCode: '123456', // 登录验证码
-        registerTel: '', // 注册电话
-        registerCode: '', // 注册验证码
-        registerPassword: '', // 注册密码
+        realName: '傅毅', // 真实姓名
+        registerTel: '13412341234', // 注册电话
+        registerCode: '1234', // 注册验证码
+        registerPassword: '123456', // 注册密码
       }
     },
     methods: {
@@ -185,8 +192,8 @@
               let LocalUserInfo = {
                 isLogin: true,
                 realName: userInfo.realName ? userInfo.realName : '',
-                nickName: userInfo.nickname ? userInfo.nickname : '',
-                userId: userInfo.employee_id ? userInfo.employee_id : '',
+                // nickName: userInfo.nickname ? userInfo.nickname : '',
+                userId: userInfo.innerId ? userInfo.innerId : '',
                 userTel: userInfo.tel,
                 tokenId: token,
 
@@ -243,9 +250,11 @@
           ui.request({
             url: registerUrl,
             data: {
+              name: this.realName, // 真实姓名
               tel: this.registerTel, // 手机号 + 密码
               // password: encryptRSA(this.registerPassword)
-              password: this.registerPassword
+              password: this.registerPassword, // 密码
+              vcode: this.registerCode // 短信验证码
 
             },
             method: 'POST',

@@ -1,0 +1,212 @@
+<!---->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">待确认审核的项目</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right">更多</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="info_list">
+      <ui-row height=150 class="top_tip" space-top=10 border-bottom ui:for="{{ projectTodoList }}" ui:for-item="item">
+        <ui-col width="60" align="center" style="padding-top:6px">
+          <ui-view class="left_icon">待</ui-view>
+        </ui-col>
+        <ui-col class="text" align="left" space="10">
+          <ui-view style="width: 100%;">
+            <ui-row height="30">
+              <ui-col align="left" vertical-align="middle">
+                <ui-text>{{ item.op }}</ui-text>
+              </ui-col>
+              <ui-col align="right" width="100" vertical-align="middle" space-right="10" bindtap="submitItems(item)">
+                <ui-view style="font-size:16px; color:red"> 确认 </ui-view>
+              </ui-col>
+            </ui-row>
+            <ui-view>{{ item.opId }}</ui-view>
+            <ui-view>{{ item.subOp }}</ui-view>
+            <ui-view>{{ item.subOpId }}</ui-view>
+            <ui-view>taskId：{{ item.taskId }}</ui-view>
+            <ui-view>workFlowId：{{ item.workFlowId }}</ui-view>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+  </ui-page>
+</template>
+
+<script>
+
+const searchProjectTodoListUrl = 'project/todo'
+const submitConfirmSupTeamUrl = 'project/pre/sup'
+
+  export default {
+    config: {
+      navigationStyle: 'custom'
+    },
+    data() {
+      return {
+        tokenId: '',
+        selectSupTeam: '确认监理公司',
+        searchContent: '', // 搜索的内容
+        selfTeamUnit: '', // 本公司
+        projectTodoList: '', // 项目待办列表
+        taskId: '', // 项目 ID 
+        supUnitId: '', // 监理公司 Id 号
+        SupTeamList: [], // 监理公司列表
+      }
+    },
+    methods: {
+      navigateBack() {
+        ui.navigateBack()
+      },
+      submitItems (item) {
+        console.log(item.taskId)
+        this.confirmSupTeam(item.taskId)
+      },
+      // 查询项目待办信息
+      getItemTodoInfo () {
+        console.log('查询项目待办信息')
+        ui.request({
+          url: searchProjectTodoListUrl,
+          method: 'GET',
+          header: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.tokenId
+          },
+          success: (result) => {
+            console.log("查询项目待办信息:",result)
+            if(result.data.code === 2000){
+              console.log("查询项目待办信息成功:",result.data)
+              this.projectTodoList = result.data.data.list
+            }else{
+              console.log("查询项目待办信息失败:",result)
+            }
+          },
+          fail: ({ errMsg }) => {
+            console.log("查询项目待办信息失败:",errMsg)
+          }
+        })
+      },
+      // 提交确认监理公司
+      confirmSupTeam (taskId) {
+        console.log('提交监理方信息',taskId,this.supUnitId)
+        ui.request({
+          url: submitConfirmSupTeamUrl,
+          data: {
+            "taskId": taskId, // 项目 ID 号
+            "unitId": this.supUnitId // 监理公司 ID 号
+          },
+          method: 'POST',
+          header: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.tokenId
+          },
+          success: (result) => {
+            console.log("提交监理方信息:",result)
+            if(result.data.code === 2000){
+              console.log("提交监理方信息成功:",result.data)
+              // 跳转到项目管理页面
+              // ui.redirectTo({
+              //   url: '/pages/items/itemManagement/itemManagement'
+              // })
+            }else{
+              console.log("提交监理方信息失败:",result)
+            }
+            
+          },
+          fail: ({ errMsg }) => {
+            console.log("提交监理方信息失败:",errMsg)
+          }
+        })
+      }
+    },
+    mounted() {
+      console.log("待确认的项目 mounted")
+      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+      console.log("待确认的项目页面：", LocalUserInfo)
+      this.tokenId = LocalUserInfo.tokenId
+
+      this.selfTeamUnit = ui.getStorageSync('LocalTeamUnitInfo')
+      console.log("待确认的项目页面：", this.selfTeamUnit)
+
+      this.supUnitId = this.selfTeamUnit.teamUnitId
+
+      // 查询创建的项目待办信息
+      this.getItemTodoInfo()
+    }
+  }
+</script>
+
+<style lang="less">
+  .nav_bar {
+    background: #fff;
+
+    .ui-icon {
+      color: #1890ff;
+    }
+
+    .nav_title {
+      color: #000;
+      font-size: 32rpx;
+      font-weight: bold;
+    }
+
+    .nav_right {
+      color: #1890ff;
+      font-size: 16px;
+    }
+  }
+
+  .info_list {
+    .mix-1px(1, 0, 0, 0, #ccc);
+    margin-top: 10px;
+  }
+
+  .top_tip {
+    background-color: #fff;
+
+    .left_icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #1890ff;
+      text-align: center;
+      line-height: 40px;
+      color: #fff;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .left_icon2 {
+      background-color: #FF7360;
+    }
+
+    .left_icon3 {
+      background-color: #39CCC5;
+    }
+
+    .text {
+      .ui-text {
+        font-size: 14px;
+        color: #6d6d6d;
+      }
+
+      .ui-view {
+        color: #9C9FA4;
+        font-size: 12px;
+        .mix-text-overflow();
+      }
+    }
+  }
+</style>

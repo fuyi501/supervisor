@@ -38,8 +38,8 @@
     },
     data() {
       return {
-        // 行业名称
-        industryName: '',
+        // 行业名称和类型
+        industry: {},
 
       }
     },
@@ -49,10 +49,24 @@
         ui.navigateBack()
       },
       selected (value) {
-        this.industryName = value
-        console.log(this.industryName)
-        ui.setStorageSync('selectedIndustry', this.industryName)
-        ui.navigateBack()
+        if( value === '监理单位') {
+          this.industry = {
+            name: value,
+            type: 'supervisor'
+          }
+          console.log(this.industry)
+          ui.setStorageSync('selectedIndustry', this.industry)
+          ui.navigateBack()
+        } else if( value === '施工单位') {
+          this.industry = {
+            name: value,
+            type: 'constructor'
+          }
+          console.log(this.industry)
+          ui.setStorageSync('selectedIndustry', this.industry)
+          ui.navigateBack()
+        }
+        
       }
     },
     mounted() {
