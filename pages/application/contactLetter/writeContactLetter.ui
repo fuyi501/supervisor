@@ -1,6 +1,6 @@
 <!--note.ui-->
 <template>
-  <ui-page>
+  <ui-page page-load="{{ pageLoad }}">
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
         <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
@@ -22,6 +22,40 @@
         <ui-col vertical-align="middle" align="left" width="160" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            通知单编号
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-input
+            placeholder="请输入通知单编号"
+            placeholder-style="color:#999B9E"
+            show-clear="{{true}}"
+            ui:model="{{ contactLetterNo }}"
+          ></ui-input>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50" border-bottom bindtap="openSelectConTeam">
+        <ui-col vertical-align="middle" align="left" width="140" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            项目所属施工公司
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-view class="active2" ui:if=" !companyName "> 请选择
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
+          <ui-view class="active" ui:else> {{ companyName }}
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <!-- <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="160" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
             单位项目部
           </ui-view>
         </ui-col>
@@ -29,13 +63,13 @@
           <ui-input
             placeholder="请输入承包单位名称"
             placeholder-style="color:#999B9E"
-            show-clear="{{false}}"
+            show-clear="{{true}}"
             ui:model="{{ companyName }}"
           ></ui-input>
         </ui-col>
-      </ui-row>
+      </ui-row> -->
 
-      <ui-row height="50">
+      <ui-row height="50" space-top=10>
         <ui-col vertical-align="middle" align="left" width="90" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
@@ -159,13 +193,31 @@ export default {
     backgroundColor: '#F6F6F6',
     disableIosGesture: true,
     navigationBarTextStyle: 'white',
-    delay: true
+    delay: true,
+    cache: true
   },
   data () {
     return {
+      pageLoad: {// 进入页面先判断是否有地理数据保存在 本地存储中
+        trigger: 'always',
+        handle: () => {
+          console.log("监理工作联系单 pageLoad")
+      
+          this.contactLetterCon = ui.getStorageSync('selectedConTeam')
+          ui.removeStorageSync('selectedConTeam')
+          this.companyName = this.contactLetterCon ? this.contactLetterCon.name : ''
+          this.conUnitId = this.contactLetterCon ? this.contactLetterCon.id : ''
+        }
+      },
       pageTitle: '监理工作联系单',
       pageTitleRight: '更多',
-      companyName: '沪通铁路工程IV标项目部',
+      tokenId: '',
+      projectName: '', // 项目名称
+      projectId: '', // 项目 ID
+      contactLetterNo: '', // 联系单编号
+      contactLetterCon: '', // 联系单施工公司全部信息
+      companyName: '', // 联系单施工公司名称
+      conUnitId: '', // 联系单施工公司 ID 号
       contactTime: '', // 联系时间
       timeLimit: '3日内将整改完成并进行回复', // 整改时限
       // 质量和安全问题
@@ -198,6 +250,12 @@ export default {
         }
       })
     },
+    // 选择施工公司
+    openSelectConTeam () {
+      ui.navigateTo({
+        url: '/pages/items/createItems/selectProjectConTeam'
+      })
+    },
     // 质量问题
     qualitySwitchChange (val) {
       console.log(val)
@@ -227,27 +285,63 @@ export default {
     },
     // 提交
     submit () {
-      if (this.companyName === '') {
-        ui.showToast({ title: '请输入承包单位名称' })
-      } else if (this.timeLimit === '') {
+      console.log(this.contactLetterNo,this.projectId,this.contactReason,this.conUnitId)
+      if (!this.companyName) {
+        ui.showToast({ title: '请输入施工单位名称' })
+      } else if (!this.timeLimit) {
         ui.showToast({ title: '请输入整改时限' })
-      } else if (this.contactReason === '') {
+      } else if (!this.contactReason) {
         ui.showToast({ title: '请输入联系单事由' })
-      } else if (this.contactContent === '') {
+      } else if (!this.contactContent) {
         ui.showToast({ title: '请输入联系内容' })
       } else {
-       this.paySubmit()
+        this.paySubmit()
       }
     },
     paySubmit () {
-      ui.showToast({ title: '提交成功', icon: 'success' })
-      setTimeout(() => {
-        ui.navigateBack()
-      }, 1000)
+      console.log('提交施工联系单信息')
+      ui.request({
+        url: 'sup/contact/submit',
+        data: {
+          "no": this.contactLetterNo, // 联系单编号
+          "projectId": this.projectId, // 项目 ID 号
+          "content": this.contactReason, // 联系原因
+          "fileId": null, // 
+          "conUnitId": this.conUnitId, // 施工公司 ID 号
+        },
+        method: 'POST',
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.tokenId
+        },
+        success: (result) => {
+          console.log("提交施工联系单信息:",result)
+          if(result.data.code === 2000){
+            console.log("提交施工联系单信息成功:",result.data)
+            
+            ui.navigateBack()
+      
+          }else{
+            console.log("提交施工联系单信息失败:",result)
+          }
+        },
+        fail: ({ errMsg }) => {
+          console.log("提交施工联系单信息失败:",errMsg)
+        }
+      })
     }
   },
   mounted () {
-    
+
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("LocalUserInfo:", LocalUserInfo)
+    this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
+    let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
+    console.log("项目管理页面：", LocalProjectInfoList[0])
+    this.projectName = LocalProjectInfoList[0].itemName
+    this.projectId = LocalProjectInfoList[0].itemId
+
     this.contactTime = dayjs().format("YYYY-MM-DD HH:mm")
 
   }

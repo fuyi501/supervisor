@@ -1,6 +1,6 @@
 <!---->
 <template>
-  <ui-page>
+  <ui-page page-load="{{ pageLoad }}">
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
         <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
@@ -17,12 +17,12 @@
     <ui-view class="item_title">
       <ui-row height=80 class="title">
         <ui-col vertical-align="bottom" align="center">
-          地铁六号线一标段
+          {{ itemName }}
         </ui-col>
       </ui-row>
       <ui-row height=70 class="sub_title">
         <ui-col vertical-align="top" align="center">
-          地铁六号线一标段
+          {{ itemId }}
         </ui-col>
       </ui-row>
     </ui-view>
@@ -130,9 +130,21 @@ export default {
   },
   data() {
     return {
+      pageLoad:{
+        trigger:'always',
+        handle:()=>{
+          let itemInfo = ui.getQuery()
+          let itemIndex = Number(itemInfo.itemIndex)
+          let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
+          console.log("项目管理页面：", LocalProjectInfoList[itemIndex])
+          this.itemName = LocalProjectInfoList[itemIndex].itemName
+          this.itemId = LocalProjectInfoList[itemIndex].itemId
+        }
+      },
       tokenId: '',
       teamUnitId: '',
       itemName: '', // 项目名称
+      itemId: '',
       itemSectionName: '四川成都郫都区地铁六号线一标段', // 副标题
       itemDesc: '简介：六号线一标段',
     }

@@ -54,16 +54,16 @@
       </ui-col>
     </ui-row>
 
-    <ui-row height="60" class="contacts_list3" bindtap="">
+    <ui-row height="60" class="contacts_list3" bindtap="" ui:for="{{ LocalProjectInfoList }}" ui:for-item="item" ui:for-index="itemIndex">
       <ui-col width="50" space-left=10 align="center" vertical-align="middle">
         <ui-view class="left_icon">
           <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
         </ui-view>
       </ui-col>
       <ui-col vertical-align="middle" space-left="15">
-        <ui-view class="text_content">地铁六号线标段一</ui-view>
+        <ui-view class="text_content">{{ item.itemName }}</ui-view>
       </ui-col>
-      <ui-col vertical-align="middle" align="right" width="80" space-right="15" class="right_icon" bindtap="openItemsManagement">
+      <ui-col vertical-align="middle" align="right" width="80" space-right="15" class="right_icon" bindtap="openItemsManagement(itemIndex)">
         <ui-view style="width:100%; color:#1890ff">
           管理
           <ui-icon type="setting" size="18" color="#1890ff"></ui-icon>
@@ -83,12 +83,11 @@ export default {
   data() {
     return {
       tokenId: '',
-      teamUnitName: '',
-      teamUnitDesc: '',
-      teamUnitId: '',
-      teamUnitInviteCode: '',
-      teamUnitType: '',
-      teamUnitInnerType: ''
+      itemName: '',
+      itemId: '',
+      itemSTime: '',
+      itemETime: '',
+      LocalProjectInfoList: []
     }
   },
   methods: {
@@ -112,9 +111,9 @@ export default {
       })
     },
     // 项目管理
-    openItemsManagement () {
+    openItemsManagement (itemIndex) {
       ui.navigateTo({
-        url: '/pages/items/itemManagement/itemManagement'
+        url: '/pages/items/itemManagement/itemManagement?itemIndex=' + itemIndex
       })
     },
     // 查询项目
@@ -147,7 +146,7 @@ export default {
     getItemsInfo () {
       console.log('查询公司项目列表信息')
       ui.request({
-        url: 'project/list/top',
+        url: 'project/list/top/all/1',
         method: 'GET',
         header: {
           'Content-Type': 'application/json',
@@ -157,7 +156,19 @@ export default {
           console.log("查询公司项目列表信息:",result)
           if(result.data.code === 2000){
             console.log("查询公司项目列表成功:",result.data)
-            
+            let itemInfo = result.data.data.list
+
+            for(let item in itemInfo){
+              this.LocalProjectInfoList.push({
+                itemName: itemInfo[item].name,
+                itemId: itemInfo[item].id,
+                itemSTime: itemInfo[item].startTime,
+                itemETime: itemInfo[item].endTime
+              })
+            }
+
+            ui.setStorageSync('LocalProjectInfoList', this.LocalProjectInfoList)
+            console.log(this.LocalProjectInfoList)
 
           }else{
             console.log("查询公司项目列表信息失败:",result)
@@ -177,19 +188,8 @@ export default {
     console.log("选择监理公司页面：", LocalUserInfo)
     this.tokenId = LocalUserInfo.tokenId
 
-    let LocalTeamTreeInfo = ui.getStorageSync('LocalTeamTreeInfo')
-    console.log("团队组织树信息：", LocalTeamTreeInfo)
-
-    if( LocalTeamTreeInfo !== null ) {
-      let LocalTeamUnitInfo = ui.getStorageSync('LocalTeamUnitInfo')
-      console.log("团队组织单元信息：", LocalTeamUnitInfo)
-      this.teamUnitName = LocalTeamUnitInfo.teamUnitName
-      this.teamUnitDesc = LocalTeamUnitInfo.teamUnitDesc
-      this.teamUnitId = LocalTeamUnitInfo.teamUnitId
-      this.teamUnitInviteCode = LocalTeamUnitInfo.teamUnitInviteCode
-      this.teamUnitType = LocalTeamUnitInfo.teamUnitType
-      this.teamUnitInnerType = LocalTeamUnitInfo.teamUnitInnerType
-    }
+    let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
+    console.log("组织项目信息：", LocalProjectInfoList)
 
     this.getItemsInfo()
   }

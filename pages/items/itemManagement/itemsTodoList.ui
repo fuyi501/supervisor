@@ -40,6 +40,10 @@
           </ui-view>
         </ui-col>
       </ui-row>
+
+      <ui-row> {{ selfTeamUnit.teamUnitName }} </ui-row>
+      <ui-row> {{ supUnitId }} </ui-row>
+
     </ui-view>
 
   </ui-page>

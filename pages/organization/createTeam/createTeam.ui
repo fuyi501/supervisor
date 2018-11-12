@@ -140,6 +140,7 @@ import cityList from '#/static/data/address'
         //团队名称
         teamName: '',
 
+        // 行业名称
         industry: {
           name: '',
           type: ''

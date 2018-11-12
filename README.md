@@ -79,6 +79,16 @@ let LocalProjectAMapInfo = {
 }
 ```
 
+项目信息保存在 LocalProjectInfoList 中，
+```js
+LocalProjectInfoList.push({
+    itemName: 
+    itemId: 
+    itemSTime: 
+    itemETime:
+})
+```
+
 ## 项目计划安排
 
 #### 项目版本1.0.0，预计 11月12日 完成
