@@ -30,20 +30,36 @@
       </ui-map>
     </ui-view>
 
-    <ui-view class="qiandaoCentent">
-      <ui-row height="100" border-bottom>
+    <ui-view class="qiandaoCentent" ui:for="{{qianDaoList}}" ui:for-item="qianDaoItem" ui:if="{{qianDaoList.length>1}}">
+      <ui-row height="100" border-bottom >
         <ui-col width="80" align="center" style="margin-top:10px;">
-          <ui-view class="left_icon">傅毅</ui-view>
+          <ui-view class="left_icon">{{qianDaoItem.name}}</ui-view>
         </ui-col>
         <ui-col space-right="10" vertical-align="middle">
           <ui-view class="qiandao-info">
-            <ui-view class="qiandao-name">{{qianDaoList.name}}</ui-view>
+            <ui-view class="qiandao-name">{{qianDaoItem.name}}</ui-view>
             <ui-view class="qiandao-time">
-              {{qianDaoList.time}} ，今日已签到 {{qianDaoList.count}} 次
+              {{qianDaoItem.qianDaoTime}} ，今日已签到 {{qianDaoItem.qianDaoNumber}} 次
             </ui-view>
             <ui-view class="qiandao-addr">
               <ui-icon type="map1" size="12" color="#333"></ui-icon>
-              {{qianDaoList.address}}
+              {{qianDaoItem.qianDaoAddress}}
+            </ui-view>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+    <ui-view class="qiandaoCentent" ui:else>
+      <ui-row height="80" border-bottom >
+        <ui-col width="80" align="center">
+          <ui-view class="left_icon">傅毅</ui-view>
+        </ui-col>
+        <ui-col space-right="10" vertical-align="middle">
+          <ui-view class="qiandao-info" style="margin-top:20px">
+            <ui-view class="qiandao-name">傅毅</ui-view>
+            <ui-view class="qiandao-time">
+              今日你还没有签到
             </ui-view>
           </ui-view>
         </ui-col>
@@ -58,8 +74,8 @@
   // mapComprehensive.js
   var amapFile = require('amap-touchui')
   var key = '4216f7d550dc95ef4ac91e3c0ee6a19a'
-  var icon = require('#/images/map/ic_map_mode.png'),
-    iconActive = require('#/images/map/ic_map_mode_active.png')
+  var icon = require('#/images/map/ic_map_mode2.png'),
+    iconActive = require('#/images/map/ic_map_mode_active2.png')
 
   export default {
     config: {
@@ -71,32 +87,48 @@
         mapHeight: ui.DEFAULT_CONTENT_HEIGHT-300 + 'px',
         latitude: 30.768075, // 纬度
         longitude: 103.986003, // 经度
-        qianDaoList: {  // 签到数据列表
-          name: '傅毅',
-          time: '11:20',
-          count: 1,
-          address: '西南交大犀浦校区'
-        },
-        city: '', // 城市
+        qianDaoList: [ // 签到数据列表
+          {  
+            name: '傅毅',
+            qianDaoTime: '11:20', 
+            qianDaoNumber: 1,
+            qianDaoAddress: '西南交大犀浦校区'
+          },
+        ],
         markers: [{ // 地图上的 markers
           id: 1,
           latitude: 30.764259,
           longitude: 103.986475,
           iconPath: icon,
-          width: 23,
-          height: 30
-        }, {
-          id: 2,
-          latitude: 30.768075,
-          longitude: 103.986003,
-          iconPath: icon,
-          width: 23,
-          height: 30
+          width: 32,
+          height: 32
         }],
       }
     },
     mounted() {
-
+      let LocalQianDaoInfo = ui.getStorageSync('LocalQianDaoInfo')
+      if(LocalQianDaoInfo){
+        let qianDaoInfoList = LocalQianDaoInfo.qianDaoInfoList
+        for( let i in qianDaoInfoList){
+          this.qianDaoList.push({
+            name: '傅毅',
+            qianDaoTime: qianDaoInfoList[i].qianDaoTime,
+            qianDaoNumber: qianDaoInfoList[i].qianDaoNumber,
+            qianDaoAddress: ''
+          })
+          this.reserveAddr(qianDaoInfoList[i].qianDaoLocation, i)
+        }
+        for( let i in qianDaoInfoList){
+          this.markers.push({
+            id: i,
+            latitude: qianDaoInfoList[i].qianDaoLocation[1],
+            longitude: qianDaoInfoList[i].qianDaoLocation[0],
+            iconPath: icon,
+            width: 32,
+            height: 32
+          })
+        }
+      } 
     },
     methods: {
       navigateBack () {
@@ -140,7 +172,30 @@
           return item.id === id
         })[0]
         console.log('current:', current)
-      }
+      },
+      // 地址逆解析
+      reserveAddr (markerObj, index) {
+        console.log('地址逆解析')
+        // 调用amapFile.AMapWX构造函数创建myAmapFun实例
+        var myAmapFun = new amapFile.AMapWX({ key: key })
+        // 根据参数的坐标值,调用getRegeo方法逆解析地址
+        myAmapFun.getRegeo({
+          location: `${markerObj[0]},${markerObj[1]}`,
+          success: (data) => {
+            console.log('成功：', data)
+            this.qianDaoList[index].qianDaoAddress = data[0].regeocodeData.formatted_address
+            // 调用成功则将相关数据存储至textData
+            // this.setData({
+            //   textData: {
+            //     name: data[0].regeocodeData.formatted_address,
+            //     address: data[0].name,
+            //     latitude: data[0].latitude,
+            //     longitude: data[0].longitude
+            //   }
+            // })
+          }
+        })
+      },
     }
   }
 </script>
@@ -186,7 +241,7 @@
     line-height: 50px;
     color: #fff;
     font-size: 16px;
-    margin-top: 10px;
+    margin-top: 15px;
   }
 
   .qiandao-info {

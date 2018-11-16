@@ -10,3 +10,7 @@ ui.preloadDialogs([
   require('#/pages/userCenter/login/loginInterface.ui')
 ])
 
+ui.preloadDialogs([
+  require('#/pages/application/kaoqin/kqStatistics.ui')
+])
+

@@ -89,6 +89,20 @@ LocalProjectInfoList.push({
 })
 ```
 
+本地签到信息保存在 LocalQianDaoInfo 中，
+```js
+LocalQianDaoInfo = {
+    qianDaoInfoList: [
+        {
+            qianDaoTime:  // 签到时间
+            qianDaoLocation: // 签到地理位置
+            qianDaoNumber:  // 第几次签到
+        }
+    ],
+    qianDaoCount: // 签到次数
+})
+```
+
 ## 项目计划安排
 
 #### 项目版本1.0.0，预计 11月12日 完成
