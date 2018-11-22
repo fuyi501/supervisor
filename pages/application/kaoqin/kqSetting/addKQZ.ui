@@ -1,0 +1,275 @@
+<!--note.ui-->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">新增考勤组</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right">更多</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="form_content">
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
+          <ui-view>
+            考勤组名称
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="left" space="20">
+          <ui-input
+            placeholder="请输入考勤组名称"
+            placeholder-style="color:#999B9E"
+            show-clear="{{true}}"
+            ui:model="{{ kqzName }}"
+          ></ui-input>
+        </ui-col>
+      </ui-row>
+
+      <!-- 抄送人 -->
+      <ui-view class="recipients">
+        <ui-view class="title">考勤部门</ui-view>
+        <ui-view class="recipients_content">
+          <ui-view class="recipients_list" ui:for="{{ kqDepartmentList }}" ui:for-item="item">
+            <ui-view class="list_content" bindtap="deleteKQD(index)">
+              <ui-view class="close">x</ui-view>
+              <ui-text>{{ item.name }}</ui-text>
+            </ui-view>
+          </ui-view>
+          <ui-view class="recipients_list" bindtap="addKQD">
+            <ui-view class="add_recipients">
+              <ui-icon type="add" size="20" color="#B3B5B5"></ui-icon>
+            </ui-view>
+          </ui-view>
+        </ui-view>
+      </ui-view>
+
+      <ui-row height="60" space-top="10">
+        <ui-col vertical-align="middle" align="center" space="30">
+          <ui-button type="primary" bindtap="submit">下一步</ui-button>
+        </ui-col>
+      </ui-row>
+
+    </ui-view>
+
+  </ui-page>
+</template>
+
+<script>
+
+export default {
+  config: {
+    navigationStyle: 'custom',
+    backgroundColor: '#F6F6F6',
+    navigationBarTextStyle: 'white',
+    "delay":true
+  },
+  data () {
+    return {
+      kqzName: '平头哥工作室',
+
+      // 考勤部门
+      kqDepartmentList: [],
+
+    }
+  },
+  methods: {
+    // 返回按钮
+    navigateBack () {
+      ui.navigateBack()
+    },
+    
+    // 添加考勤部门
+    addKQD () {
+    },
+    // 删除考勤部门
+    deleteKQD (index) {
+      // console.log(index)
+      // this.approverList.splice(index, 1)
+      // this.approvalUserId = null
+    },
+    submit () {
+      if (this.kqzName === '') {
+        ui.showToast({ title: '请输入考勤组名称' })
+      } else if (!this.kqDepartmentList) {
+        ui.showToast({ title: '请添加考勤人员或部门' })
+      } else {
+       this.paySubmit()
+      }
+    },
+    paySubmit () {
+      ui.showToast({ title: '下一步', icon: 'success' })
+      setTimeout(() => {
+        ui.navigateTo({
+          url: '/pages/application/kaoqin/kqSetting/kqRules?kqzName=' + this.kqzName
+        })
+      }, 1000)
+    }
+  },
+  // 日期组件计算
+  created () {
+  },
+  mounted () {
+
+  }
+}
+</script>
+
+<style lang="less">
+
+.nav_bar {
+  background: #fff;
+  .ui-icon {
+    color: #1890ff;
+  }
+  .nav_title {
+    color: #000;
+    font-size: 32rpx;
+    font-weight: bold;
+  }
+  .nav_right{
+    color: #1890ff;
+    font-size: 16px;
+  }
+}
+
+.form_content{
+  padding-top: 10px;
+  // .mix-1px(1, 0, 1, 0, #ccc);
+
+  .ui-row{
+    background: #fff;
+    .mix-1px(0, 0, 1, 0, #ccc);
+    .ui-view{
+      font-size: 14px;
+      color: #1A1E23;
+      &.right_column{
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+      }
+    }
+    .ui-row{
+      width: 100%;
+      .right_column{
+        width: 95%;
+        font-size: 12px;
+      }
+      .ui-textarea-wrapper{
+        padding: 10px;
+      }
+    }
+    .weui-cell{
+      padding: 0;
+      .ui-picker-select{
+        font-size: 14px;
+      }
+    }
+    .ui-input{
+      border:0px;
+      padding: 0px;
+      .ui-input-inner{
+        height: 33px;
+        width: 100%;
+        text-align: right;
+      }
+    }
+  }
+}
+.weui-cell__hd{
+  display: none;
+}
+.detail_description{
+  margin-bottom: 10px;
+  background: #fff;
+  .ui-icon {
+    padding-left: 10px;
+  }
+  .ui-text{
+    // width: 70px;
+    text-align: left;
+    line-height: 30px;
+    color: #1A1E23;
+    font-size: 14px;
+  }
+  .ui-textarea-wrapper{
+    border: 0;
+    padding: 10px;
+  }
+}
+.recipients{
+  margin-top: 10px;
+  background-color: #fff;
+  .title{
+    text-align: left;
+    padding-left: 10px;
+    line-height: 40px;
+    .ui-text{
+      font-size: 14px;
+      color: #ccc;
+    }
+  }
+  .recipients_content{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    padding-bottom: 20px;
+    .recipients_list{
+      display: inline-flex;
+      text-align: center;
+      padding: 5px 15px;
+      .list_content{
+        position: relative;
+        .close{
+          position: absolute;
+          top: -3px;
+          right: -3px;
+          width: 13px;
+          height: 13px;
+          border-radius: 50%;
+          z-index: 9;
+          background-color: #14171B;
+          line-height:13px;
+          font-size: 12px;
+          color: #fff;
+        }
+        .ui-image{
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          margin-bottom: 10px;
+        }
+        .ui-text{
+          color: #060606;
+          font-size: 12px;
+        }
+      }
+      .add_recipients{
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #F4F4F4;
+        line-height: 40px;
+        text-align: center;
+      }
+    }
+
+  }
+}
+
+//弹窗
+.ui-confirm-content{
+  text-align: center;
+}
+
+</style>

@@ -1,0 +1,102 @@
+<!--note.ui-->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="20" color="#126DFE"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">选择考勤日期</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="demo-content">
+      <ui-checkbox-group  bindchange="checkboxChange">
+          <ui-label class="checkbox" ui:for="{{items}}">
+            <ui-checkbox value="{{item.name}}" checked="{{ item.checked }}" type="circle"></ui-checkbox>{{item.value}}
+          </ui-label>
+      </ui-checkbox-group>
+    </ui-view>
+
+  </ui-page>
+</template>
+
+<script>
+  export default {
+    config: {
+      navigationStyle: 'custom',
+      backgroundColor: '#F6F6F6'
+    },
+    data() {
+      return {
+        // 考勤日期
+        kqDays: '',
+        items: [
+          { name: '一', value: '每周一', checked: true },
+          { name: '二', value: '每周二', checked: true },
+          { name: '三', value: '每周三', checked: true },
+          { name: '四', value: '每周四', checked: true },
+          { name: '五', value: '每周五', checked: true },
+          { name: '六', value: '每周六' },
+          { name: '七', value: '每周日' }
+        ]
+
+      }
+    },
+    methods: {
+      // 返回按钮
+      navigateBack() {
+        ui.navigateBack()
+      },
+      checkboxChange (obj) {
+        this.kqDays = obj.value.join(',')
+        console.log(this.kqDays)
+        ui.setStorageSync('selectedKQDays', this.kqDays)
+
+      }
+      // selected (value) {
+      //   this.staffSize = value
+      //   console.log(this.staffSize)
+      //   ui.setStorageSync('selectedStaffSize', this.staffSize)
+      //   ui.navigateBack()
+      // }
+    },
+    mounted() {
+
+    }
+  }
+</script>
+
+<style lang="less">
+
+  .nav_bar {
+    background: #fff;
+
+    .nav_title {
+      color: #000;
+      font-size: 36rpx;
+      font-weight: bold;
+    }
+  }
+
+  .demo-content {
+    .ui-checkbox-group {
+      background-color: #fff;
+    }
+
+    .checkbox {
+      display: block;
+      margin-left: 15px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      font-size: 14px;
+
+      &:not(:first-of-type) {
+        .mix-1px(1, 0, 0, 0, #d4d4d4);
+      }
+    }
+  }
+</style>

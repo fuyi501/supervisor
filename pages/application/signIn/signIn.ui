@@ -298,7 +298,7 @@ export default {
 
                   // 签到请求
                   ui.request({
-                    url: 'https://api.estech.xyz:8533/face/compare/base64',
+                    url: 'unit/attendance',
                     data: {
                       'lon': that.center[0],
                       'lat': that.center[1],

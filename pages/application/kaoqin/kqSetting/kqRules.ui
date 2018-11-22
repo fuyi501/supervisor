@@ -1,0 +1,432 @@
+<!--note.ui-->
+<template>
+  <ui-page page-load="{{ pageLoad }}">
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">考勤规则设置</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right">更多</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="form_content">
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
+          <ui-view>
+            排班方式
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          {{ kaoQinWay }}
+        </ui-col>
+      </ui-row>
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
+          <ui-view>
+            上班时间
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          {{ stimeValue }}
+        </ui-col>
+      </ui-row>
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
+          <ui-view>
+            下班时间
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          {{ etimeValue }}
+        </ui-col>
+      </ui-row>
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
+          <ui-view>
+            考勤日期
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20" bindtap="openSelectKQDays">
+          {{ kqDays }}
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="60" space-top="10">
+        <ui-col vertical-align="middle" align="center" space="30">
+          <ui-button type="primary" bindtap="submit">保存考勤组</ui-button>
+        </ui-col>
+      </ui-row>
+
+    </ui-view>
+
+  </ui-page>
+</template>
+
+<script>
+
+export default {
+  config: {
+    navigationStyle: 'custom',
+    backgroundColor: '#F6F6F6',
+    "delay":true
+  },
+  data () {
+    return {
+      pageLoad: { // 进入页面先判断是否有地理数据保存在 本地存储中
+        trigger: 'always',
+        handle: () => {
+          console.log("考勤规则 pageLoad")
+          let kqdays = ui.getStorageSync('selectedKQDays')
+
+          this.kqDays = kqdays ? '每周' + kqdays : '每周一、二、三、四、五'
+
+          let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+          console.log("LocalUserInfo:", LocalUserInfo)
+        
+          this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
+        }
+      },
+      tokenId: '',
+      teamUnitId: '',
+      kqzName: '',
+      kqRulesId: '',
+      kaoQinWay: '固定',
+
+      // 日期选择 上班时间和下班时间
+      stimeValue: '09:00',
+      etimeValue: '18:00',
+
+      // 考勤日期
+      kqDays: '每周一、二、三、四、五',
+      dayNumber: []
+      
+    }
+  },
+  methods: {
+    // 返回按钮
+    navigateBack () {
+      ui.navigateBack()
+    },
+    openSelectKQDays () {
+      ui.navigateTo({
+        url: '/pages/application/kaoqin/kqSetting/selectKQDays'
+      })
+    },
+    submit () {
+      this.postKQRules(this.teamUnitId)
+
+      // this.getKQRules(this.teamUnitId)
+    },
+    saveKQZ () {
+      // ui.showToast({ title: '保存成功', icon: 'success' })
+      // setTimeout(() => {
+      //   ui.navigateBack()
+      // }, 1000)
+      
+    },
+    // 提交考勤规则,参数 组织 ID
+    postKQRules (unitId) {
+      console.log('提交考勤规则')
+      ui.request({
+        url: 'unit/attendance/mgr/rule/' + unitId,
+        data: {
+          "name":this.kqzName + "考勤规则",
+          "type":"fixed",
+          "recordType":"loc",
+          "startTime":"09:00:00",
+          "endTime":"18:00:00",
+          "resetTime":"00:00:00",
+          "weekdays":[true,true,true,true,true,false,false],
+          "isCompensated":false,
+          "isProjectInherited":false,
+          "isLowerLevel":false,
+          "area":[
+            // {
+            //   "index":1,
+            //   "lon":103.297955,
+            //   "lat":31.026178
+            // }
+          ]
+        },
+        method: 'POST',
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.tokenId
+        },
+        success: (result) => {
+          console.log("提交考勤规则:",result)
+          if(result.data.code === 2000){
+            console.log("提交考勤规则成功:",result.data)
+            this.getKQRules(this.teamUnitId)
+          
+          }else{
+            console.log("提交考勤规则失败:",result)
+          }
+          
+        },
+        fail: ({ errMsg }) => {
+          console.log("提交考勤规则失败:",errMsg)
+        }
+      })
+    },
+    // 查询考勤规则
+    getKQRules (unitId) {
+      console.log('查询考勤规则')
+      ui.request({
+        url: 'unit/attendance/mgr/rule/' + unitId,
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.tokenId
+        },
+        method: 'GET',
+        success: (result) => {
+          console.log("返回结果:",result)
+          if(result.data.code === 2000){
+            console.log("查询考勤规则成功:",result.data.data)
+            this.kqRulesId = result.data.data.rules[0].id
+
+            this.postKQZ(this.teamUnitId)
+            
+          }else{
+            console.log("查询考勤规则失败:",result)
+          }
+        },
+        fail: ({ errMsg }) => {
+          console.log("查询考勤规则失败:",errMsg)
+        }
+      })
+    },
+    // 创建考勤组
+    postKQZ (unitId) {
+      console.log('创建考勤组')
+      ui.request({
+        url: 'unit/attendance/mgr/rule/' + unitId,
+        data: {
+          "name": this.kqzName, // 考勤组名称
+          "ruleId": this.ruleId, // 考勤规则ID
+        },
+        method: 'POST',
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.tokenId
+        },
+        success: (result) => {
+          console.log("创建考勤组:",result)
+          if(result.data.code === 2000){
+            console.log("创建考勤组成功:",result.data)
+            this.getKQZInfo(this.teamUnitId)
+
+          }else{
+            console.log("创建考勤组失败:",result)
+          }
+          
+        },
+        fail: ({ errMsg }) => {
+          console.log("创建考勤组失败:",errMsg)
+        }
+      })
+    },
+    getKQZInfo (unitId) {
+      console.log('查询考勤组信息')
+      ui.request({
+        url: 'unit/attendance/mgr/group/' + unitId,
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.tokenId
+        },
+        method: 'GET',
+        success: (result) => {
+          console.log("返回结果:",result)
+          if(result.data.code === 2000){
+            console.log("查询考勤组信息成功:",result.data.data)
+            
+          }else{
+            console.log("查询考勤组信息失败:",result)
+          }
+        },
+        fail: ({ errMsg }) => {
+          console.log("查询考勤组信息失败:",errMsg)
+        }
+      })
+    }
+  },
+  // 日期组件计算
+  created () {
+  },
+  mounted () {
+    let kqzInfo=ui.getQuery()
+    this.kqzName = kqzInfo.kqzName
+    console.log(this.kqzName)
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("LocalUserInfo:", LocalUserInfo)
+  
+    this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
+    let LocalTeamTreeInfo = ui.getStorageSync('LocalTeamTreeInfo')
+    console.log("团队组织树信息：", LocalTeamTreeInfo)
+
+    this.teamUnitId = LocalTeamTreeInfo.teamTreeId
+
+  }
+}
+</script>
+
+<style lang="less">
+
+.nav_bar {
+  background: #fff;
+  .ui-icon {
+    color: #1890ff;
+  }
+  .nav_title {
+    color: #000;
+    font-size: 32rpx;
+    font-weight: bold;
+  }
+  .nav_right{
+    color: #1890ff;
+    font-size: 16px;
+  }
+}
+
+.form_content{
+  padding-top: 10px;
+  // .mix-1px(1, 0, 1, 0, #ccc);
+
+  .ui-row{
+    background: #fff;
+    .mix-1px(0, 0, 1, 0, #ccc);
+    .ui-view{
+      font-size: 14px;
+      color: #1A1E23;
+      &.right_column{
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+      }
+    }
+    .ui-row{
+      width: 100%;
+      .right_column{
+        width: 95%;
+        font-size: 12px;
+      }
+      .ui-textarea-wrapper{
+        padding: 10px;
+      }
+    }
+    .weui-cell{
+      padding: 0;
+      .ui-picker-select{
+        font-size: 14px;
+      }
+    }
+    .ui-input{
+      border:0px;
+      padding: 0px;
+      .ui-input-inner{
+        height: 33px;
+        width: 100%;
+        text-align: right;
+      }
+    }
+  }
+}
+.weui-cell__hd{
+  display: none;
+}
+.detail_description{
+  margin-bottom: 10px;
+  background: #fff;
+  .ui-icon {
+    padding-left: 10px;
+  }
+  .ui-text{
+    // width: 70px;
+    text-align: left;
+    line-height: 30px;
+    color: #1A1E23;
+    font-size: 14px;
+  }
+  .ui-textarea-wrapper{
+    border: 0;
+    padding: 10px;
+  }
+}
+.recipients{
+  margin-top: 10px;
+  background-color: #fff;
+  .title{
+    text-align: left;
+    padding-left: 10px;
+    line-height: 40px;
+    .ui-text{
+      font-size: 14px;
+      color: #ccc;
+    }
+  }
+  .recipients_content{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    padding-bottom: 20px;
+    .recipients_list{
+      display: inline-flex;
+      text-align: center;
+      padding: 5px 15px;
+      .list_content{
+        position: relative;
+        .close{
+          position: absolute;
+          top: -3px;
+          right: -3px;
+          width: 13px;
+          height: 13px;
+          border-radius: 50%;
+          z-index: 9;
+          background-color: #14171B;
+          line-height:13px;
+          font-size: 12px;
+          color: #fff;
+        }
+        .ui-image{
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          margin-bottom: 10px;
+        }
+        .ui-text{
+          color: #060606;
+          font-size: 12px;
+        }
+      }
+      .add_recipients{
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #F4F4F4;
+        line-height: 40px;
+        text-align: center;
+      }
+    }
+
+  }
+}
+
+//弹窗
+.ui-confirm-content{
+  text-align: center;
+}
+
+</style>
