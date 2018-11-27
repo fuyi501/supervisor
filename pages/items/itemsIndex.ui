@@ -21,11 +21,11 @@
         <ui-col span=12>
           <ui-row>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openProjectTodoList">
-              <ui-icon type="zuzhi" color="#ffa940" size="40"></ui-icon>    
+              <ui-icon type="checkapply" color="#1890ff" size="40"></ui-icon>    
               <ui-view class="app_text">待确认</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openProjectReviewList">
-              <ui-icon type="items3" color="#ffa940" size="40"></ui-icon>    
+              <ui-icon type="shenpi3" color="#1890ff" size="40"></ui-icon>    
               <ui-view class="app_text">待审核</ui-view>       
             </ui-col>
           </ui-row>
@@ -36,7 +36,7 @@
     <ui-row height="60" class="contacts_list1" space-top=10 space-bottom=10 bindtap="openCreateItems">
       <ui-col width="50" space-left=10 align="center" vertical-align="middle">
         <ui-view class="left_icon">
-          <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
+          <ui-icon type="items3" color="#fff" size="24"></ui-icon>
         </ui-view>
       </ui-col>
       <ui-col vertical-align="middle" space-left="15">
@@ -94,11 +94,13 @@ export default {
     navigateBack () {
       ui.navigateBack()
     },
+    // 待确认
     openProjectTodoList () {
       ui.navigateTo({
         url: '/pages/items/itemManagement/itemsTodoList'
       })
     },
+    // 待审核
     openProjectReviewList () {
       ui.navigateTo({
         url: '/pages/items/itemManagement/itemsReviewList'
@@ -185,13 +187,16 @@ export default {
     console.log("我的项目")
 
     let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
-    console.log("选择监理公司页面：", LocalUserInfo)
+    console.log("我的项目页面：", LocalUserInfo)
     this.tokenId = LocalUserInfo.tokenId
 
     let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
     console.log("组织项目信息：", LocalProjectInfoList)
-
-    this.getItemsInfo()
+    if(LocalProjectInfoList === null){
+      this.getItemsInfo()
+    }else{
+      this.LocalProjectInfoList = LocalProjectInfoList
+    }
   }
 }
 </script>

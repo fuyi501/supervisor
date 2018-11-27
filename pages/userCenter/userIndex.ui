@@ -71,7 +71,7 @@
 
         <ui-row height="50" class="user_content_list2" bindtap="Meiqia">
           <ui-col width="50" vertical-align="middle" align="center">
-            <ui-view class="left_icon">
+            <ui-view class="left_icon" >
               <ui-icon type="customer" color="#fff" size="24"></ui-icon>
             </ui-view>
           </ui-col>
@@ -85,7 +85,7 @@
 
         <ui-row height="50" class="user_content_list2" url="/pages/userCenter/setting/feedback">
           <ui-col width="50" vertical-align="middle" align="center">
-            <ui-view class="left_icon">
+            <ui-view class="left_icon" >
               <ui-icon type="wenti" color="#fff" size="24"></ui-icon>
             </ui-view>
           </ui-col>
@@ -99,7 +99,7 @@
 
         <ui-row height="50" class="user_content_list2" url="/pages/userCenter/about">
           <ui-col width="50" vertical-align="middle" align="center">
-            <ui-view class="left_icon">
+            <ui-view class="left_icon" style="background-color:#52c41a;">
               <ui-icon type="about" color="#fff" size="24"></ui-icon>
             </ui-view>
           </ui-col>
@@ -113,7 +113,7 @@
 
         <ui-row height="50" class="user_content_list2" space-top=10 bindtap="openSetting">
           <ui-col width="50" vertical-align="middle" align="center">
-            <ui-view class="left_icon">
+            <ui-view class="left_icon" style="background-color:#546E7A;">
               <ui-icon type="setting" color="#fff" size="24"></ui-icon>
             </ui-view>
           </ui-col>
@@ -259,11 +259,9 @@
               LocalUserInfo.isHasAvatar = true
               LocalUserInfo.avatarBase64 = this.portraitUrl
               ui.setStorageSync('LocalUserInfo', LocalUserInfo)
-              
             }else{
               console.log("获取用户头像失败:",result)
             }
-            
           },
           fail: ({ errMsg }) => {
             console.log("获取用户头像失败:",errMsg)
@@ -281,7 +279,8 @@
         this.nickName = LocalUserInfo.nickName
         this.userTel = LocalUserInfo.userTel
         this.tokenId = LocalUserInfo.tokenId
-
+        
+        // 头像不为空则请求获取头像
         if(LocalUserInfo.isHasAvatar){
           if(LocalUserInfo.avatarBase64 === ''){
             this.getUserAvatar()

@@ -1,6 +1,6 @@
 <!--note.ui-->
 <template>
-  <ui-page page-load="{{ pageLoad }}">
+  <ui-page>
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
         <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
@@ -19,16 +19,9 @@
           <ui-view>团队名称</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
-          
           <ui-row >
             <ui-col vertical-align="middle" align="right" style="color:#999B9E">
-              <ui-input type="text" 
-                placeholder="请填写真实名称" 
-                placeholder-style="color:#999B9E" 
-                show-clear="{{true}}" 
-                ui:model="{{ teamName }}"
-              >
-              </ui-input>
+              {{ teamName }}
             </ui-col>
             <ui-col vertical-align="middle" align="right" width=20>
               <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
@@ -37,25 +30,25 @@
         </ui-col>
       </ui-row>
 
-      <ui-row height="50" bindtap="openIndustry">
+      <ui-row height="50">
         <ui-col vertical-align="middle" align="left" width="70" space-left="10">
           <ui-view>所在行业</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-            {{ industry ? industry : '必填' }}
+            {{ industry }}
             <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
           </ui-view>
         </ui-col>
       </ui-row>
 
-      <ui-row height="50" bindtap="openStaffSize">
+      <ui-row height="50">
         <ui-col vertical-align="middle" align="left" width="70" space-left="10">
           <ui-view>人员规模</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-            {{ staffSize ? staffSize : '必填' }}
+            {{ staffSize }}
             <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
           </ui-view>
         </ui-col>
@@ -68,7 +61,7 @@
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-row >
             <ui-col vertical-align="middle" align="right" style="color:#999B9E">
-              <ui-picker mode="region" value="{{ area }}" range="{{ cityList }}" hide-district bindchange="openArea"></ui-picker>
+              {{ area }}
             </ui-col>
             <ui-col vertical-align="middle" align="right" width=20>
               <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
@@ -91,117 +84,39 @@
 
 <script>
 
-const createTeamUrl = 'unit'
-import cityList from '#/static/data/address'
+// 移除组织单元
+const removeTeamUrl = 'unit'
 
-  export default {
-    config: {
-      navigationStyle: 'custom',
-      backgroundColor: '#F6F6F6',
-      disableIosGesture: true,
-      navigationBarTextStyle: 'white',
-      delay: true,
-      cache: true
-    },
-    data() {
-      return {
-        pageLoad: { // 进入页面先判断是否有地理数据保存在 本地存储中
-          trigger: 'always',
-          handle: () => {
-            console.log("创建团队 pageLoad")
-            this.industry = ui.getStorageSync('selectedIndustry')
-            this.staffSize = ui.getStorageSync('selectedStaffSize')
-            this.duty = ui.getStorageSync('selectedDuty')
-
-            let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
-            console.log("LocalUserInfo:", LocalUserInfo)
-         
-            this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
-
-            
-          }
-        },
-        tokenId: '',
-        //团队名称
-        teamName: '平头哥工作室',
-
-        industry: '', // 行业
-        staffSize: '', // 人员规模
-        cityList: cityList,
-        area: ['510000', '510100'], // 地区
-        duty: '', // 职务
-
-        managerList: [], // 管理员列表
-        teamMemberList: [] // 团队成员列表
-
-      }
-    },
-    methods: {
-      // 返回按钮
-      navigateBack() {
-        ui.navigateBack()
-      },
-      openIndustry () {
-        ui.navigateTo({
-          url: '/pages/contacts/organization/selectIndustry'
-        })
-      },
-      openStaffSize () {
-        ui.navigateTo({
-          url: '/pages/contacts/organization/selectStaffSize'
-        })
-      },
-      openArea (val) {
-        console.log(val)
-        this.area = val
-      },
-      openDuty() {
-        ui.navigateTo({
-          url: '/pages/contacts/organization/selectDuty'
-        })
-      },
-      submit () {
-        if(this.teamName === '') {
-          ui.showToast({title: '请输入团队名称'})
-        }else{
-          this.createTeam()
-        }
-      },
-      createTeam () {
-        console.log('创建团队')
-        ui.request({
-          url: createTeamUrl,
-          data: {
-            'name': this.teamName, 
-            "desc":"test",
-            "type":"supervisor",
-            "innerType":"company"
-          },
-          method: 'POST',
-          header: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.tokenId
-          },
-          success: (result) => {
-            console.log("创建团队:",result)
-            if(result.data.code === 2000){
-              console.log("创建团队成功:",result.data)
-            
-            }else{
-              console.log("创建团队失败:",result)
-            }
-            
-          },
-          fail: ({ errMsg }) => {
-            console.log("创建团队失败:",errMsg)
-          }
-        })
-      }
-    },
-    mounted() {
-      
+export default {
+  config: {
+    navigationStyle: 'custom',
+    backgroundColor: '#F6F6F6',
+    delay: true,
+    cache: true
+  },
+  data() {
+    return {
+      tokenId: '',
+      teamName: '平头哥监理公司', //团队名称
+      industry: '监理单位', // 所属行业
+      staffSize: '10-20', // 人员规模
+      area: '四川成都', // 所在地区
     }
+  },
+  methods: {
+    // 返回按钮
+    navigateBack() {
+      ui.navigateBack()
+    }
+  },
+  mounted() {
+    console.log("团队设置 pageLoad")
+
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("LocalUserInfo:", LocalUserInfo)
+    this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
   }
+}
 </script>
 
 <style lang="less">

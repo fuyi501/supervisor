@@ -11,7 +11,7 @@
         <ui-col vertical-align="middle" align="center">
           <ui-view class="nav_title"> {{ teamName }} </ui-view>
         </ui-col>
-        <ui-col vertical-align="middle" align="center" width="50">
+        <ui-col vertical-align="middle" align="center" width="50" bindtap="openTeamManagement">
           <ui-view class="nav_right">管理</ui-view>
         </ui-col>
       </ui-row>
@@ -103,6 +103,12 @@ export default {
   methods: {
     navigateBack () {
       ui.navigateBack()
+    },
+    // 团队管理
+    openTeamManagement () {
+      ui.navigateTo({
+        url: '/pages/organization/teamManagement/teamManagement'
+      })
     },
     // 解析姓氏
     getFirstName(name) {

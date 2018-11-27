@@ -79,23 +79,6 @@
       navigateBack() {
         ui.navigateBack()
       },
-      // 考勤
-      openKaoQin () {
-        ui.navigateTo({
-          url: '/pages/application/kaoqin/kaoqin'
-        })
-      },
-      // 签到
-      openSignIn () {
-        ui.navigateTo({
-          url: '/pages/application/signIn/signIn'
-        })
-      },
-      addKaoQinRules () {
-        ui.navigateTo({
-          url: '/pages/application/kaoqin/kqSetting/kqRules'
-        })
-      },
       // 新增考勤组
       addKaoQinZu() {
         ui.navigateTo({

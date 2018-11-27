@@ -34,11 +34,11 @@
         <ui-col span=12>
           <ui-row>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openOrganizationIndex">
-              <ui-icon type="zuzhi" color="#ffa940" size="40"></ui-icon>    
+              <ui-icon type="zuzhi" color="#1890ff" size="40"></ui-icon>    
               <ui-view class="app_text">我的企业</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openItemsIndex">
-              <ui-icon type="items3" color="#ffa940" size="40"></ui-icon>    
+              <ui-icon type="items3" color="#1890ff" size="40"></ui-icon>    
               <ui-view class="app_text">我的项目</ui-view>       
             </ui-col>
           </ui-row>
@@ -60,7 +60,8 @@
       </ui-col>
     </ui-row>
 
-    <ui-row height="60" class="contacts_list3" bindtap="">
+    <!-- 在通讯录这一页展示 企业信息，先注释掉不展示 -->
+    <!-- <ui-row height="60" class="contacts_list3" bindtap="">
       <ui-col width="50" space-left=10 align="center" vertical-align="middle">
         <ui-view class="left_icon">
           <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
@@ -78,15 +79,12 @@
     </ui-row>
     <ui-row height="50" class="contacts_list4" bindtap="openOrgStructure">
       <ui-col width="50" space-left=10 align="center" vertical-align="middle">
-        <!-- <ui-view class="left_icon" style="background-color:#1890ff" > -->
-          <ui-icon type="zuzhi" color="#1890ff" size="20"></ui-icon>
-        <!-- </ui-view> -->
+        <ui-icon type="zuzhi" color="#1890ff" size="20"></ui-icon>
       </ui-col>
       <ui-col vertical-align="middle" space-left="15">
         <ui-view class="text_content">组织架构</ui-view>
       </ui-col>
       <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
-        <!-- <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon> -->
       </ui-col>
     </ui-row>
 
@@ -109,7 +107,7 @@
           </ui-col>
         </ui-row>
       </ui-col>
-    </ui-row>
+    </ui-row> -->
 
     <ui-row height="60" class="contacts_list2" bindtap="openContactBook">
       <ui-col width="50" space-left=10 align="center" vertical-align="middle">

@@ -103,35 +103,35 @@
       <ui-row space-top=0 >
         <ui-col span=12>
           <ui-row>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openRiZhi">
-                <ui-icon type="rizhi3" color="#ff525d" size="30"></ui-icon>    
-                <ui-view class="app_text">项目日志</ui-view>
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="openContact">
+                <ui-icon type="pangzhan2" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">监理联系单</ui-view>           
             </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openPangZhan">
-                <ui-icon type="pangzhan" color="#28aa91" size="30"></ui-icon> 
-                <ui-view class="app_text">旁站记录</ui-view> 
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openContactReply">
+                <ui-icon type="huifudan" color="#28aa91" size="30"></ui-icon>    
+                <ui-view class="app_text">联系回复单</ui-view>       
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openNotice">
-                <ui-icon type="gonggao3" color="#28aa91" size="30"></ui-icon>    
+                <ui-icon type="tongzhidan" color="#28aa91" size="30"></ui-icon>    
                 <ui-view class="app_text">监理通知单</ui-view>       
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openNoticeReply">
-                <ui-icon type="gonggao3" color="red" size="30"></ui-icon>    
+                <ui-icon type="huifudan3" color="red" size="30"></ui-icon>    
                 <ui-view class="app_text">通知回复单</ui-view>              
             </ui-col>
           </ui-row>
 
           <ui-row>
-            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="openContact">
-                <ui-icon type="gonggao3" color="#ff525d" size="30"></ui-icon>    
-                <ui-view class="app_text">监理联系单</ui-view>           
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openRiZhi">
+                <ui-icon type="rizhi3" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">项目日志</ui-view>
             </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openContactReply">
-                <ui-icon type="gonggao3" color="#28aa91" size="30"></ui-icon>    
-                <ui-view class="app_text">联系回复单</ui-view>       
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openPangZhan">
+                <ui-icon type="xuncha2" color="#28aa91" size="30"></ui-icon> 
+                <ui-view class="app_text">旁站记录</ui-view> 
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openXunCha">
-                <ui-icon type="xuncha" color="#fc9153" size="30"></ui-icon>    
+                <ui-icon type="xuncha3" color="#fc9153" size="30"></ui-icon>    
                 <ui-view class="app_text">巡查记录</ui-view>             
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">

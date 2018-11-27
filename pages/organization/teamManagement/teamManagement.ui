@@ -21,15 +21,16 @@
         </ui-col>
       </ui-row>
       <ui-row height=70 class="sub_title">
-        <ui-col vertical-align="top" align="center">
-          团队号：{{ teamUnitInviteCode }}
-        </ui-col>
+        <ui-view style="color:#1890ff;">团队号：</ui-view>{{ teamUnitInviteCode }}
       </ui-row>
     </ui-view>
 
     <ui-view class="form_content">
       <ui-row height="50" space-top=5 bindtap="openInviteEmployee">
-        <ui-col vertical-align="middle" align="left" space-left="10">
+        <ui-col width="50" space-left=5 align="center" vertical-align="middle">
+          <ui-icon type="haoyou2" color="#faad14" size="24"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="left" space-left="5">
           <ui-view>添加员工加入团队</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
@@ -48,7 +49,10 @@
         </ui-col>
       </ui-row>
       <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" space-left="10">
+        <ui-col width="50" space-left=5 align="center" vertical-align="middle">
+          <ui-icon type="tongji2" color="#faad14" size="24"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="left" space-left="5">
           <ui-view>员工使用数据</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
@@ -66,7 +70,10 @@
         </ui-col>
       </ui-row>
       <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" space-left="10">
+        <ui-col width="50" space-left=5 align="center" vertical-align="middle">
+          <ui-icon type="customer" color="#1890ff" size="24"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="left" space-left="5">
           <ui-view>我的客服</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
@@ -79,7 +86,10 @@
     
     <ui-view class="form_content">
       <ui-row height="50" space-top=5>
-        <ui-col vertical-align="middle" align="left" space-left="10">
+        <ui-col width="50" space-left=5 align="center" vertical-align="middle">
+          <ui-icon type="setting2" color="#52c41a" size="24"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="left" space-left="5">
           <ui-view>管理员设置</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
@@ -89,7 +99,10 @@
         </ui-col>
       </ui-row>
       <ui-row height="50" space=30 bindtap="openTeamSetting">
-        <ui-col vertical-align="middle" align="left" space-left="10">
+        <ui-col width="50" space-left=5 align="center" vertical-align="middle">
+          <ui-icon type="setting" color="#455A64" size="24"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="left" space-left="5">
           <ui-view>更多设置</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
@@ -290,7 +303,7 @@ export default {
     background: #fff;
     // .mix-1px(0, 0, 1, 0, #ccc);
     .ui-view{
-      font-size: 14px;
+      font-size: 15px;
       color: #1A1E23;
       &.right_column{
         color: #999B9E;

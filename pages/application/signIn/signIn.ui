@@ -21,29 +21,32 @@
     <ui-view class="qiandao_windows" style="{{ { height: height + 'px'} }}">
       <!-- 个人信息 -->
       <ui-view class="top" >
-        <ui-row height="40" class="header_top" border-bottom>
+        <ui-row height="50" class="header_top" border-bottom>
           <ui-col vertical-align="middle" align="center" width="36" space-left="10">
-            <ui-icon type="shijian" size="16" color="#ccc"></ui-icon> 
+            <ui-icon type="shijian" size="16" color="#1890ff"></ui-icon> 
           </ui-col>
           <ui-col vertical-align="middle" align="left" width="90" >
-            2018-10-24
+            {{ qianDaoDate }}
           </ui-col>
           <ui-col vertical-align="middle" align="right" width="40" space-right=5>
-            <ui-icon type="zuzhi" size="16" color="#ccc"></ui-icon>
+            <ui-icon type="zuzhi" size="16" color="#1890ff"></ui-icon>
           </ui-col>
           <ui-col vertical-align="middle" align="left">
-            平头哥工作室
+            {{ qianDaoUnitName }}
           </ui-col>
         </ui-row>
-        <ui-row height="40" class="header_top">
+        <ui-row height="60" class="header_top">
           <ui-col vertical-align="middle" align="center" width="36" space-left="10">
-            <ui-icon type="map1" size="20" color="#ccc"></ui-icon> 
+            <ui-icon type="map1" size="20" color="#1890ff"></ui-icon> 
           </ui-col>
-          <ui-col vertical-align="middle" align="left" width="90">
-            西南交大
+          <ui-col vertical-align="middle" align="left" >
+            {{ qianDaoAddress }}
           </ui-col>
-          <ui-col vertical-align="middle" align="right" space-right=10 bindtap="refreshAMap">
-            刷新
+          <ui-col vertical-align="middle" align="right" width="80" space-right=10 bindtap="refreshAMap">
+            <ui-view>
+              <ui-icon type="shuaxin" size="16" color="#1890ff" style="margin-right:3px;"></ui-icon>
+              刷新
+            </ui-view>
           </ui-col>
         </ui-row>
       </ui-view>
@@ -67,7 +70,9 @@
 </template>
 
 <script>
-
+// 地址逆解析用到
+var amapFile = require('amap-touchui')
+var key = '4216f7d550dc95ef4ac91e3c0ee6a19a'
 import lrz from '#/static/utils/lrz'
 import dayjs from '#/static/utils/dayjs'
 
@@ -77,7 +82,6 @@ export default {
     navigationBarTitleText: '签到',
     // backgroundColor: '#F4F4F4',
     cache: true
-    // disableScroll:true
   },
   data () {
     return {
@@ -115,6 +119,9 @@ export default {
         }
       },
       height: ui.DEFAULT_CONTENT_HEIGHT, // 内容高度
+      qianDaoDate: '', // 签到时间
+      qianDaoUnitName: '', // 团队名称
+      qianDaoAddress: '', // 签到地址
       //签到数据
       qianDaoCount: 0, // 签到次数，成功一次加一
       qianDaoTime: '',
@@ -134,12 +141,6 @@ export default {
       polyp: [  // 多边形 边缘数据
       ],
       center: [116.397428, 39.90923]
-    }
-  },
-  // 计算属性
-  computed: {
-    userInfo: function () {
-      return this.userName + " " + this.userTel
     }
   },
   methods: {
@@ -211,6 +212,7 @@ export default {
         // console.log("坐标：",res.lnglat.lng,res.lnglat.lat)
         this.center = [ res.lnglat.lng, res.lnglat.lat ]
         console.log("地图 center",this.center)
+        this.reserveAddr(this.center)
 
         // 本地签到地理信息
         let LocalQianDaoAMapInfo = {
@@ -326,7 +328,6 @@ export default {
                             buttonText: '我知道了',
                             buttonStyle: { color: '#f97d0e' },
                             success () {
-
                               console.log("签到成功,存储本地签到地理信息")
                               that.qianDaoCount += 1
                               let LocalQianDaoInfo = ui.getStorageSync('LocalQianDaoInfo')
@@ -344,7 +345,7 @@ export default {
                           ui.showAlert({
                             title: "签到失败",
                             content: `
-                              <div style="font-size: 20px; text-align: center;"> 人脸不匹配 </div>
+                              <div style="font-size: 20px; text-align: center;"> 人脸不匹配 ${result.data.data.desc} </div>
                             `,
                             buttonText: '我知道了',
                             buttonStyle: { color: '#f97d0e' },
@@ -358,7 +359,7 @@ export default {
                         ui.showAlert({
                           title: "签到失败",
                           content: `
-                            <div style="font-size: 20px; text-align: center;"> 请求失败</br>请再次尝试 </div>
+                            <div style="font-size: 20px; text-align: center;"> ${result.data.data.desc} </div>
                           `,
                           buttonText: '我知道了',
                           buttonStyle: { color: '#f97d0e' },
@@ -369,45 +370,60 @@ export default {
                       }
                     },
                     fail: function ({ errMsg }) {
-                      
                       ui.hideLoading()
                       ui.showToast({ title: '上传对比失败' })
                       console.log("上传对比失败：",errMsg)
                     }
                   })
-
               })
               .catch(function (err){
-                  // 处理失败会执行
-                  console.log("压缩失败",err)
-                  
+                // 处理失败会执行
+                console.log("压缩失败",err)
               })
               .always(function () {
-                  // 不管是成功失败，都会执行
-                  console.log("执行压缩")
+                // 不管是成功失败，都会执行
+                console.log("执行压缩")
               });
-          
             },
             fail: function (res) {
               console.log("选择照片失败:", res)
             }
           })
-
-        
       }
-      
     },
     nowTimes () {
       this.NowTime = dayjs().format("HH:mm:ss")
+    },
+    // 地址逆解析
+    reserveAddr (markerObj) {
+      console.log('地址逆解析')
+      // 调用amapFile.AMapWX构造函数创建myAmapFun实例
+      var myAmapFun = new amapFile.AMapWX({ key: key })
+      // 根据参数的坐标值,调用getRegeo方法逆解析地址
+      myAmapFun.getRegeo({
+        location: `${markerObj[0]},${markerObj[1]}`,
+        success: (data) => {
+          console.log('地址逆解析成功：', data)
+          this.qianDaoAddress = data[0].regeocodeData.formatted_address
+        }
+      })
     }
-  
   },
   mounted() {
     console.log("签到 mounted")
 
     this.init()
     console.log('当前时间：', dayjs())
+    this.qianDaoDate = dayjs().format('YYYY-MM-DD')
     setInterval(this.nowTimes, 1000);
+
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("签到页面用户信息：", LocalUserInfo)
+    this.tokenId = LocalUserInfo.tokenId
+
+    let LocalTeamUnitInfo = ui.getStorageSync('LocalTeamUnitInfo')
+    console.log("签到页面团队信息：", LocalTeamUnitInfo)
+    this.qianDaoUnitName = LocalTeamUnitInfo.teamUnitName
 
     // 初始化本地签到地理信息
     let LocalQianDaoInfo = ui.getStorageSync('LocalQianDaoInfo')
@@ -418,8 +434,6 @@ export default {
       }
     }
     
-                              
-  
   }
 }
 

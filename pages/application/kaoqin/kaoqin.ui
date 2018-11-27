@@ -18,29 +18,28 @@
       </ui-row>
     </ui-nav-bar>
 
-    <ui-view class="qiandao_windows">
+    <ui-view class="kaoqin_windows">
       <!-- 个人信息 -->
       <ui-view class="top" >
         <ui-row height="60" class="header_top" border-bottom>
           <ui-col vertical-align="middle" align="center" width="60">
-            <ui-view class="head_portrait">
-            </ui-view>
             <ui-image
-            src="{{ portraitUrl }}"
+            src="{{ userAvatar }}"
             mode='aspectFill'
             width="40"
             height="40"
-            class="head_portrait"
             ></ui-image>
           </ui-col>
           <ui-col vertical-align="middle" align="left">
             <ui-view class="login">{{ userName }}</ui-view>
-            <ui-view class="login_after"> {{ userItem }} </ui-view>
+            <ui-view class="login_after"> {{ userTeamName }} </ui-view>
           </ui-col>
-          <ui-col vertical-align="middle" align="right" width="150" space-right="15">
+          <ui-col vertical-align="middle" align="right" width="145" space-right=15>
             <ui-row >
-              <ui-col vertical-align="middle" align="right">2018.12.12</ui-col>
-              <ui-col vertical-align="middle" align="right" width=20>
+              <ui-col vertical-align="middle" align="right" width=100 > 
+                {{ nowDate }} 
+              </ui-col>
+              <ui-col vertical-align="middle" align="right" width=30 space-right=10>
                 <ui-icon type="arrow-right" size="18" color="#000"></ui-icon>
               </ui-col>
             </ui-row>
@@ -60,19 +59,21 @@
             <ui-view class="title-info">上班时间</ui-view>
             <ui-view class="title-date">09:00</ui-view>
           </ui-view>
-          <ui-view class="fixed-view-content" ui:if="{{isShangBan }}">
-            <ui-row>上班打卡</ui-row>
-            <ui-row> {{ time }} </ui-row>
-          </ui-view>
-          <ui-view ui:else>
+          
+          <ui-view ui:if="{{ isShangBan }}">
             <ui-view class="head">
-              <ui-view class="head-info">打卡时间 12:23</ui-view>
-              <em class="head-tag">正常</em>
+              <ui-view class="head-info">打卡时间 {{ shangBanTime }}</ui-view>
+              <em class="head-tag">{{ shangBanStatus }}</em>
             </ui-view>
             <ui-view class="content">
-              <ui-view class="content-info">地点西南交大</ui-view>
+              <ui-view class="content-info">地点：{{ shangBanAddress }}</ui-view>
             </ui-view>
           </ui-view>
+          <ui-view class="fixed-view-content" ui:else bindtap="shangBanDaka">
+            <ui-row>上班打卡</ui-row>
+            <ui-row> {{ kaoQinTime }} </ui-row>
+          </ui-view>
+
         </ui-view>
       </ui-timeline-item>
       <ui-timeline-item
@@ -85,22 +86,42 @@
             <ui-view class="title-info">下班时间</ui-view>
             <ui-view class="title-date">18:00</ui-view>
           </ui-view>
-          <ui-view class="fixed-view-content" ui:if="{{ isXiaBan }}">
-            <ui-row>上班打卡</ui-row>
-            <ui-row> {{ time }} </ui-row>
-          </ui-view>
-          <ui-view ui:else>
+          
+          <ui-view ui:if="{{ isXiaBan }}" >
             <ui-view class="head">
-              <ui-view class="head-info">打卡时间 12:23</ui-view>
-              <em class="head-tag">正常</em>
+              <ui-view class="head-info">打卡时间 {{ xiaBanTime }}</ui-view>
+              <em class="head-tag">{{ xiaBanStatus }}</em>
             </ui-view>
             <ui-view class="content">
-              <ui-view class="content-info">地点西南交大</ui-view>
+              <ui-view class="content-info">地点：{{ xiaBanAddress }}</ui-view>
             </ui-view>
           </ui-view>
+          <ui-view class="fixed-view-content" ui:elif="{{ isShangBan }}" bindtap="xiaBanDaka">
+            <ui-row>下班打卡</ui-row>
+            <ui-row> {{ kaoQinTime }} </ui-row>
+          </ui-view>
+
         </ui-view>
       </ui-timeline-item>
     </ui-timeline>
+
+    <ui-mask ui:model="showMask">
+      <ui-view class="content">
+        <ui-view class="tip">
+          <ui-view class="tip_top">
+            <ui-icon type="daka5" size="80" color="#1890ff"></ui-icon>
+          </ui-view>
+          <ui-view class="tip_content">
+            {{ maskTime }}
+            <ui-view> {{ maskSubTitle }} </ui-view>
+          </ui-view>
+          <ui-view class="bottom_content">为自己美好的未来奋斗！</ui-view>
+          <ui-view class="tip_bottom" bindtap="handleShowMask(false)">
+            我知道了
+          </ui-view>
+        </ui-view>
+      </ui-view>
+    </ui-mask>
 
   </ui-page>
 </template>
@@ -115,11 +136,16 @@ export default {
     navigationBarTitleText: '签到',
     // backgroundColor: '#F4F4F4',
     cache: true
-    // navigationBarTextStyle: 'black',
-    // disableScroll:true
   },
   data () {
     return {
+      pageLoad: {// 进入页面通过缓存tokenId来判断是否是登录状态
+        trigger: 'always',
+        handle: () => {
+          console.log("pageLoad 每次打开这个页面都会执行这个函数")
+   
+        }
+      },
       list: [
         {
           time: '上班时间',
@@ -136,64 +162,79 @@ export default {
           info: '地点'
         },
       ],
-      // 加载页面判断是否登录
-      isLogin: false,
-      userName: '傅毅',
-      userTel: '',
-      userId: '', // 用户工号
-      userItem: '中铁二局地铁六号线标段一', // 用户所属项目
-      tokenid: '',
-      currentNum: 0, // 这个值控制显示登录页面还是注册页面,0为登录页面,1为注册页面
-      portraitUrl: require('#/images/portrait_bg.png'),
-      pageLoad: {// 进入页面通过缓存tokenId来判断是否是登录状态
-        trigger: 'always',
-        handle: () => {
-          console.log("pageLoad 每次打开这个页面都会执行这个函数")
-   
+      tokenId: '',
+      userName: '', // 用户姓名
+      userTeamName: '', // 用户团队名称
+      userAvatar: require('#/images/portrait_bg.png'),
+     
+      // 考勤数据
+      nowDate: '',
 
-          // 判断是否已签到
-          let qianDaoInfo = ui.getStorageSync('qianDaoInfo')
-          console.log("qianDaoInfo",qianDaoInfo)
-          if(qianDaoInfo !== null){
-            if(qianDaoInfo.qianDaoStatus !== null){
-              this.isQianDao = qianDaoInfo.qianDaoStatus
-            }else{
-              console.log("没有这个数据")
-            }
-          } else {
-            this.isQianDao = false
-          }
-        }
-      },
-      height: ui.DEFAULT_CONTENT_HEIGHT,
-      //签到数据
-      isQianDao: false, // 是否已签到，默认为 false
       isShangBan: false,
-      isXiaBan: true,
-      qiandao: ui.WIN_WIDTH/2, // 签到按钮位于屏幕中间
+      shangBanTime: '', // 上班打卡时间
+      shangBanStatus: '', // 上班状态
+      shangBanAddress: '', // 上班地点
+
+      isXiaBan: false,
+      xiaBanTime: '', // 下班打卡时间
+      xiaBanStatus: '', // 下班状态
+      xiaBanAddress: '', // 下班地点
+
+      showMask: false, 
+      maskTime: '',
+      maskSubTitle: '',
+
       sourceType: 'camera', // 只打开摄像头
       sizeType: 'original', // 原图或者压缩
-      time: '',
+      kaoQinTime: '',
      
-    }
-  },
-  computed: {
-    userInfo: function () {
-      return this.userName + " " + this.userTel
     }
   },
   methods: {
     navigateBack () {
       ui.navigateBack()
     },
-    
+    shangBanDaka () {
+      this.isShangBan = true
+      this.shangBanTime = dayjs().format("HH:mm")
+      this.shangBanStatus = '正常'
+      this.shangBanAddress = '西南交大'
+
+      this.maskTime = this.shangBanTime
+      this.maskSubTitle = '上班打卡成功'
+      this.handleShowMask(true)
+    },
+    xiaBanDaka () {
+      this.isXiaBan = true
+      this.xiaBanTime = dayjs().format("HH:mm")
+      this.xiaBanStatus = '正常'
+      this.xiaBanAddress = '西南交大'
+      
+      this.maskTime = this.xiaBanTime
+      this.maskSubTitle = '下班打卡成功'
+      this.handleShowMask(true)
+    },
+    handleShowMask (show) {
+      this.showMask = show
+    },
     nowTimes () {
-      this.time = dayjs().format("HH:mm:ss")
+      this.kaoQinTime = dayjs().format("HH:mm:ss")
     }
   
   },
   mounted() {
     console.log("考勤 mounted")
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("考勤页面：", LocalUserInfo)
+    this.tokenId = LocalUserInfo.tokenId
+    this.userName = LocalUserInfo.realName
+    this.userAvatar = LocalUserInfo.avatarBase64 ? LocalUserInfo.avatarBase64 : require('#/images/portrait_bg.png')
+
+    let LocalTeamUnitInfo = ui.getStorageSync('LocalTeamUnitInfo')
+    console.log("考勤页面：", LocalTeamUnitInfo)
+    this.userTeamName = LocalTeamUnitInfo.teamUnitName
+
+    this.nowDate = dayjs().format("YYYY-MM-DD")
 
     setInterval(this.nowTimes, 1000);
   
@@ -220,10 +261,10 @@ export default {
   }
 }
 
-.qiandao_windows {
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
+.kaoqin_windows {
+  // display:flex;
+  // flex-direction:column;
+  // justify-content:space-between;
   margin-bottom: 30px;
 }
 
@@ -306,4 +347,56 @@ export default {
   background-color: @theme-color;
   z-index: 99;
 }
+
+.ui-mask{
+  .content{
+    height: 100%;
+    .mix-flex-center();
+  }
+  .tip{
+    width: 250px;
+    height: 310px;
+    border-radius: 8px;
+    overflow: hidden; 
+    background: #fff no-repeat center 10px;
+    background-size: 40px;
+  }
+  .tip_top{
+    padding: 5px 10px;
+    height: 100px;
+    text-align: center;
+  }
+  .tip_content{
+    padding: 10px 15px 10px 15px;
+    color: #1890ff;
+    font-size: 34px;
+    font-weight: bold;
+    text-align: center;
+
+    .ui-view{
+      text-align: center;
+      color: #1890ff;
+      font-size: 18px;
+      line-height: 30px
+    }
+  }
+  .bottom_content {
+    text-align: center;
+    color: #bfbfbf;
+    font-size: 14px;
+    height: 50px;
+    line-height: 30px
+  }
+  .tip_bottom{
+    width: 80%;
+    line-height: 40px;
+    background-color: #1890ff;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    margin: 0 auto;
+    border-radius:20px; 
+  }
+}
+
 </style>

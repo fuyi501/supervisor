@@ -36,40 +36,51 @@
       </ui-col>
     </ui-row>
 
-    <ui-row height="60" class="contacts_list3" bindtap="">
-      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
-        <ui-view class="left_icon">
-          <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
-        </ui-view>
-      </ui-col>
-      <ui-col vertical-align="middle" space-left="15">
-        <ui-view class="text_content"> {{ teamUnitName }} </ui-view>
-      </ui-col>
-      <ui-col vertical-align="middle" align="right" width="80" space-right="15" class="right_icon" bindtap="openTeamManagement">
-        <ui-view style="width:100%; color:#1890ff">
-          管理
-          <ui-icon type="setting" size="18" color="#1890ff"></ui-icon>
-        </ui-view>
-      </ui-col>
-    </ui-row>
-    <ui-row height="50" class="contacts_list4" bindtap="openOrgStructure">
-      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
-        <!-- <ui-view class="left_icon" style="background-color:#1890ff" > -->
-          <ui-icon type="zuzhi" color="#1890ff" size="20"></ui-icon>
-        <!-- </ui-view> -->
-      </ui-col>
-      <ui-col vertical-align="middle" space-left="15">
-        <ui-view class="text_content">组织架构</ui-view>
-      </ui-col>
-      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
-        <!-- <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon> -->
-      </ui-col>
-    </ui-row>
+    <ui-view ui:if="{{teamUnitName === ''}}">
+      <!-- 创建团队 -->
+    </ui-view>
+    <ui-view ui:else>
+      <ui-row height="60" class="contacts_list3" bindtap="">
+        <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+          <ui-view class="left_icon">
+            <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" space-left="15">
+          <ui-view class="text_content"> {{ teamUnitName }} </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" width="80" space-right="15" class="right_icon" bindtap="openTeamManagement">
+          <ui-view style="width:100%; color:#1890ff">
+            管理
+            <ui-icon type="setting" size="18" color="#1890ff"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" class="contacts_list4" bindtap="openOrgStructure">
+        <ui-col width="50" space-left=10 align="center" vertical-align="middle">
+          <!-- <ui-view class="left_icon" style="background-color:#1890ff" > -->
+            <ui-icon type="zuzhi" color="#1890ff" size="20"></ui-icon>
+          <!-- </ui-view> -->
+        </ui-col>
+        <ui-col vertical-align="middle" space-left="15">
+          <ui-view class="text_content">组织架构</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
+          <!-- <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon> -->
+        </ui-col>
+      </ui-row>
+    </ui-view>
+    
 
   </ui-page>
 </template>
 
 <script>
+// 查询组织树
+const getTeamTreeInfoUrl = 'unit/tree'
+// 查询组织单元信息
+const getTeamUnitInfoUrl = 'unit/'
+
 export default {
   config: {
     navigationStyle: 'custom',
@@ -77,6 +88,7 @@ export default {
   },
   data() {
     return {
+      tokenId: '',
       teamUnitName: '',
       teamUnitDesc: '',
       teamUnitId: '',
@@ -106,15 +118,106 @@ export default {
       ui.navigateTo({
         url: '/pages/organization/teamManagement/teamStaffList'
       })
+    },
+    // 获取组织树信息
+    getTeamTreeInfo () {
+      console.log('查询组织树')
+      ui.request({
+        url: getTeamTreeInfoUrl,
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.tokenId
+        },
+        method: 'GET',
+        success: (result) => {
+          console.log("返回结果:",result)
+          if(result.data.code === 2000){
+            
+            let teamTreeInfo = result.data.data
+
+            // 设置 LocalTeamTreeInfo 数据
+            let LocalTeamTreeInfo = {
+              teamTreeName: teamTreeInfo.name,
+              teamTreeId: teamTreeInfo.id,
+              teamTreeStaff: teamTreeInfo.chars,
+              teamTreeSubs: teamTreeInfo.subs,
+              teamTreeType: teamTreeInfo.type
+            }
+            
+            // 保存组织树信息到本地
+            ui.setStorageSync('LocalTeamTreeInfo', LocalTeamTreeInfo)
+
+            this.getTeamUnitInfo(teamTreeInfo.id)
+            
+          }else{
+            console.log("查询组织树失败:",result)
+          }
+        },
+        fail: ({ errMsg }) => {
+          console.log("查询组织树失败:",errMsg)
+        }
+      })
+    },
+    // 获取组织单元信息，参数组织单元 ID 
+    getTeamUnitInfo (unitId) {
+      console.log('查询组织单元信息')
+      ui.request({
+        url: getTeamUnitInfoUrl + unitId,
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.tokenId
+        },
+        method: 'GET',
+        success: (result) => {
+          console.log("返回结果:",result)
+          if(result.data.code === 2000){
+            
+            console.log("查询组织单元信息成功:",result.data.data)
+
+            let teamUnitInfo = result.data.data
+
+            this.teamUnitName = teamUnitInfo.name
+            this.teamUnitDesc = teamUnitInfo.desc
+            this.teamUnitId = teamUnitInfo.id
+            this.teamUnitInviteCode = teamUnitInfo.inviteCode
+            this.teamUnitType = teamUnitInfo.type
+            this.teamUnitInnerType = teamUnitInfo.innerType
+
+            // 设置 LocalTeamUnitInfo 数据
+            let LocalTeamUnitInfo = {
+              teamUnitName: teamUnitInfo.name,
+              teamUnitDesc: teamUnitInfo.desc,
+              teamUnitId: teamUnitInfo.id,
+              teamUnitInviteCode: teamUnitInfo.inviteCode,
+              teamUnitType: teamUnitInfo.type,
+              teamUnitInnerType: teamUnitInfo.innerType
+            }
+            
+            ui.setStorageSync('LocalTeamUnitInfo', LocalTeamUnitInfo)
+            
+          }else{
+            console.log("查询组织单元信息失败:",result)
+          }
+          
+        },
+        fail: ({ errMsg }) => {
+          console.log("查询组织单元信息失败:",errMsg)
+        }
+      })
     }
   },
   mounted() {
-    console.log("我的项目")
+    console.log("我的企业")
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("我的企业页面：", LocalUserInfo)
+    this.tokenId = LocalUserInfo.tokenId
 
     let LocalTeamTreeInfo = ui.getStorageSync('LocalTeamTreeInfo')
     console.log("团队组织树信息：", LocalTeamTreeInfo)
 
-    if( LocalTeamTreeInfo !== null ) {
+    if( LocalTeamTreeInfo === null ) {
+      this.getTeamTreeInfo()
+    } else {
       let LocalTeamUnitInfo = ui.getStorageSync('LocalTeamUnitInfo')
       console.log("团队组织单元信息：", LocalTeamUnitInfo)
       this.teamUnitName = LocalTeamUnitInfo.teamUnitName

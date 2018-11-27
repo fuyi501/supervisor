@@ -35,7 +35,7 @@
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-            {{ industry.name ? industry.name : '必填' }}
+            {{ industry ? industry : '必填' }}
             <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
           </ui-view>
         </ui-col>
@@ -106,7 +106,7 @@
 </template>
 
 <script>
-
+// 创建团队 URL
 const createTeamUrl = 'unit'
 import cityList from '#/static/data/address'
 
@@ -114,8 +114,6 @@ import cityList from '#/static/data/address'
     config: {
       navigationStyle: 'custom',
       backgroundColor: '#F6F6F6',
-      disableIosGesture: true,
-      navigationBarTextStyle: 'white',
       delay: true,
       cache: true
     },
@@ -141,14 +139,11 @@ import cityList from '#/static/data/address'
         teamName: '',
 
         // 行业名称
-        industry: {
-          name: '',
-          type: ''
-        }, // 行业
+        industry: '', // 行业
         staffSize: '', // 人员规模
-        cityList: cityList,
+        cityList: cityList, // 城市列表
         area: ['510000', '510100'], // 地区
-        duty: '', // 职务
+        duty: '', // 我的职务
 
         managerList: [], // 管理员列表
         teamMemberList: [] // 团队成员列表
@@ -160,31 +155,38 @@ import cityList from '#/static/data/address'
       navigateBack() {
         ui.navigateBack()
       },
+      // 选择行业
       openIndustry () {
         ui.navigateTo({
           url: '/pages/organization/createTeam/selectIndustry'
         })
       },
+      // 选择人员规模
       openStaffSize () {
         ui.navigateTo({
           url: '/pages/organization/createTeam/selectStaffSize'
         })
       },
+      // 选择地区
       openArea (val) {
         console.log(val)
         this.area = val
       },
+      // 选择职位
       openDuty() {
         ui.navigateTo({
           url: '/pages/organization/createTeam/selectDuty'
         })
       },
+      // 添加团队管理员
       openAddManager () {
         ui.showToast({title: '敬请期待'})
       },
+      // 添加团队成员
       openAddTeamMember () {
         ui.showToast({title: '敬请期待'})
       },
+      // 立即提交创建团队
       submit () {
         if(this.teamName === '') {
           ui.showToast({title: '请输入团队名称'})
@@ -192,15 +194,16 @@ import cityList from '#/static/data/address'
           this.createTeam()
         }
       },
+      // 创建团队
       createTeam () {
         console.log('创建团队')
         ui.request({
           url: createTeamUrl,
           data: {
-            'name': this.teamName, 
-            "desc":"傅毅的团队",
-            "type":this.industry.type, // 监理公司
-            "innerType":"company"
+            "name": this.teamName, 
+            "desc": "监理公司",
+            "type": this.industry.type, // 监理公司
+            "innerType": "company"
           },
           method: 'POST',
           header: {
@@ -211,6 +214,12 @@ import cityList from '#/static/data/address'
             console.log("创建团队:",result)
             if(result.data.code === 2000){
               console.log("创建团队成功:",result.data)
+
+              // 创建团队成功后，移除本页造成的 缓存
+              ui.removeStorageSync('selectedIndustry')
+              ui.removeStorageSync('selectedStaffSize')
+              ui.removeStorageSync('selectedDuty')
+              
               // 跳转到团队管理页面
               ui.redirectTo({
                 url: '/pages/organization/teamManagement/teamManagement'
@@ -218,13 +227,13 @@ import cityList from '#/static/data/address'
             }else{
               console.log("创建团队失败:",result)
             }
-            
           },
           fail: ({ errMsg }) => {
             console.log("创建团队失败:",errMsg)
           }
         })
       },
+      // 获取地理位置
       getPosition(){
         ui.request({
           url: 'http://apis.map.qq.com/ws/location/v1/ip', 
@@ -232,11 +241,7 @@ import cityList from '#/static/data/address'
             key: 'RHGBZ-S2LAU-5MRV7-4QPTZ-JI25K-HVBDV'
           },
           success: (res) => {
-            console.log(res.data)
-            this.text = res.data.result.ad_info
-            console.log(this.text)
-            ui.showToast({title: this.text})
-
+            console.log('获取地理位置：', res.data)
           }
         })
       }
