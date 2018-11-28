@@ -109,7 +109,7 @@
       <ui-view class="content">
         <ui-view class="tip">
           <ui-view class="tip_top">
-            <ui-icon type="daka5" size="80" color="#1890ff"></ui-icon>
+            <ui-icon type="daka1" size="70" color="#1890ff"></ui-icon>
           </ui-view>
           <ui-view class="tip_content">
             {{ maskTime }}

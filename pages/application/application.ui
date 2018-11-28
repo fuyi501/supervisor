@@ -51,26 +51,26 @@
         <ui-col span=12>
           <ui-row>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openKaoQin">
-                <ui-icon type="daka2" color="#28aa91" size="30"></ui-icon>    
+                <ui-icon type="daka2" color="#1890ff" size="30"></ui-icon>    
                 <ui-view class="app_text">考勤打卡</ui-view>       
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openSignIn">
-                <ui-icon type="daka4" color="#ff525d" size="30"></ui-icon>    
+                <ui-icon type="daka4" color="#1890ff" size="30"></ui-icon>    
                 <ui-view class="app_text">签到</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openAskOff">
-                <ui-icon type="qingjia1" color="#ff525d" size="30"></ui-icon>    
+                <ui-icon type="qingjia1" color="#1890ff" size="30"></ui-icon>    
                 <ui-view class="app_text">请假</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openBuKa">
-                <ui-icon type="buka1" color="#8bb93f" size="30"></ui-icon>    
+                <ui-icon type="buka1" color="#1890ff" size="30"></ui-icon>    
                 <ui-view class="app_text">补卡</ui-view>             
             </ui-col>
           </ui-row>
 
           <ui-row>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openApproval">
-                <ui-icon type="shenpi1" color="#ff525d" size="30"></ui-icon>    
+                <ui-icon type="shenpi3" color="#faad14" size="30"></ui-icon>    
                 <ui-view class="app_text">审批</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
@@ -104,19 +104,19 @@
         <ui-col span=12>
           <ui-row>
             <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="openContact">
-                <ui-icon type="pangzhan2" color="#ff525d" size="30"></ui-icon>    
+                <ui-icon type="pangzhan2" color="#00C853" size="30"></ui-icon>    
                 <ui-view class="app_text">监理联系单</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openContactReply">
-                <ui-icon type="huifudan" color="#28aa91" size="30"></ui-icon>    
+                <ui-icon type="huifudan" color="#00C853" size="30"></ui-icon>    
                 <ui-view class="app_text">联系回复单</ui-view>       
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openNotice">
-                <ui-icon type="tongzhidan" color="#28aa91" size="30"></ui-icon>    
+                <ui-icon type="tongzhidan" color="#FF3D00" size="30"></ui-icon>    
                 <ui-view class="app_text">监理通知单</ui-view>       
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openNoticeReply">
-                <ui-icon type="huifudan3" color="red" size="30"></ui-icon>    
+                <ui-icon type="huifudan3" color="#FF3D00" size="30"></ui-icon>    
                 <ui-view class="app_text">通知回复单</ui-view>              
             </ui-col>
           </ui-row>

@@ -5,22 +5,25 @@
       <ui-row height="46">
         <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
           <ui-view>
-            <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <ui-text class="nav_title">项目详情</ui-text>
+          <ui-view class="nav_title"> {{ itemName }} </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="50">
-          <ui-view>
-          
-          </ui-view>
+          <ui-view class="nav_right">编辑</ui-view>
         </ui-col>
       </ui-row>
     </ui-nav-bar>
 
     <ui-view class="form_content">
-      <ui-row height="50">
+      <ui-row height="30">
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view style="font-size:12px; font-weight:bold; color: #1890ff;">基本信息</ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" border-bottom>
         <ui-col vertical-align="middle" align="left" width="70" space-left="10">
           <ui-view>项目名称</ui-view>
         </ui-col>
@@ -30,10 +33,39 @@
           </ui-view>
         </ui-col>
       </ui-row>
+      <ui-row height="50" border-bottom>
+        <ui-col vertical-align="middle" align="left" width="90" space-left="10">
+          <ui-view>
+            项目简介
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ itemSectionName }}
+          </ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" border-bottom>
+        <ui-col vertical-align="middle" align="left" width="90" space-left="10">
+          <ui-view>
+            所在地区
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ atCity }}
+          </ui-view>
+        </ui-col>
+      </ui-row>
 
-      <ui-row height="50">
+      <ui-row height="30" space-top=10>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view style="font-size:12px; font-weight:bold; color: #1890ff;">项目周期</ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" border-bottom>
         <ui-col vertical-align="middle" align="left" width="70" space-left="10">
-          <ui-view>开始时间</ui-view>
+          <ui-view>开工时间</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
@@ -41,10 +73,9 @@
           </ui-view>
         </ui-col>
       </ui-row>
-
-      <ui-row height="50">
+      <ui-row height="50" border-bottom>
         <ui-col vertical-align="middle" align="left" width="70" space-left="10">
-          <ui-view>结束时间</ui-view>
+          <ui-view>竣工时间</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
@@ -52,78 +83,110 @@
           </ui-view>
         </ui-col>
       </ui-row>
-
-      <ui-row height="50">
+      <ui-row height="50" border-bottom>
         <ui-col vertical-align="middle" align="left" width="70" space-left="10">
           <ui-view>预计周期</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-           {{ period }} 天
+           {{ period }}
           </ui-view>
         </ui-col>
       </ui-row>
-
-      <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="80" space-left="10">
-          <ui-view>上下班时间</ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="4">
-          <ui-view class="">
-            {{ stime }}
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="30" space="10">
-          <ui-view class="">
-            至
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" width="50" space-right="10" >
-          <ui-view class="">
-            {{ etime }}
-          </ui-view>
-        </ui-col>
-      </ui-row>
-
-      <!-- <ui-row height="50">
+      <ui-row height="50" border-bottom>
         <ui-col vertical-align="middle" align="left" width="70" space-left="10">
-          <ui-view>部门</ui-view>
+          <ui-view>状态</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-            <ui-picker mode="multiSelector" is-chain value="{{ departmentValue }}" range="{{ departments }}" range-key="text" ></ui-picker>
+           施工中
           </ui-view>
         </ui-col>
-      </ui-row> -->
+      </ui-row>
 
-      <ui-row height="50">
+      <ui-row height="30" space-top=10>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view style="font-size:12px; font-weight:bold; color: #1890ff;">监理单位信息</ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" border-bottom>
         <ui-col vertical-align="middle" align="left" width="80" space-left="10">
-          <ui-view>项目管理者</ui-view>
+          <ui-view>监理单位</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-            {{ mgrs }}
+            {{ itemSupCompany }}
+          </ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" border-bottom>
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
+          <ui-view>监理单位负责人</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ itemSupMgrs }}
           </ui-view>
         </ui-col>
       </ui-row>
 
-      <ui-row height="50" class="amap_list2">
-        <ui-col vertical-align="middle" space-left="15">
-          地理围栏
+      <ui-row height="30" space-top=10>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view style="font-size:12px; font-weight:bold; color: #1890ff;">施工单位信息</ui-view>
         </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15" bindtap="shuaxinMap" ui:if=" ismap === '' ">
-          <ui-view class="active2" > 加载地图
-            <ui-icon type="map" size="14" color="#1F95FF"></ui-icon>
-          </ui-view>
+      </ui-row>
+      <ui-row height="50" border-bottom>
+        <ui-col vertical-align="middle" align="left" width="80" space-left="10">
+          <ui-view>施工单位</ui-view>
         </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15" ui:else>
-          <ui-view class="active"> 
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ itemConCompanyName }}
           </ui-view>
         </ui-col>
       </ui-row>
-      <ui-view class="map-content">
-        <div id="detailMap" style="{{  {height:400 + 'px'} }}">
-        </div>
+      <ui-row height="50" border-bottom>
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
+          <ui-view>施工单位负责人</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space="20">
+          <ui-view class="right_column">
+            {{ itemConMgrs }}
+          </ui-view>
+        </ui-col>
+      </ui-row>
+      
+      <ui-row height="30" space-top=10>
+        <ui-col vertical-align="middle" align="left" space-left="10">
+          <ui-view style="font-size:12px; font-weight:bold; color: #1890ff;">地理围栏</ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" class="amap_list2" space-bottom=10 bindtap="shuaxinMap" ui:if="{{!ismap}}">
+        <ui-col vertical-align="middle" space-left="10">
+          项目地理信息
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15" >
+          <ui-view class="active2" > 
+            <ui-icon type="map1" size="14" color="#1F95FF"></ui-icon>
+            加载地图
+          </ui-view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="50" class="amap_list2" ui:else>
+        <ui-col vertical-align="middle" space-left="10">
+          项目地理信息
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15" >
+          <ui-view class="active2" > 
+            <ui-icon type="map1" size="14" color="#1F95FF"></ui-icon>
+            加载完成
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <!-- 地图容器 -->
+      <ui-view class="map-content" ui:if="{{isShowMap}}">
+        <div id="detailMap" style="{{ {height:400 + 'px'} }}"></div>
       </ui-view>
 
     </ui-view>
@@ -135,47 +198,47 @@
 export default {
   config: {
     navigationStyle: 'custom',
-    backgroundColor: '#F6F6F6',
-    disableIosGesture: true,
-    navigationBarTextStyle: 'white',
-    delay: true,
-    cache: true
+    backgroundColor: '#F6F6F6'
   },
   data () {
     return {
-      //项目名称
-      itemName: '',
-      // 日期选择
+      tokenId: '',
+      itemName: '', // 项目名称
+      itemId: '', 
+      itemSectionName: '四川成都郫都区地铁六号线一标段', // 副标题
+      itemDesc: '简介：六号线一标段', // 项目描述
+      atCity: '', // 项目所在地区
+      create_at: '', // 项目创建时间
+
       sDataValue: '', // 项目开始时间
       eDataValue: '', // 项目结束时间
       period: '', // 项目周期
-      stime: '09:00', // 上班时间
-      etime: '18:00', // 下班时间
-      departmentValue: null, // 选择部门
-      // 管理人
-      mgrs: '',
+
+      itemConCompany: '', // 项目施工公司
+      itemConCompanyName: '',
+      itemSupCompany: '', // 项目监理公司
+      itemSupCompanyName: '', 
+      
+      itemSupMgrs: '傅毅', // 项目监理方负责人
+      itemConMgrs: '李思成', // 项目施工方负责人
+
       // 地理围栏
+      isShowMap: false,
       script: '',
-      geoInfo: [],
-      polyArea: 0,
-      map: '',
-      toolbar: '',
-      polygon: '',
-      ismap: '' // 地图是否加载成功
+      geoInfo: '', // 地理信息
+      geoPoints: [], // 地理坐标
+      polyArea: 0, // 多边形面积
+      map: '', // 地图对象
+      mapCenter: [103,30], // 地图中心
+      toolbar: '', // 工具条
+      polygon: '', // 多边形对象
+      ismap: false // 地图是否加载成功
     }
   },
   methods: {
     // 返回按钮
     navigateBack () {
       ui.navigateBack()
-    },
-    dateDiff (sDate, eDate) {
-      let aDate = sDate.split("-")
-      let oDate1 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])
-      aDate = eDate.split("-")
-      let oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])
-      let iDays = parseInt((oDate2 - oDate1) / 1000 / 60 / 60 / 24) //把相差的毫秒数转换为天数 
-      return iDays + 1
     },
     mapInit () {
       this.script = document.createElement("script")
@@ -185,27 +248,27 @@ export default {
 
       let that = this
       window.onLoad = () => {
-        console.log("进来了")
+        console.log("加载地图")
           //基本地图加载
           that.map = new AMap.Map("detailMap", {
               resizeEnable: true,
-              center: [103,30],//地图中心点
+              center: that.mapCenter,//地图中心点
               // zoom: 12 //地图显示的缩放级别
           });
           // console.log("111111")
           // 地图加载完成后执行
-          that.map.on('complete', function(e) {
-              console.log("这是啥：",e)
+          that.map.on('complete', function(data) {
+              console.log("地图加载完成", data)
               try {
                 that.polygon = new AMap.Polygon({
                     map: that.map,
-                    fillOpacity:0.3,
-                    path: that.geoInfo
+                    fillOpacity: 0.3,
+                    path: that.geoPoints
                 });
                 that.map.setFitView() 
                 that.ismap = true
-              } catch(e1){
-                console.log("错误11111111",e1)
+              } catch(err){
+                console.log("地图加载失败",err)
               }
           });
 
@@ -216,60 +279,86 @@ export default {
     },
     shuaxinMap(){
       console.log("刷新")
+      this.isShowMap = true
       this.mapInit()
     }
   },
   mounted () {
     console.log("项目详情 mounted")
-    
-    let itemInfo = ui.getStorageSync('itemInfo')
 
-    if(itemInfo !== null){
-      console.log(itemInfo)
-      this.itemName = itemInfo.projectName
-      this.sDataValue = itemInfo.startTime
-      this.eDataValue = itemInfo.endTime
-      this.period = this.dateDiff(this.sDataValue, this.eDataValue)
-      this.stime = itemInfo.checkinStartTime
-      this.etime = itemInfo.checkinEndTime
-      this.mgrs = itemInfo.mgrs[0].userName
-      var points = itemInfo.geoInfo
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("LocalUserInfo:", LocalUserInfo)
+    this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+    
+    let LocalTeamUnitInfo = ui.getStorageSync('LocalTeamUnitInfo')
+    console.log("团队组织单元信息：", LocalTeamUnitInfo)
+    this.itemSupCompany = LocalTeamUnitInfo
+    this.itemSupCompany = this.itemSupCompany ? this.itemSupCompany.teamUnitName : ''
+
+    let itemInfo = ui.getQuery()
+    let itemIndex = Number(itemInfo.itemIndex)
+    let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
+    console.log("项目详情页面：", LocalProjectInfoList)
+    this.itemName = LocalProjectInfoList[itemIndex].itemName
+    this.itemId = LocalProjectInfoList[itemIndex].itemId
+    this.itemSectionName = LocalProjectInfoList[itemIndex].itemSectionName
+    this.itemDesc = LocalProjectInfoList[itemIndex].itemDesc
+    this.atCity = LocalProjectInfoList[itemIndex].atCity
+    this.create_at = LocalProjectInfoList[itemIndex].create_at
+    this.sDataValue = LocalProjectInfoList[itemIndex].itemSTime
+    this.eDataValue = LocalProjectInfoList[itemIndex].itemETime
+    this.period = LocalProjectInfoList[itemIndex].itemPeriod
+    this.itemConCompany = LocalProjectInfoList[itemIndex].itemConCompany
+    this.itemConCompanyName = this.itemConCompany ? this.itemConCompany.name : ''
+    this.geoInfo = LocalProjectInfoList[itemIndex].projectAMapInfo
+
+    console.table(this.geoInfo)
+    if(this.geoInfo){
+      let points = this.geoInfo
       for(let i = 0; i < points.length; i++){
-        this.geoInfo.push([points[i].lon, points[i].lat])
+        this.geoPoints.push([points[i].lon, points[i].lat])
       }
-      console.log("this.geoInfo",this.geoInfo)
+      console.table(this.geoPoints)
+      this.mapCenter = this.geoPoints[0]
+      console.table(this.mapCenter)
     }
-    // this.mapInit()
+
   }
 }
 </script>
 
 <style lang="less">
-  .ui-actionsheet-menu-cell {
-    font-size: 14px;
-    color: #666;
-  }
+
 .nav_bar {
-  background: linear-gradient(to right, #1F97FE, #126DFE);
-  .ui-view{
-    color: #fff;
-    font-size: 14px;
+  background: #fff;
+  .ui-icon {
+    color: #1890ff;
   }
-  .ui-text{
-    color: #fff;
+  .nav_title {
+    color: #000;
+    font-size: 36rpx;
+    font-weight: bold;
+  }
+  .nav_right{
+    color: #1890ff;
     font-size: 16px;
   }
 }
 
 .form_content{
-  // padding: 15px 0;
+  padding-top: 10px;
+  // .mix-1px(1, 0, 1, 0, #ccc);
+
   .ui-row{
     background: #fff;
-    .mix-1px(0, 0, 1, 0, #ccc);
+    padding-left: 5px;
+    // .mix-1px(0, 0, 1, 0, #ccc);
     .ui-view{
       font-size: 14px;
       color: #1A1E23;
       &.right_column{
+        color: #8c8c8c;
+        padding-right: 5px;
         width: 100%;
         height: 35px;
         line-height: 35px;
@@ -300,119 +389,10 @@ export default {
         text-align: right;
       }
     }
-    &.payee{
-      &:before{
-        border-bottom-width: 0px;
-      }
-      .ui-button{
-        line-height: 30px;
-      }
-    }
-
-  }
-  .payee_content{
-    margin-bottom: 10px;
-    // width: 95%;
-    // margin: 0 auto;
-    // border-radius: 5px;
-    // overflow: hidden;
-    // box-shadow: 0px 0px 13px 0px #d6d7d8;
   }
 }
 .weui-cell__hd{
   display: none;
-}
-.money_tip{
-  text-align: right;
-  padding-right: 10px;
-  font-size: 12px;
-  color:#999B9E;
-  line-height: 30px;
-  background-color: #fff;
-  .mix-1px(0, 0, 1, 0, #ccc);
-  .ui-text{
-    color:red;
-  }
-}
-.detail_description{
-  margin-bottom: 10px;
-  background: #fff;
-  .ui-text{
-    // width: 70px;
-    text-align: left;
-    line-height: 30px;
-    color: #1A1E23;
-    padding-left: 10px;
-  }
-  .ui-textarea-wrapper{
-    border: 0;
-    padding: 10px;
-  }
-}
-.recipients{
-  margin-top: 10px;
-  background-color: #fff;
-  .title{
-    text-align: left;
-    padding-left: 10px;
-    line-height: 40px;
-    .ui-text{
-      font-size: 12px;
-      color: #ccc;
-    }
-  }
-  .recipients_content{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 100%;
-    padding-bottom: 20px;
-    .recipients_list{
-      display: inline-flex;
-      text-align: center;
-      padding: 5px 15px;
-      .list_content{
-        position: relative;
-        .close{
-          position: absolute;
-          top: -3px;
-          right: -3px;
-          width: 13px;
-          height: 13px;
-          border-radius: 50%;
-          z-index: 9;
-          background-color: #14171B;
-          line-height:13px;
-          font-size: 12px;
-          color: #fff;
-        }
-        .ui-image{
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          margin-bottom: 10px;
-        }
-        .ui-text{
-          color: #060606;
-          font-size: 12px;
-        }
-      }
-      .add_recipients{
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background-color: #F4F4F4;
-        line-height: 40px;
-        text-align: center;
-      }
-    }
-
-  }
-}
-
-//弹窗
-.ui-confirm-content{
-  text-align: center;
 }
 // 地理围栏
 // .map-content {

@@ -128,7 +128,7 @@
       
       <ui-row height="60" space-top="10">
         <ui-col vertical-align="middle" align="center" space="30">
-          <ui-button type="primary" bindtap="submitCreateItems">下一步</ui-button>
+          <ui-button type="primary" bindtap="submitCreateItems">创建项目</ui-button>
         </ui-col>
       </ui-row>
 
@@ -169,7 +169,9 @@ export default {
           }
           
           this.itemConCompany = ui.getStorageSync('selectedConTeam')
-          ui.removeStorageSync('selectedConTeam')
+          // ui.removeStorageSync('selectedConTeam') // 这里不清除
+
+          // this.LocalProjectInfoList = []
 
         }
       },
@@ -179,7 +181,7 @@ export default {
       itemDesc: '简介：六号线一标段', // 项目描述
       teamUnitId: '', // 团队组织 ID 号，这里指监理方id号
       cityList: cityList,
-      atCity: ['110000', '110101'], // 所在地区
+      atCity: ["510000", "510100", "510124"], // 所在地区
       create_at: '', // 项目创建时间
 
       // 日期选择
@@ -197,6 +199,8 @@ export default {
       isamap: '',
       geoInfo: [],
       polyArea: 0,
+
+      LocalProjectInfoList: [] // 本地项目信息列表
 
     }
   },
@@ -278,13 +282,36 @@ export default {
         ui.showToast({title: '请输入项目名称'})
       } else if(!this.itemConCompany) {
         ui.showToast({title: '请选择施工公司'})
-      }{
-        this.createItems()
+      } else {
+        // this.createItems()
+        // 创建项目信息，直接把项目信息保存到本地项目信息数据中
+        
+        this.LocalProjectInfoList.push({
+          itemName: this.itemName,
+          itemSectionName: this.itemSectionName,
+          itemDesc: this.itemDesc,
+          atCity: '四川省 成都市 郫都区',
+          itemId: '34ac5ac256aa4cc3ac5ac256aaecc3c0', // 项目ID
+          itemSTime: this.sDataValue,
+          itemETime: this.eDataValue,
+          itemPeriod: this.period,
+          itemConCompany: this.itemConCompany, // 项目施工公司
+          create_at: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          projectAMapInfo: this.geoInfo
+
+        })
+        
+        ui.setStorageSync('LocalProjectInfoList', this.LocalProjectInfoList)
+        console.log('创建成功：', this.LocalProjectInfoList)
+        ui.redirectTo({
+          url: '/pages/items/itemsIndex'
+        })
+
       }
     },
     // 创建项目，基本项目，包含 施工单位 id 号 
     createItems () {
-      console.log('创建项目')
+      console.log('创建项目', this.itemConCompany.id)
       ui.request({
         url: createItemsUrl,
         data: {

@@ -59,12 +59,31 @@
 
     </ui-view>
 
-    <ui-fixed-view bottom="40" right="{{ qiandao-70 }}" bindtap="faceCompare">
+    <ui-fixed-view bottom="40" right="{{ qiandao-70 }}" bindtap="submitQianDao">
       <ui-view class="fixed-view-content">
-        <ui-row>签到</ui-row>
-        <ui-row> {{ NowTime }} </ui-row>
+        <ui-row style="font-size:20px;">签到</ui-row>
+        <ui-row style="font-size:26px;"> {{ NowTime }} </ui-row>
+        <ui-row style="font-size:12px;"> 已签 {{ qianDaoCount }} 次 </ui-row>
       </ui-view>
     </ui-fixed-view>
+
+    <ui-mask ui:model="showMask">
+      <ui-view class="content">
+        <ui-view class="tip">
+          <ui-view class="tip_top">
+            <ui-icon type="daka5" size="80" color="#1890ff"></ui-icon>
+          </ui-view>
+          <ui-view class="tip_content">
+            {{ maskTime }}
+            <ui-view> {{ maskSubTitle }} </ui-view>
+          </ui-view>
+          <ui-view class="bottom_content">为自己美好的未来奋斗！</ui-view>
+          <ui-view class="tip_bottom" bindtap="handleShowMask(false)">
+            我知道了
+          </ui-view>
+        </ui-view>
+      </ui-view>
+    </ui-mask>
 
   </ui-page>
 </template>
@@ -138,9 +157,13 @@ export default {
       polygon: '', // 多边形对象
       marker1: '', // marker 对象
       marker1InPolygon: '', // 判断点是否在多边形区域内
-      polyp: [  // 多边形 边缘数据
-      ],
-      center: [116.397428, 39.90923]
+      polyp: [], // 多边形 边缘数据
+      center: [116.397428, 39.90923],
+      
+      // mask 数据
+      showMask: false, 
+      maskTime: '',
+      maskSubTitle: '',
     }
   },
   methods: {
@@ -253,143 +276,158 @@ export default {
         this.map.setFitView() // 自适应地图显示
       })
     },
-    faceCompare () {
-      if(this.isQianDao){
-        ui.showAlert({
-          title: "签到结果",
-          content: `
-            <div style="font-size: 20px; text-align: center;"> 您已签到，请勿重复签到 </div>
-          `,
-          buttonText: '我知道了',
-          buttonStyle: { color: '#f97d0e' },
-          success () {
-            console.log("已签到")
+    submitQianDao () {
+      
+      // 测试信息
+      // this.maskTime = dayjs().format("HH:mm:ss")
+      // this.maskSubTitle = '签到成功'
+      // this.handleShowMask(true)
+
+      console.log("准备签到")
+      var that = this
+
+      ui.chooseImage({
+        sourceType: that.sourceType,
+        sizeType: that.sizeType,
+        success: function (res) {
+
+          ui.showLoading({
+            text: '正在签到'
+          })
+          console.log('图片拍摄成功：', res)
+          var imageSrc = res.tempFilePaths[0]
+          console.log("图片路径：", imageSrc)
+          console.log("上传token：", that.tokenId)
+          that.qianDaoTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
+          console.log(that.qianDaoTime)
+
+          // 压缩图片
+          lrz(imageSrc)
+            .then(function (rst) {
+                // 处理成功会执行
+                console.log("识别压缩成功",rst)
+
+                let imageSrcBase64 = rst.base64
+                
+                // 去掉头部的照片 base64 编码
+                var imageBase = imageSrcBase64.split(',')[1]
+                console.log("总长度:",rst.base64Len, "去掉头部后的长度：",imageBase.length)
+
+
+                console.log("签到成功,存储本地签到地理信息")
+                ui.hideLoading()
+
+                that.maskTime = dayjs(that.qianDaoTime).format("HH:mm:ss")
+                that.maskSubTitle = '签到成功'
+                that.handleShowMask(true)
+
+                that.qianDaoCount += 1
+                let LocalQianDaoInfo = ui.getStorageSync('LocalQianDaoInfo')
+                LocalQianDaoInfo.qianDaoInfoList.push({
+                  qianDaoTime: that.qianDaoTime,
+                  qianDaoLocation: that.center,
+                  qianDaoNumber: that.qianDaoCount
+                })
+                LocalQianDaoInfo.qianDaoCount = that.qianDaoCount
+                ui.setStorageSync('LocalQianDaoInfo',LocalQianDaoInfo)
+
+
+                // // 签到请求
+                // ui.request({
+                //   url: 'unit/attendance',
+                //   data: {
+                //     'lon': that.center[0],
+                //     'lat': that.center[1],
+                //     'submitAt': that.qianDaoTime,
+                //     'faceData': imageBase
+                //   },
+                //   method: 'POST',
+                //   header: {
+                //     'Content-Type': 'application/json',
+                //     'Authorization': 'Bearer ' + that.tokenId
+                //   },
+                //   success: (result) => {
+                //     ui.hideLoading()
+
+                //     console.log("上传对比base64编码成功 result:",result)
+
+                //     if(result.data.code === 2000){
+                //       if(result.data.data.sim > 90){
+
+                //         // 签到成功后返回 签到结果 告知用户 
+                //         ui.showAlert({
+                //           title: "签到结果",
+                //           content: `
+                //             <div style="font-size: 20px; text-align: center;"> 签到成功 </div>
+                //           `,
+                //           buttonText: '我知道了',
+                //           buttonStyle: { color: '#f97d0e' },
+                //           success () {
+
+                //             console.log("签到成功,存储本地签到地理信息")
+                //             that.qianDaoCount += 1
+                //             let LocalQianDaoInfo = ui.getStorageSync('LocalQianDaoInfo')
+                //             LocalQianDaoInfo.qianDaoInfoList.push({
+                //               qianDaoTime: that.qianDaoTime,
+                //               qianDaoLocation: that.center,
+                //               qianDaoNumber: that.qianDaoCount
+                //             })
+                //             LocalQianDaoInfo.qianDaoCount = that.qianDaoCount
+                //             ui.setStorageSync('LocalQianDaoInfo',LocalQianDaoInfo)
+
+                //           }
+                //         })
+
+                //       }else{
+                //         // 签到失败 
+                //         ui.showAlert({
+                //           title: "签到失败",
+                //           content: `
+                //             <div style="font-size: 20px; text-align: center;"> 人脸不匹配 ${result.data.data.desc} </div>
+                //           `,
+                //           buttonText: '我知道了',
+                //           buttonStyle: { color: '#f97d0e' },
+                //           success () {
+                //             console.log("签到失败")
+                //           }
+                //         })
+                //       }
+                //     }else{
+                //       // 请求失败
+                //       ui.showAlert({
+                //         title: "签到失败",
+                //         content: `
+                //           <div style="font-size: 20px; text-align: center;"> ${result.data.data.desc} </div>
+                //         `,
+                //         buttonText: '我知道了',
+                //         buttonStyle: { color: '#f97d0e' },
+                //         success () {
+                //           console.log("签到失败")
+                //         }
+                //       })
+                //     }
+                //   },
+                //   fail: function ({ errMsg }) {
+                //     ui.hideLoading()
+                //     ui.showToast({ title: '上传对比失败' })
+                //     console.log("上传对比失败：",errMsg)
+                //   }
+                // })
+
+            })
+            .catch(function (err){
+              // 处理失败会执行
+              console.log("压缩失败",err)
+            })
+            .always(function () {
+              // 不管是成功失败，都会执行
+              console.log("执行压缩")
+            });
+          },
+          fail: function (res) {
+            console.log("选择照片失败:", res)
           }
         })
-      }else{
-        
-        console.log("准备签到")
-        var that = this
-
-        ui.chooseImage({
-          sourceType: that.sourceType,
-          sizeType: that.sizeType,
-          success: function (res) {
-
-            ui.showLoading({
-              text: '正在签到'
-            })
-            console.log('图片拍摄成功：', res)
-            var imageSrc = res.tempFilePaths[0]
-            console.log("图片路径：", imageSrc)
-            console.log("上传token：", that.tokenId)
-            that.qianDaoTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
-            console.log(that.qianDaoTime)
-
-            // 压缩图片
-            lrz(imageSrc)
-              .then(function (rst) {
-                  // 处理成功会执行
-                  console.log("识别压缩成功",rst)
-
-                  let imageSrcBase64 = rst.base64
-                  
-                  // 去掉头部的照片 base64 编码
-                  var imageBase = imageSrcBase64.split(',')[1]
-                  console.log("总长度:",rst.base64Len, "去掉头部后的长度：",imageBase.length)
-
-                  // 签到请求
-                  ui.request({
-                    url: 'unit/attendance',
-                    data: {
-                      'lon': that.center[0],
-                      'lat': that.center[1],
-                      'submitAt': that.qianDaoTime,
-                      'faceData': imageBase
-                    },
-                    method: 'POST',
-                    header: {
-                      'Content-Type': 'application/json',
-                      'Authorization': 'Bearer ' + that.tokenId
-                    },
-                    success: (result) => {
-                      ui.hideLoading()
-
-                      console.log("上传对比base64编码成功 result:",result)
-
-                      if(result.data.code === 2000){
-                        if(result.data.data.sim > 90){
-                          // 签到成功后返回 签到结果 告知用户 
-                          ui.showAlert({
-                            title: "签到结果",
-                            content: `
-                              <div style="font-size: 20px; text-align: center;"> 签到成功 </div>
-                            `,
-                            buttonText: '我知道了',
-                            buttonStyle: { color: '#f97d0e' },
-                            success () {
-                              console.log("签到成功,存储本地签到地理信息")
-                              that.qianDaoCount += 1
-                              let LocalQianDaoInfo = ui.getStorageSync('LocalQianDaoInfo')
-                              LocalQianDaoInfo.qianDaoInfoList.push({
-                                qianDaoTime: that.qianDaoTime,
-                                qianDaoLocation: that.center,
-                                qianDaoNumber: that.qianDaoCount
-                              })
-                              LocalQianDaoInfo.qianDaoCount = that.qianDaoCount
-                              ui.setStorageSync('LocalQianDaoInfo',LocalQianDaoInfo)
-                            }
-                          })
-                        }else{
-                          // 签到失败 
-                          ui.showAlert({
-                            title: "签到失败",
-                            content: `
-                              <div style="font-size: 20px; text-align: center;"> 人脸不匹配 ${result.data.data.desc} </div>
-                            `,
-                            buttonText: '我知道了',
-                            buttonStyle: { color: '#f97d0e' },
-                            success () {
-                              console.log("签到失败")
-                            }
-                          })
-                        }
-                      }else{
-                        // 请求失败
-                        ui.showAlert({
-                          title: "签到失败",
-                          content: `
-                            <div style="font-size: 20px; text-align: center;"> ${result.data.data.desc} </div>
-                          `,
-                          buttonText: '我知道了',
-                          buttonStyle: { color: '#f97d0e' },
-                          success () {
-                            console.log("签到失败")
-                          }
-                        })
-                      }
-                    },
-                    fail: function ({ errMsg }) {
-                      ui.hideLoading()
-                      ui.showToast({ title: '上传对比失败' })
-                      console.log("上传对比失败：",errMsg)
-                    }
-                  })
-              })
-              .catch(function (err){
-                // 处理失败会执行
-                console.log("压缩失败",err)
-              })
-              .always(function () {
-                // 不管是成功失败，都会执行
-                console.log("执行压缩")
-              });
-            },
-            fail: function (res) {
-              console.log("选择照片失败:", res)
-            }
-          })
-      }
     },
     nowTimes () {
       this.NowTime = dayjs().format("HH:mm:ss")
@@ -407,6 +445,9 @@ export default {
           this.qianDaoAddress = data[0].regeocodeData.formatted_address
         }
       })
+    },
+    handleShowMask (show) {
+      this.showMask = show
     }
   },
   mounted() {
@@ -496,11 +537,63 @@ export default {
   width:140px !important;
   height: 140px;
   // line-height: 140px;
-  padding-top:38px;
+  padding-top:26px;
   text-align: center;
   color: #fff;
   font-size: 20px;
   background-color: @theme-color;
   z-index: 99;
+}
+
+
+.ui-mask{
+  .content{
+    height: 100%;
+    .mix-flex-center();
+  }
+  .tip{
+    width: 250px;
+    height: 310px;
+    border-radius: 8px;
+    overflow: hidden; 
+    background: #fff no-repeat center 10px;
+    background-size: 40px;
+  }
+  .tip_top{
+    padding: 5px 10px;
+    height: 100px;
+    text-align: center;
+  }
+  .tip_content{
+    padding: 10px 15px 10px 15px;
+    color: #1890ff;
+    font-size: 34px;
+    font-weight: bold;
+    text-align: center;
+
+    .ui-view{
+      text-align: center;
+      color: #1890ff;
+      font-size: 18px;
+      line-height: 30px
+    }
+  }
+  .bottom_content {
+    text-align: center;
+    color: #bfbfbf;
+    font-size: 14px;
+    height: 50px;
+    line-height: 30px
+  }
+  .tip_bottom{
+    width: 80%;
+    line-height: 40px;
+    background-color: #1890ff;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    margin: 0 auto;
+    border-radius:20px; 
+  }
 }
 </style>
