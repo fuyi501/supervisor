@@ -185,19 +185,7 @@ export default {
   methods: {
     // 返回按钮
     navigateBack () {
-      ui.showConfirm({
-        content: '表单尚未提交，你要离开么？',
-        confirmButtonText: '离开',
-        cancelButtonText: '继续填写',
-        success: (result) => {
-          if (result.confirm) {
-            ui.offBackButtonClick({
-              listener: this.navigateBack
-            })
-            ui.navigateBack()
-          }
-        }
-      })
+      ui.navigateBack()
     },
     handleType (val) { // 补签类型
       this.typeValue = val

@@ -62,14 +62,20 @@
           
           <ui-view ui:if="{{ isShangBan }}">
             <ui-view class="head">
-              <ui-view class="head-info">打卡时间 {{ shangBanTime }}</ui-view>
-              <em class="head-tag">{{ shangBanStatus }}</em>
+              <ui-view class="head-info">打卡时间 {{ sbTimeFormat }}</ui-view>
+              <em class="head-tag" style="{{  {'background-color':sbColor} }}">{{ shangBanStatus }}</em>
             </ui-view>
             <ui-view class="content">
               <ui-view class="content-info">地点：{{ shangBanAddress }}</ui-view>
             </ui-view>
+            <ui-view class="content" ui:if="{{ shangBanStatus !== '正常'}}" bindtap="openBuKaApply">
+              <ui-view style="margin-top:3px;color:#40a9ff"> 
+                申请补卡
+                <ui-icon type="arrow-right" size="14" color="#40a9ff"></ui-icon>
+              </ui-view>
+            </ui-view>
           </ui-view>
-          <ui-view class="fixed-view-content" ui:else bindtap="shangBanDaka">
+          <ui-view class="fixed-view-content" ui:else bindtap="preShangBanDaka">
             <ui-row>上班打卡</ui-row>
             <ui-row> {{ kaoQinTime }} </ui-row>
           </ui-view>
@@ -89,11 +95,17 @@
           
           <ui-view ui:if="{{ isXiaBan }}" >
             <ui-view class="head">
-              <ui-view class="head-info">打卡时间 {{ xiaBanTime }}</ui-view>
-              <em class="head-tag">{{ xiaBanStatus }}</em>
+              <ui-view class="head-info">打卡时间 {{ xbTimeFormat }}</ui-view>
+              <em class="head-tag" style="{{  {'background-color':xbColor} }}">{{ xiaBanStatus }}</em>
             </ui-view>
             <ui-view class="content">
               <ui-view class="content-info">地点：{{ xiaBanAddress }}</ui-view>
+            </ui-view>
+            <ui-view class="content" bindtap="xiaBanDaka">
+              <ui-view style="margin-top:3px;color:#40a9ff"> 
+                更新打卡
+                <ui-icon type="arrow-right" size="14" color="#40a9ff"></ui-icon>
+              </ui-view>
             </ui-view>
           </ui-view>
           <ui-view class="fixed-view-content" ui:elif="{{ isShangBan }}" bindtap="xiaBanDaka">
@@ -130,6 +142,9 @@
 
 import dayjs from '#/static/utils/dayjs'
 
+var amapFile = require('amap-touchui')
+var key = '4216f7d550dc95ef4ac91e3c0ee6a19a'
+ 
 export default {
   config: {
     navigationStyle: 'custom',
@@ -146,22 +161,6 @@ export default {
    
         }
       },
-      list: [
-        {
-          time: '上班时间',
-          date: '09:00',
-          title: '打卡时间 12:23',
-          tag: '正常',
-          info: '地点西南交大'
-        },
-        {
-          time: '下班时间',
-          date: '18:00',
-          title: '打卡时间/缺卡',
-          tag: '缺卡',
-          info: '地点'
-        },
-      ],
       tokenId: '',
       userName: '', // 用户姓名
       userTeamName: '', // 用户团队名称
@@ -169,15 +168,20 @@ export default {
      
       // 考勤数据
       nowDate: '',
+      nowMapCenter: [],
 
       isShangBan: false,
       shangBanTime: '', // 上班打卡时间
+      sbTimeFormat: '', // 用于显示的格式化时间
       shangBanStatus: '', // 上班状态
+      sbColor: '', // 上班状态的 class 样式
       shangBanAddress: '', // 上班地点
 
       isXiaBan: false,
       xiaBanTime: '', // 下班打卡时间
+      xbTimeFormat: '', // 用于显示的格式化时间
       xiaBanStatus: '', // 下班状态
+      xbColor: '', // 下班状态的 class 样式
       xiaBanAddress: '', // 下班地点
 
       showMask: false, 
@@ -194,23 +198,63 @@ export default {
     navigateBack () {
       ui.navigateBack()
     },
+    // 上班打卡预处理
+    preShangBanDaka () {
+      let timeDiff = dayjs().diff(dayjs(dayjs().format("YYYY-MM-DD ") + '09:00:00'), 'minute')
+      console.log(timeDiff)
+      if(timeDiff < -60){
+        ui.showAlert({
+          title: '提示',
+          content: `
+            <div style="font-size: 20px; color: #262626; text-align: center;"> 打卡时间未到 </div>
+          `,
+          buttonText: '知道了',
+          buttonStyle: { color: '#1890ff' }
+        })
+      } else if(timeDiff > 0 && timeDiff < 60){
+        this.shangBanStatus = '迟到'
+        this.sbColor = 'orange'
+        this.shangBanDaka()
+      } else if(timeDiff > 60) {
+        this.shangBanStatus = '缺卡'
+        this.sbColor = 'red'
+        this.shangBanDaka()
+      } else {
+        this.shangBanStatus = '正常'
+        this.sbColor = '#1890ff'
+        this.shangBanDaka()
+      }
+    },
     shangBanDaka () {
-      this.isShangBan = true
-      this.shangBanTime = dayjs().format("HH:mm")
-      this.shangBanStatus = '正常'
-      this.shangBanAddress = '西南交大'
 
-      this.maskTime = this.shangBanTime
+      this.isShangBan = true
+      this.shangBanTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
+      this.sbTimeFormat = dayjs(this.shangBanTime).format("HH:mm")
+
+      this.reserveAddr(this.nowMapCenter, '上班')
+
+      this.maskTime = dayjs(this.shangBanTime).format("HH:mm")
       this.maskSubTitle = '上班打卡成功'
       this.handleShowMask(true)
     },
     xiaBanDaka () {
       this.isXiaBan = true
-      this.xiaBanTime = dayjs().format("HH:mm")
-      this.xiaBanStatus = '正常'
-      this.xiaBanAddress = '西南交大'
+      this.xiaBanTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
+      this.xbTimeFormat = dayjs(this.xiaBanTime).format("HH:mm")
+
+      let timeDiff = dayjs(this.xiaBanTime).diff(dayjs(dayjs().format("YYYY-MM-DD ") + '18:00:00'), 'minute')
+      console.log(timeDiff)
+      if(timeDiff < 0){
+        this.xiaBanStatus = '早退'
+        this.xbColor = 'orange'
+      } else {
+        this.xiaBanStatus = '正常'
+        this.xbColor = '#1890ff'
+      }
+
+      this.reserveAddr(this.nowMapCenter, '下班')
       
-      this.maskTime = this.xiaBanTime
+      this.maskTime = dayjs(this.xiaBanTime).format("HH:mm")
       this.maskSubTitle = '下班打卡成功'
       this.handleShowMask(true)
     },
@@ -219,6 +263,39 @@ export default {
     },
     nowTimes () {
       this.kaoQinTime = dayjs().format("HH:mm:ss")
+    },
+    openBuKaApply () {
+      ui.navigateTo({
+        url: '/pages/application/supplement/buqian'
+      })
+    },
+    // 获取定位信息
+    getLocation () {
+      ui.getLocation({
+        success: (res) => {
+          console.log('res:', res)
+          this.nowMapCenter = [res.longitude, res.latitude]
+          console.log(this.nowMapCenter)
+        }
+      })
+    },
+    // 地址逆解析
+    reserveAddr (markerObj, type) {
+      console.log('地址逆解析')
+      // 调用amapFile.AMapWX构造函数创建myAmapFun实例
+      var myAmapFun = new amapFile.AMapWX({ key: key })
+      // 根据参数的坐标值,调用getRegeo方法逆解析地址
+      myAmapFun.getRegeo({
+        location: `${markerObj[0]},${markerObj[1]}`,
+        success: (data) => {
+          console.log('成功：', data)
+          if(type === '上班'){
+            this.shangBanAddress = data[0].regeocodeData.formatted_address
+          }else{
+            this.xiaBanAddress = data[0].regeocodeData.formatted_address
+          }
+        }
+      })
     }
   
   },
@@ -236,8 +313,20 @@ export default {
 
     this.nowDate = dayjs().format("YYYY-MM-DD")
 
-    setInterval(this.nowTimes, 1000);
-  
+    setInterval(this.nowTimes, 1000)
+
+    this.getLocation()
+
+    // let timeDiff = dayjs().diff(dayjs(dayjs().format("YYYY-MM-DD ") + '09:00:00'), 'minute')
+    // console.log(timeDiff)
+    // if(timeDiff > 60) {
+    //   this.reserveAddr(this.nowMapCenter, '上班')
+    //   this.shangBanStatus = '缺卡'
+    //   this.isQueKa = true
+    //   this.isShangBan = true
+    //   this.sbColor = 'red'
+    // }
+
   }
 }
 
@@ -270,6 +359,9 @@ export default {
 
 .header_top {
   background: #fff;
+  .ui-image {
+    border-radius: 50%;
+  }
   .login {
     color: #000;
     font-size: 16px;
@@ -290,7 +382,7 @@ export default {
   display: inline-block;
   font-size: 14px;
   line-height: 14px;
-  color: #EF4238;
+  color: #1890ff;
   margin-right: 5px;
   vertical-align: top;
 }
@@ -311,6 +403,7 @@ export default {
       width: 120px;
       color: #222;
       font-size: 16px;
+      font-weight: bold;
   }
   &-tag {
       width: 35px;

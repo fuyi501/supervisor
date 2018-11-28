@@ -30,29 +30,27 @@
       </ui-map>
     </ui-view>
 
-    <ui-view class="qiandaoCentent" ui:for="{{qianDaoList}}" ui:for-item="qianDaoItem" ui:if="{{qianDaoList.length>1}}">
-      <ui-row height="100" border-bottom >
-        <ui-col width="80" align="center" style="margin-top:10px;">
-          <ui-view class="left_icon">{{qianDaoItem.name}}</ui-view>
+    <ui-view class="qiandaoCentent">
+      <ui-row height="100" border-bottom ui:for="{{qianDaoList}}" ui:for-item="qianDaoItem" ui:if="{{ qianDaoList.length > 0 }}">
+        <ui-col width="80" align="center" vertical-align="middle">
+          <ui-view class="left_icon">{{ getFirstName(qianDaoItem.name) }}</ui-view>
         </ui-col>
         <ui-col space-right="10" vertical-align="middle">
           <ui-view class="qiandao-info">
             <ui-view class="qiandao-name">{{qianDaoItem.name}}</ui-view>
             <ui-view class="qiandao-time">
-              {{qianDaoItem.qianDaoTime}} ，今日已签到 {{qianDaoItem.qianDaoNumber}} 次
+              {{qianDaoItem.qianDaoTime}} ，今日第 {{qianDaoItem.qianDaoNumber}} 次签到
             </ui-view>
             <ui-view class="qiandao-addr">
-              <ui-icon type="map1" size="12" color="#333"></ui-icon>
+              <ui-icon type="map1" size="16" color="#1890ff"></ui-icon>
               {{qianDaoItem.qianDaoAddress}}
             </ui-view>
           </ui-view>
         </ui-col>
       </ui-row>
-    </ui-view>
 
-    <ui-view class="qiandaoCentent" ui:else>
-      <ui-row height="80" border-bottom >
-        <ui-col width="80" align="center">
+      <ui-row height="80" border-bottom ui:else>
+        <ui-col width="80" align="center" vertical-align="middle">
           <ui-view class="left_icon">傅毅</ui-view>
         </ui-col>
         <ui-col space-right="10" vertical-align="middle">
@@ -71,7 +69,9 @@
 
 
 <script>
-  // mapComprehensive.js
+
+import dayjs from '#/static/utils/dayjs'
+
   var amapFile = require('amap-touchui')
   var key = '4216f7d550dc95ef4ac91e3c0ee6a19a'
   var icon = require('#/images/map/ic_map_mode2.png'),
@@ -93,28 +93,32 @@
             qianDaoTime: '11:20', 
             qianDaoNumber: 1,
             qianDaoAddress: '西南交大犀浦校区'
-          },
+          }
         ],
-        markers: [{ // 地图上的 markers
-          id: 1,
-          latitude: 30.764259,
-          longitude: 103.986475,
-          iconPath: icon,
-          width: 32,
-          height: 32
-        }],
+        markers: [
+          // { // 地图上的 markers
+          //   id: 1,
+          //   latitude: 30.764259,
+          //   longitude: 103.986475,
+          //   iconPath: icon,
+          //   width: 32,
+          //   height: 32
+          // }
+        ],
       }
     },
     mounted() {
+      console.log('签到统计页面 mounted')
       let LocalQianDaoInfo = ui.getStorageSync('LocalQianDaoInfo')
+      console.log('签到统计页面', LocalQianDaoInfo)
       if(LocalQianDaoInfo){
         let qianDaoInfoList = LocalQianDaoInfo.qianDaoInfoList
         for( let i in qianDaoInfoList){
           this.qianDaoList.push({
             name: '傅毅',
-            qianDaoTime: qianDaoInfoList[i].qianDaoTime,
+            qianDaoTime: dayjs(qianDaoInfoList[i].qianDaoTime).format('HH:mm'),
             qianDaoNumber: qianDaoInfoList[i].qianDaoNumber,
-            qianDaoAddress: ''
+            qianDaoAddress: qianDaoInfoList[i].qianDaoAddress
           })
           this.reserveAddr(qianDaoInfoList[i].qianDaoLocation, i)
         }
@@ -133,6 +137,11 @@
     methods: {
       navigateBack () {
         ui.navigateBack()
+      },
+      // 解析姓氏
+      getFirstName(name) {
+        let firstName = name.substr(0,1)
+        return firstName
       },
       // 标记点markers点击事件
       makertap(e) {
@@ -195,7 +204,7 @@
             // })
           }
         })
-      },
+      }
     }
   }
 </script>
@@ -236,30 +245,29 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color:#1890ff; 
+    background-color: #1890ff; 
     text-align: center;
     line-height: 50px;
     color: #fff;
-    font-size: 16px;
-    margin-top: 15px;
+    font-size: 24px;
   }
 
   .qiandao-info {
     width: 278px;
     height: 69px;
     .qiandao-name {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: bold;
-      line-height: 16px;
+      line-height: 18px;
     }
     .qiandao-time {
       margin: 10px 0px;
-      font-size: 14px;
-      line-height: 14px;
+      font-size: 16px;
+      line-height: 16px;
     }
     .qiandao-addr {
-      font-size: 10px;
-      line-height: 10px;
+      font-size: 14px;
+      line-height: 14px;
       color: #8c8c8c;
     }
   }

@@ -326,7 +326,8 @@ export default {
                 LocalQianDaoInfo.qianDaoInfoList.push({
                   qianDaoTime: that.qianDaoTime,
                   qianDaoLocation: that.center,
-                  qianDaoNumber: that.qianDaoCount
+                  qianDaoNumber: that.qianDaoCount,
+                  qianDaoAddress: that.qianDaoAddress
                 })
                 LocalQianDaoInfo.qianDaoCount = that.qianDaoCount
                 ui.setStorageSync('LocalQianDaoInfo',LocalQianDaoInfo)
@@ -469,10 +470,11 @@ export default {
     // 初始化本地签到地理信息
     let LocalQianDaoInfo = ui.getStorageSync('LocalQianDaoInfo')
     if(!LocalQianDaoInfo){ // 不存在则创建
-      let LocalQianDaoInfo = {
+      LocalQianDaoInfo = {
         qianDaoInfoList: [],
         qianDaoCount: 0
       }
+      ui.setStorageSync('LocalQianDaoInfo', LocalQianDaoInfo)
     }
     
   }
