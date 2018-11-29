@@ -104,11 +104,11 @@
         <ui-col span=12>
           <ui-row>
             <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="openContact">
-                <ui-icon type="pangzhan2" color="#00C853" size="30"></ui-icon>    
+                <ui-icon type="pangzhan2" color="#1890ff" size="30"></ui-icon>    
                 <ui-view class="app_text">监理联系单</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openContactReply">
-                <ui-icon type="huifudan" color="#00C853" size="30"></ui-icon>    
+                <ui-icon type="huifudan" color="#1890ff" size="30"></ui-icon>    
                 <ui-view class="app_text">联系回复单</ui-view>       
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openNotice">

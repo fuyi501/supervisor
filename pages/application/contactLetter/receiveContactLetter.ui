@@ -9,7 +9,7 @@
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <ui-view class="nav_title">我发出的监理通知单</ui-view>
+          <ui-view class="nav_title">我审批的监理联系单</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="50">
           <ui-view class="nav_right">更多</ui-view>
@@ -20,17 +20,17 @@
     <ui-tab-view class="type-badge">
       <template slot="header">
         <ui-tab-view-header>
-          <ui-view>待回复</ui-view>
+          <ui-view>待审批</ui-view>
         </ui-tab-view-header>
         <ui-tab-view-header>
-          <ui-view>已回复</ui-view>
+          <ui-view>已审批</ui-view>
         </ui-tab-view-header>
       </template>
       <template slot="body">
         <ui-tab-view-body >
 
-          <!-- 待回复列表 -->
-          <ui-view class="list-view" ui:for="{{items}}" ui:for-item="item" >
+          <!-- 待审批列表 -->
+          <ui-view class="list-view" ui:for="{{contactLetterPendingList}}" ui:for-item="item" >
             <ui-row space="10">
               <ui-col>
                 <ui-text class="titleName">{{item.titleName}}</ui-text>
@@ -68,15 +68,15 @@
             </ui-row>
           </ui-view>
 
-          <ui-view class="divider">
+          <!-- <ui-view class="divider">
             <ui-divider >没有新数据了</ui-divider>
-          </ui-view>
+          </ui-view> -->
 
         </ui-tab-view-body>
         <ui-tab-view-body >
 
-          <!-- 已回复列表 -->
-          <ui-view class="list-view" ui:for="{{items}}" ui:for-item="item" >
+          <!-- 已审批列表 -->
+          <ui-view class="list-view" ui:for="{{contactLetterApprovalList}}" ui:for-item="item" >
             <ui-row space="10">
               <ui-col>
                 <ui-text class="titleName">{{item.titleName}}</ui-text>
@@ -114,9 +114,9 @@
             </ui-row>
           </ui-view>
 
-          <ui-view class="divider">
+          <!-- <ui-view class="divider">
             <ui-divider >没有新数据了</ui-divider>
-          </ui-view>
+          </ui-view> -->
         </ui-tab-view-body>
       </template>
     </ui-tab-view>
@@ -133,15 +133,15 @@
       return {
         imgWidth: (ui.WIN_WIDTH-40)/4-8 + 'px', 
         imgHeight: (ui.WIN_WIDTH-40)/4-8 + 'px',
-        items: [
+        contactLetterPendingList: [ // 待审批列表
           {
             "id": 1,
             "type": "1",
-            "titleName": "傅毅发出的通知单",
+            "titleName": "傅毅发出的联系单",
             "content": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
             "datetime": "2018-10-22 13:33",
             "collect": "10",
-            "source": "待回复",
+            "source": "待审批",
             "dataType": "hot",
             "imgarr": [{
                 "id": 1,
@@ -162,15 +162,18 @@
               "color": "#4285f4",
               "content": "专题"
             }]
-          },
+          }
+        ],
+
+        contactLetterApprovalList: [ // 已审批列表
           {
-            "id": 2,
+            "id": 1,
             "type": "1",
-            "titleName": "傅毅发出的通知单",
+            "titleName": "傅毅发出的联系单",
             "content": "这里有问题，需要修改",
             "datetime": "2018-10-22 13:33",
             "collect": "10",
-            "source": "已整改并回复",
+            "source": "已审批",
             "dataType": "hot",
             "imgarr": [{
                 "id": 1,
@@ -182,14 +185,6 @@
               },
               {
                 "id": 3,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 4,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 5,
                 "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
               }
             ],
@@ -206,6 +201,9 @@
     methods: {
       navigateBack() {
         ui.navigateBack()
+      },
+      openDetails (item) {
+        console.log(item)
       },
       previewImage (imgarr, img) {
         let imgUrls = []
@@ -227,7 +225,7 @@
       }
     },
     mounted() {
-      console.log("我发出的监理通知单 mounted", ui.WIN_WIDTH)
+      console.log("我审批的监理联系单 mounted", ui.WIN_WIDTH)
     }
   }
 </script>

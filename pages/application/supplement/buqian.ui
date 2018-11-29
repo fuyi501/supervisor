@@ -20,33 +20,14 @@
 
     <ui-view class="form_content">
       <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="90" space-left="10">
+        <ui-col vertical-align="middle" align="left" width="100" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            补签类型
+            补签时间点
           </ui-view>
         </ui-col>
-        <ui-col vertical-align="middle" align="right" space="20">
-          <ui-picker title="" range="{{ typeList }}" value="{{ typeValue }}" bindchange="handleType"></ui-picker>
-        </ui-col>
-      </ui-row>
-
-      <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="90" space-left="10">
-          <ui-view>
-            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            补签时间
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="4">
-          <ui-view class="">
-            <ui-picker mode="date" start="2018-09-01" end="2028-09-30" value="{{ dataValue }}" date-format="YYYY年M月D日" bindchange="choiceDate"></ui-picker>
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" width="50" space-right="10">
-          <ui-view class="">
-            <ui-picker title="" range="{{ timeTypeList }}" value="{{ timeTypeValue }}" bindchange="handleTimeType"></ui-picker>
-          </ui-view>
+        <ui-col vertical-align="middle" align="right" space-right="10" bindtap="openBuQianTimePopup">
+          {{ buQianDateTime }}
         </ui-col>
       </ui-row>
 
@@ -60,16 +41,16 @@
       <ui-view class="accessory_wrap">
         <ui-text block>附件</ui-text>
         <ui-view class="accessory_content">
-          <ui-view class="accessory_list"
-          ui:for="{{ accessoryContent }}"
-          >
-            <ui-view class="close">x</ui-view>
-            <ui-image
-            src="{{ item }}"
-            mode='aspectFill'
-            width="60"
-            height="60"
-            ></ui-image>
+          <ui-view class="accessory_list" ui:for="{{ accessoryContent }}" ui:for-item="item">
+            <ui-view bindtap="deleteAccessory(index, item)">
+              <ui-view class="close">x</ui-view>
+              <ui-image
+              src="{{ item }}"
+              mode='aspectFill'
+              width="60"
+              height="60"
+              ></ui-image>
+            </ui-view>
           </ui-view>
           <ui-view class="add_accessory" bindtap="addAccessory">
             <ui-view>
@@ -101,7 +82,6 @@
             </ui-view>
           </ui-view>
         </ui-view>
-
       </ui-view>
 
       <!-- 抄送人 -->
@@ -129,44 +109,52 @@
           <ui-button type="primary" bindtap="submit">立即提交</ui-button>
         </ui-col>
       </ui-row>
-
     </ui-view>
+
+    <!-- 选择请假开始时间和结束时间的 popup -->
+    <ui-popup ui:model="{{ showPopup }}" height="300" background="#fff">
+      <ui-view >
+        <ui-row>
+          <ui-col span=8>
+            <ui-picker-view mode="date" start="2018-09-01" end="2028-09-30" value="{{ dataValue }}" date-format="YYYY年M月D日" bindchange="choiceDate"></ui-picker-view>
+          </ui-col>
+          <ui-col span=4>
+            <ui-picker-view title="" mode="time" value="{{ timeValue }}" bindchange="choiceTime"></ui-picker-view>
+          </ui-col>
+        </ui-row>
+      </ui-view>
+    </ui-popup>
 
   </ui-page>
 </template>
 
 <script>
-const getDoubleNumber = function (num) {
-  return num < 10 ? '0' + num : '' + num
-}
+
+import dayjs from '#/static/utils/dayjs'
+
 const sourceType = [['camera'], ['album'], ['camera', 'album']]
 const sizeType = [['compressed'], ['original'], ['compressed', 'original']]
 export default {
   config: {
     navigationStyle: 'custom',
-    backgroundColor: '#F6F6F6',
-    disableIosGesture: true,
-    navigationBarTextStyle: 'white',
-    "delay":true
+    backgroundColor: '#F6F6F6'
   },
   data () {
     return {
-      typeList: ['遗忘','公务','其他'],
-      typeValue: 0,
-
+      tokenId: '',
       userName: '傅毅',
       userId: '10010',
-      // 日期选择
-      dataValue: '',
-      timeTypeList: ['全天','上午','下午'],
-      timeTypeValue: 0,
+      // 补签时间
+      showPopup: false,
+      dataValue: '2018-12-12',
+      timeValue: '09:00',
+      createTime: '',
 
       // 补签事由
       buQianReason: '',
 
       // 附件
       accessoryContent: [],
-      imgs: [],
 
       // 审批人
       isApprover: false,
@@ -182,21 +170,29 @@ export default {
 
     }
   },
+  computed: {
+    // 计算补签时间点
+    buQianDateTime: function () {
+      console.log('补签时间', this.dataValue + ' ' + this.timeValue)
+      return this.dataValue + ' ' + this.timeValue
+    }
+  },
   methods: {
     // 返回按钮
     navigateBack () {
       ui.navigateBack()
     },
-    handleType (val) { // 补签类型
-      this.typeValue = val
+    // 打开选择时间的 popup
+    openBuQianTimePopup () {
+      this.showPopup = true
     },
-    // 选择补签开始日期
+    // 选择日期
     choiceDate (val) {
       this.dataValue = val
     },
-    // 选择上下午
-    handleTimeType (val) {
-      this.timeTypeValue = val
+    // 选择时间
+    choiceTime (val) { 
+      this.timeValue = val
     },
     // 添加抄送人
     addRecipients () {
@@ -263,12 +259,7 @@ export default {
                 data.approvers.forEach((item, index) => {
                   this.approverList.push(item)
                   this.approvalUserId = item.userId
-                })
-              }
-              if (data && data.approvers2) {
-                this.approvalUserId2 = null
-                data.approvers2.forEach((item, index) => {
-                  this.approvalUserId2 = item.userId
+                  this.approverName = item.userName
                 })
               }
             }
@@ -282,48 +273,9 @@ export default {
       this.approverList.splice(index, 1)
       this.approvalUserId = null
     },
-    inputChange (e) {
-      console.log(e)
-      if (e < 0) {
-        this.dayNumber = 0
-      } else {
-        this.dayNumber = e
-      }
-      this.approverList = []
-    },
-    // 失去焦点后获取审批人
-    inputBlur () {
-
-    },
-    // 提交附件
+    // 添加附件
     addAccessory () {
       this.chooseImage(2)
-    },
-
-    submit () {
-      if (this.askOffReason === '') {
-        ui.showToast({ title: '请输入补签事由' })
-      } else if (this.approvalUserId === null) {
-        ui.showToast({ title: '请选择审批人' })
-      } else {
-       this.paySubmit()
-      }
-    },
-    // 保存为草稿
-    saveDraft () {
-      if (this.askOffReason === '') {
-        ui.showToast({ title: '请输入补签事由' })
-      } else if (this.approvalUserId === null) {
-        ui.showToast({ title: '请选择审批人' })
-      } else {
-       this.paySubmit()
-      }
-    },
-    paySubmit () {
-      ui.showToast({ title: '提交成功', icon: 'success' })
-      setTimeout(() => {
-        ui.navigateBack()
-      }, 1000)
     },
     chooseImage (index) {
       ui.chooseImage({
@@ -339,31 +291,69 @@ export default {
         }
       })
     },
-    format (obj) {
-      var date = new Date(obj)
-      var y = 1900 + date.getYear()
-      var m = '0' + (date.getMonth() + 1)
-      var d = '0' + date.getDate()
-      return y + '/' + m.substring(m.length - 2, m.length) + '/' + d.substring(d.length - 2, d.length)
+    // 删除附件
+    deleteAccessory (index, imgPath) {
+      console.log('删除：', index, imgPath)
+      this.accessoryContent.splice(index, 1)
+    },
+    submit () {
+      if (this.askOffReason === '') {
+        ui.showToast({ title: '请输入补签事由' })
+      } else if (this.approvalUserId === null) {
+        ui.showToast({ title: '请选择审批人' })
+      } else {
+        //  this.paySubmit()
+
+        this.createTime = dayjs().format("YYYY-MM-DD HH:mm")
+
+        let LocalApprovalInfoList = ui.getStorageSync('LocalApprovalInfoList')
+        LocalApprovalInfoList.buQianApprovalInfoList.push({
+          proposerName: this.userName, // 申请人
+          approvalType: '补签', // 审批类型
+          buQianDateTime: this.buQianDateTime, // 补卡时间点
+          createTime: this.createTime, // 补卡申请时间
+          buQianReason: this.buQianReason, // 补卡原因
+          approverName: this.approverName, // 审批人姓名
+          accessoryContent: this.accessoryContent // 附件
+        })
+        console.log('LocalApprovalInfoList:', LocalApprovalInfoList)
+        ui.setStorageSync('LocalApprovalInfoList', LocalApprovalInfoList)
+
+        ui.showToast({ title: '补签申请成功', icon: 'success' })
+        
+        window.setTimeout(() => {
+          ui.navigateTo({
+            url: '/pages/application/approval/myApproval'
+          })
+        }, 1000)
+
+      }
+    },
+    paySubmit () {
+      ui.showToast({ title: '提交成功', icon: 'success' })
+      setTimeout(() => {
+        ui.navigateBack()
+      }, 1000)
     }
   },
-  created () {
-  },
   mounted () {
-    // 获取上一个页面传递过来的参数
-    let getData = ui.getQuery()
-    console.log("参数",getData)
-    // 获取当前日期
-    let today = new Date()
-    let year = today.getFullYear()
-    let month = today.getMonth() + 1 
-    let day = today.getDate()
-    let hour = today.getHours()
-    let minute = today.getMinutes()
-    this.dataValue = year + '-' + month + '-' + day
-    // this.timeValue = hour + ':' + minute
-    //监听安卓返回
-    ui.onBackButtonClick(this.navigateBack)
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("LocalUserInfo:", LocalUserInfo)
+    this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
+    this.dataValue = dayjs().format("YYYY-MM-DD")
+    this.timeValue = dayjs().format("HH:mm")
+
+    // 初始化本地 审批列表 信息
+    let LocalApprovalInfoList = ui.getStorageSync('LocalApprovalInfoList')
+    console.log('LocalApprovalInfoList:', LocalApprovalInfoList)
+    if(!LocalApprovalInfoList){ // 不存在则创建
+      LocalApprovalInfoList = {
+        askOffApprovalInfoList: [], // 请假审批信息列表
+        buQianApprovalInfoList: [] // 补签审批信息列表 
+      }
+      ui.setStorageSync('LocalApprovalInfoList', LocalApprovalInfoList)
+    }
   }
 }
 </script>

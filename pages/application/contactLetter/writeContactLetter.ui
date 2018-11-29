@@ -22,12 +22,12 @@
         <ui-col vertical-align="middle" align="left" width="160" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            通知单编号
+            联系单编号
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <ui-input
-            placeholder="请输入通知单编号"
+            placeholder="请输入联系单编号"
             placeholder-style="color:#999B9E"
             show-clear="{{true}}"
             ui:model="{{ contactLetterNo }}"
@@ -150,16 +150,16 @@
       <ui-view class="accessory_wrap">
         <ui-text block>附件</ui-text>
         <ui-view class="accessory_content">
-          <ui-view class="accessory_list"
-          ui:for="{{ accessoryContent }}"
-          >
-            <ui-view class="close">x</ui-view>
-            <ui-image
-            src="{{ item }}"
-            mode='aspectFill'
-            width="60"
-            height="60"
-            ></ui-image>
+          <ui-view class="accessory_list" ui:for="{{ accessoryContent }}" ui:for-item="item">
+            <ui-view bindtap="deleteAccessory(index, item)">
+              <ui-view class="close">x</ui-view>
+              <ui-image
+              src="{{ item }}"
+              mode='aspectFill'
+              width="60"
+              height="60"
+              ></ui-image>
+            </ui-view>
           </ui-view>
           <ui-view class="add_accessory" bindtap="addAccessory">
             <ui-view>
@@ -191,8 +191,6 @@ export default {
   config: {
     navigationStyle: 'custom',
     backgroundColor: '#F6F6F6',
-    disableIosGesture: true,
-    navigationBarTextStyle: 'white',
     delay: true,
     cache: true
   },
@@ -204,7 +202,8 @@ export default {
           console.log("监理工作联系单 pageLoad")
       
           this.contactLetterCon = ui.getStorageSync('selectedConTeam')
-          ui.removeStorageSync('selectedConTeam')
+          // ui.removeStorageSync('selectedConTeam')
+          console.log('this.contactLetterCon: ', this.contactLetterCon)
           this.companyName = this.contactLetterCon ? this.contactLetterCon.name : ''
           this.conUnitId = this.contactLetterCon ? this.contactLetterCon.id : ''
         }
@@ -228,8 +227,7 @@ export default {
       contactContent: '', // 联系内容
 
       // 附件
-      accessoryContent: [],
-      imgs: []
+      accessoryContent: []
     }
   },
   methods: {
@@ -241,10 +239,7 @@ export default {
         cancelButtonText: '继续填写',
         success: (result) => {
           if (result.confirm) {
-            // 取消返回键监听事件
-            ui.offBackButtonClick({
-              listener: this.navigateBack
-            })
+            
             ui.navigateBack()
           }
         }
@@ -263,20 +258,51 @@ export default {
     },
     // 安全问题
     safeSwitchChange (val) {
+      console.log(val)
       this.isSafe = val
     },
     // 添加附件
     addAccessory () {
       this.chooseImage(2)
     },
+    // 删除附件
+    deleteAccessory (index, imgPath) {
+      console.log('删除：', index, imgPath)
+      this.accessoryContent.splice(index, 1)
+      // ui.getSavedFileList({
+      //   filePath: imgPath,
+      //   success: function (res) {
+      //     console.log('获取文件信息：', res)
+      //     if (res.fileList.length > 0) {
+      //       ui.removeSavedFile({
+      //         filePath: res.fileList[0].filePath,
+      //         complete: function (res) {
+      //           console.log(res)
+      //         }
+      //       })
+      //     }
+      //   }
+      // })
+    },
+    // 选择照片
     chooseImage (index) {
       ui.chooseImage({
         sourceType: sourceType[index],
         sizeType: sizeType[1],
         success: (res) => {
+          console.log('res:', res)
           res.tempFilePaths.forEach((item, index) => {
             this.accessoryContent.push(item)
+            // // 保存文件到本地沙箱中
+            // ui.saveFile({
+            //   tempFilePath: item,
+            //   success: function (res) {
+            //     var savedFilePath = res.savedFilePath
+            //     console.log(savedFilePath)
+            //   }
+            // })
           })
+          console.log('this.accessory: ', this.accessoryContent)
         },
         fail: (res) => {
           console.log("添加照片失败")
@@ -295,7 +321,27 @@ export default {
       } else if (!this.contactContent) {
         ui.showToast({ title: '请输入联系内容' })
       } else {
-        this.paySubmit()
+        // this.paySubmit()
+
+        let LocalContactLetterInfoList = ui.getStorageSync('LocalContactLetterInfoList')
+        LocalContactLetterInfoList.contactLetterInfoList.push({
+          contactLetterNo: this.contactLetterNo,
+          contactTime: this.contactTime,
+          timeLimit: this.timeLimit,
+          contactLetterCon: this.contactLetterCon,
+          contactReason: this.contactReason,
+          contactContent: this.contactContent,
+          accessoryContent: this.accessoryContent
+        })
+        console.log('LocalContactLetterInfoList:', LocalContactLetterInfoList)
+        ui.setStorageSync('LocalContactLetterInfoList', LocalContactLetterInfoList)
+
+        ui.showToast({ title: '提交成功', icon: 'success' })
+        
+        window.setTimeout(() => {
+          ui.navigateBack()
+        }, 1000)
+
       }
     },
     paySubmit () {
@@ -334,15 +380,25 @@ export default {
   mounted () {
 
     let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
-    console.log("LocalUserInfo:", LocalUserInfo)
+    console.log("监理工作联系单:", LocalUserInfo)
     this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
 
     let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
-    console.log("项目管理页面：", LocalProjectInfoList[0])
+    console.log("监理工作联系单页面：", LocalProjectInfoList[0])
     this.projectName = LocalProjectInfoList[0].itemName
     this.projectId = LocalProjectInfoList[0].itemId
 
     this.contactTime = dayjs().format("YYYY-MM-DD HH:mm")
+
+    // 初始化本地 监理联系单 信息
+    let LocalContactLetterInfoList = ui.getStorageSync('LocalContactLetterInfoList')
+    console.log('LocalContactLetterInfoList:', LocalContactLetterInfoList)
+    if(!LocalContactLetterInfoList){ // 不存在则创建
+      LocalContactLetterInfoList = {
+        contactLetterInfoList: []
+      }
+      ui.setStorageSync('LocalContactLetterInfoList', LocalContactLetterInfoList)
+    }
 
   }
 }

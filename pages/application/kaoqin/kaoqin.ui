@@ -211,11 +211,11 @@ export default {
           buttonText: '知道了',
           buttonStyle: { color: '#1890ff' }
         })
-      } else if(timeDiff > 0 && timeDiff < 60){
+      } else if(timeDiff > 0 && timeDiff < 120){
         this.shangBanStatus = '迟到'
         this.sbColor = 'orange'
         this.shangBanDaka()
-      } else if(timeDiff > 60) {
+      } else if(timeDiff > 120) {
         this.shangBanStatus = '缺卡'
         this.sbColor = 'red'
         this.shangBanDaka()

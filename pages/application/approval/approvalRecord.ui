@@ -29,24 +29,44 @@
       <template slot="body">
         <ui-tab-view-body enable-reach-bottom-load="{{loadMore}}" on-load-more="{{ handleLoadMore }}">
 
-          <ui-view class="info_list">
-            <ui-row height="100" class="top_tip" border-bottom ui:for="{{ qingJiaList }}" ui:for-item="item">
-              <ui-col width="60" align="center" style="padding-top:6px">
-                <ui-view class="left_icon">假</ui-view>
+          <ui-view class="info_list" ui:for="{{ pendingApprovalList }}" ui:for-item="item">
+            <ui-row height="140" class="top_tip" border-bottom ui:if=" {{item.approvalType === '请假'}} ">
+              <ui-col width="60" align="center" >
+                <ui-view class="left_icon" >{{ item.proposerName }}</ui-view>
               </ui-col>
               <ui-col class="text" align="left" vertical-align="middle" space="10">
-                <ui-view style="width: 100%;">
+                <ui-view style="width:100%;">
                   <ui-row height="30">
                     <ui-col align="left" vertical-align="middle">
-                      <ui-text>请假批号: {{ item.payId }}</ui-text>
+                      <ui-text style="font-size:16px;">{{ item.proposerName }}的{{ item.approvalType }}</ui-text>
                     </ui-col>
                     <ui-col align="right" width="100" vertical-align="middle" space-right="10">
-                      <ui-view>{{ getLocalTime(item.createTime) }}</ui-view>
+                      <ui-view>{{ item.createTime }}</ui-view>
                     </ui-col>
                   </ui-row>
-                  <ui-view>请假天数：{{ item.daynumber }}</ui-view>
-                  <ui-view>审批人：{{ item.shenpiren }}</ui-view>
-                  <ui-view style="color:red;">审批中</ui-view>
+                  <ui-view>请假类型：{{ item.askOffType }}</ui-view>
+                  <ui-view>开始时间：{{ item.startDateTime }}</ui-view>
+                  <ui-view>结束时间：{{ item.endDateTime }}</ui-view>
+                  <ui-view style="color:#fa8c16;margin-top:5px;">{{ item.status }}</ui-view>
+                </ui-view>
+              </ui-col>
+            </ui-row>
+            <ui-row height="100" class="top_tip" border-bottom ui:elif=" {{item.approvalType === '补签'}} ">
+              <ui-col width="60" align="center">
+                <ui-view class="left_icon">{{ item.proposerName }}</ui-view>
+              </ui-col>
+              <ui-col class="text" align="left" vertical-align="middle" space="10">
+                <ui-view style="width:100%;">
+                  <ui-row height="30">
+                    <ui-col align="left" vertical-align="middle">
+                      <ui-text style="font-size:16px;">{{ item.proposerName }}的{{ item.approvalType }}申请</ui-text>
+                    </ui-col>
+                    <ui-col align="right" width="100" vertical-align="middle" space-right="10">
+                      <ui-view>{{ item.createTime }}</ui-view>
+                    </ui-col>
+                  </ui-row>
+                  <ui-view>补签原因：{{ item.buQianReason }}</ui-view>
+                  <ui-view style="color:#fa8c16;margin-top:5px;">{{ item.status }}</ui-view>
                 </ui-view>
               </ui-col>
             </ui-row>
@@ -58,29 +78,48 @@
         </ui-tab-view-body>
         <ui-tab-view-body enable-reach-bottom-load="{{loadMore}}" on-load-more="{{ handleLoadMore }}">
 
-          <ui-view class="info_list">
-            <ui-row height="100" class="top_tip" border-bottom ui:for="{{ buQianList }}" ui:for-item="item">
-              <ui-col width="60" align="center" style="padding-top:6px">
-                <ui-view class="left_icon">补</ui-view>
+          <ui-view class="info_list" ui:for="{{ approvaledList }}" ui:for-item="item">
+            <ui-row height="140" class="top_tip" border-bottom ui:if=" {{item.approvalType === '请假'}} ">
+              <ui-col width="60" align="center" >
+                <ui-view class="left_icon" >{{ item.proposerName }}</ui-view>
               </ui-col>
               <ui-col class="text" align="left" vertical-align="middle" space="10">
-                <ui-view style="width: 100%;">
+                <ui-view style="width:100%;">
                   <ui-row height="30">
                     <ui-col align="left" vertical-align="middle">
-                      <ui-text>补签批号: {{ item.payId }}</ui-text>
+                      <ui-text style="font-size:16px;">{{ item.proposerName }}的{{ item.approvalType }}</ui-text>
                     </ui-col>
                     <ui-col align="right" width="100" vertical-align="middle" space-right="10">
-                      <ui-view>{{ getLocalTime(item.createTime) }}</ui-view>
+                      <ui-view>{{ item.createTime }}</ui-view>
                     </ui-col>
                   </ui-row>
-                  <ui-view>补签日期：{{ item.dayBuQian }}</ui-view>
-                  <ui-view>审批人：{{ item.shenpiren }}</ui-view>
-                  <ui-view style="color:#13c2c2;">审批通过</ui-view>
+                  <ui-view>请假类型：{{ item.askOffType }}</ui-view>
+                  <ui-view>开始时间：{{ item.sdataValue }} {{ item.stimeValue }}</ui-view>
+                  <ui-view>结束时间：{{ item.edataValue }} {{ item.etimeValue }}</ui-view>
+                  <ui-view style="color:#00C853;margin-top:5px;">{{ item.status }}</ui-view>
+                </ui-view>
+              </ui-col>
+            </ui-row>
+            <ui-row height="100" class="top_tip" border-bottom ui:elif=" {{item.approvalType === '补签'}} ">
+              <ui-col width="60" align="center">
+                <ui-view class="left_icon">{{ item.proposerName }}</ui-view>
+              </ui-col>
+              <ui-col class="text" align="left" vertical-align="middle" space="10">
+                <ui-view style="width:100%;">
+                  <ui-row height="30">
+                    <ui-col align="left" vertical-align="middle">
+                      <ui-text style="font-size:16px;">{{ item.proposerName }}的{{ item.approvalType }}申请</ui-text>
+                    </ui-col>
+                    <ui-col align="right" width="100" vertical-align="middle" space-right="10">
+                      <ui-view>{{ item.createTime }}</ui-view>
+                    </ui-col>
+                  </ui-row>
+                  <ui-view>补签原因：{{ item.buQianReason }}</ui-view>
+                  <ui-view style="color:#00C853;margin-top:5px;">{{ item.status }}</ui-view>
                 </ui-view>
               </ui-col>
             </ui-row>
           </ui-view>
-
 
           <ui-view style="width:200px;margin:0 auto;">
             <ui-divider ui:show="{{!loadMore}}">没有新数据了</ui-divider>
@@ -100,50 +139,69 @@
     },
     data() {
       return {
-        loadMore: true,
-        qingJiaList: [{
-          payId: 'QJ2018090712',
-          projectId: 123,
-          projectName: '其他',
-          daynumber: 1,
-          shenpiren: '傅毅',
-          memo: '',
-          createTime: 1511280000000
+        loadMore: true, // 加载更多
+        count: 0,
+
+        pendingApprovalList: [{
+          approvalId: 'QJ2018090712', // 审批编号
+          proposerName: '傅毅',
+          approvalType: '请假', // 审批类型
+          teamUnitName: '平头哥工作室', // 所在部门
+          askOffType: '病假', // 请假类型
+          // 请假日期 开始日期时间和结束日期时间
+          startDateTime: '2018-11-20 12:12',
+          endDateTime: '2018-11-21 13:13',
+          // 请假事由
+          askOffReason: '生病中',
+          approverName: '傅毅',
+          createTime: '2018-11-20 12:23',
+          status: '审批中'
         }, {
-          payId: 'QJ2018090712',
-          projectId: 123,
-          projectName: '其他',
-          daynumber: 2,
-          shenpiren: '傅毅',
-          memo: '',
-          createTime: 1511280000000
+          approvalId: 'QJ2018090712', // 审批编号
+          proposerName: '傅毅',
+          approvalType: '补签', // 审批类型
+          teamUnitName: '平头哥工作室', // 所在部门
+          // 补签班次
+          dataValue: '2018-11-21 12:12',
+          // 补签原因
+          buQianReason: '忘记打卡',
+          accessoryContent: [],
+          approverName: '傅毅',
+          createTime: '2018-11-20 12:23',
+          status: '审批中'
         }],
-        buQianList: [{
-          payId: 'BQ2018090712',
-          projectId: 123,
-          projectName: '其他',
-          dayBuQian: '2018-09-05',
-          shenpiren: '傅毅',
-          memo: '',
-          createTime: 1511280000000
+
+        approvaledList: [{
+          approvalId: 'QJ2018090712', // 审批编号
+          proposerName: '傅毅',
+          approvalType: '请假', // 审批类型
+          teamUnitName: '平头哥工作室', // 所在部门
+          askOffType: '病假', // 请假类型
+          // 请假日期 开始日期时间和结束日期时间
+          sdataValue: '2018-11-20',
+          stimeValue: '12:12', 
+          edataValue: '2018-11-21',
+          etimeValue: '12:12', 
+          // 请假事由
+          askOffReason: '生病中',
+          approverName: '傅毅',
+          createTime: '2018-11-20 12:23',
+          status: '审批通过'
         }, {
-          payId: 'BQ2018090712',
-          projectId: 123,
-          projectName: '其他',
-          dayBuQian: '2018-09-04',
-          shenpiren: '傅毅',
-          memo: '',
-          createTime: 1511280000000
+          approvalId: 'QJ2018090712', // 审批编号
+          proposerName: '傅毅',
+          approvalType: '补签', // 审批类型
+          teamUnitName: '平头哥工作室', // 所在部门
+          // 补签班次
+          dataValue: '2018-11-21 12:12',
+          // 补签原因
+          buQianReason: '忘记打卡',
+          accessoryContent: [],
+          approverName: '傅毅',
+          createTime: '2018-11-20 12:23',
+          status: '审批通过'
         }],
-        pageLoad: {
-          trigger: 'always',
-          handle: () => {
-            console.log('我的审批')
-          }
-        },
-        items: [],
-        bottom: 30,
-        count: 0
+        
       }
     },
     methods: {
@@ -152,11 +210,6 @@
       },
       handleLoadMore() {
         this.count++
-      },
-      // 解析后台返回的时间格式
-      getLocalTime(tm) {
-        let tt = new Date(tm).toLocaleDateString().replace(/\//g, '-')
-        return tt
       }
     },
     mounted() {
@@ -214,21 +267,12 @@
       line-height: 40px;
       color: #fff;
       font-size: 16px;
-      margin-top: 10px;
+      margin-top: 20px;
     }
-
-    .left_icon2 {
-      background-color: #FF7360;
-    }
-
-    .left_icon3 {
-      background-color: #39CCC5;
-    }
-
     .text {
       .ui-text {
         font-size: 14px;
-        color: #6d6d6d;
+        color: #262626;
       }
 
       .ui-view {

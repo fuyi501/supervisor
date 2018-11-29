@@ -37,15 +37,8 @@
             开始时间
           </ui-view>
         </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="4">
-          <ui-view class="">
-            <ui-picker mode="date" start="2018-09-01" end="2028-09-30" value="{{ sdataValue }}" date-format="YYYY年M月D日" bindchange="choiceSDate"></ui-picker>
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" width="60" space-right="10">
-          <ui-view class="">
-            <ui-picker title="" mode="time" value="{{ stimeValue }}" bindchange="handleSTime"></ui-picker>
-          </ui-view>
+        <ui-col vertical-align="middle" align="right" space-right="10" bindtap="openStartTimePopup">
+          {{ qingjiaStartTime }}
         </ui-col>
       </ui-row>
 
@@ -56,15 +49,8 @@
             结束时间
           </ui-view>
         </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="4">
-          <ui-view class="">
-            <ui-picker mode="date" start="2018-09-01" end="2028-09-30" value="{{ edataValue }}" date-format="YYYY年M月D日" bindchange="choiceEDate"></ui-picker>
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" width="60" space-right="10">
-          <ui-view class="">
-            <ui-picker title="" mode="time" value="{{ etimeValue }}" bindchange="handleETime"></ui-picker>
-          </ui-view>
+        <ui-col vertical-align="middle" align="right" space-right="10" bindtap="openEndTimePopup">
+          {{ qingjiaEndTime }}
         </ui-col>
       </ui-row>
 
@@ -110,7 +96,6 @@
             </ui-view>
           </ui-view>
         </ui-view>
-
       </ui-view>
 
       <!-- 抄送人 -->
@@ -133,14 +118,40 @@
           </ui-view>
         </ui-view>
       </ui-view>
-
+      <!-- 提交按钮 -->
       <ui-row height="60" space-top="10">
         <ui-col vertical-align="middle" align="center" space="30">
           <ui-button type="primary" bindtap="submit">立即提交</ui-button>
         </ui-col>
       </ui-row>
-
     </ui-view>
+
+    <!-- 选择请假开始时间和结束时间的 popup -->
+    <ui-popup ui:model="{{ showStartTimePopup }}" height="300" background="#fff">
+      <ui-view >
+        <ui-row>
+          <ui-col span=8>
+            <ui-picker-view mode="date" start="2018-09-01" end="2028-09-30" value="{{ sdataValue }}" date-format="YYYY年M月D日" bindchange="choiceSDate"></ui-picker-view>
+          </ui-col>
+          <ui-col span=4>
+            <ui-picker-view title="" mode="time" value="{{ stimeValue }}" bindchange="handleSTime"></ui-picker-view>
+          </ui-col>
+        </ui-row>
+      </ui-view>
+    </ui-popup>
+
+    <ui-popup ui:model="{{ showEndTimePopup }}" height="300" background="#fff">
+      <ui-view >
+        <ui-row>
+          <ui-col span=8>
+            <ui-picker-view mode="date" start="2018-09-01" end="2028-09-30" value="{{ edataValue }}" date-format="YYYY年M月D日" bindchange="choiceEDate"></ui-picker-view>
+          </ui-col>
+          <ui-col span=4>
+            <ui-picker-view title="" mode="time" value="{{ etimeValue }}" bindchange="handleETime"></ui-picker-view>
+          </ui-col>
+        </ui-row>
+      </ui-view>
+    </ui-popup>
 
   </ui-page>
 </template>
@@ -167,11 +178,15 @@ export default {
       tokenId: '',
       userName: '傅毅',
       userId: '10010',
+      createTime: '', // 请假申请时间
       // 日期选择 开始日期时间和结束日期时间
+      showStartTimePopup: false,
       sdataValue: '',
-      stimeValue: '', 
+      stimeValue: '',
+      
+      showEndTimePopup: false,
       edataValue: '',
-      etimeValue: '', 
+      etimeValue: '',
 
       // 请假天数
       dayNumber: '',
@@ -188,30 +203,41 @@ export default {
       approvalUserId2: null,
 
       // 抄送人
-      recipientsList: [ ],
+      recipientsList: [],
       ccuserIds: []
 
+    }
+  },
+  computed: {
+    // 计算开始时间
+    qingjiaStartTime: function () {
+      console.log('开始时间', this.sdataValue + ' ' + this.stimeValue)
+      return this.sdataValue + ' ' + this.stimeValue
+    },
+    // 计算结束时间
+    qingjiaEndTime: function () {
+      console.log('结束时间', this.edataValue + ' ' + this.etimeValue)
+      return this.edataValue + ' ' + this.etimeValue
     }
   },
   methods: {
     // 返回按钮
     navigateBack () {
-      ui.showConfirm({
-        content: '表单尚未提交，你要离开么？',
-        confirmButtonText: '离开',
-        cancelButtonText: '继续填写',
-        success: (result) => {
-          if (result.confirm) {
-            ui.offBackButtonClick({
-              listener: this.navigateBack
-            })
-            ui.navigateBack()
-          }
-        }
-      })
+      ui.navigateBack()
+    },
+    // 打开选择开始时间的 popup
+    openStartTimePopup () {
+      console.log('开始时间')
+      this.showStartTimePopup = true
+    },
+    // 打开选择结束时间的 popup
+    openEndTimePopup () {
+      console.log('结束时间')
+      this.showEndTimePopup = true
     },
     handleType (val) { // 请假类型
       this.typeValue = val
+      console.log(this.typeValue, this.typeList[val])
     },
     // 选择请假开始日期
     choiceSDate (val) {
@@ -295,12 +321,7 @@ export default {
                 data.approvers.forEach((item, index) => {
                   this.approverList.push(item)
                   this.approvalUserId = item.userId
-                })
-              }
-              if (data && data.approvers2) {
-                this.approvalUserId2 = null
-                data.approvers2.forEach((item, index) => {
-                  this.approvalUserId2 = item.userId
+                  this.approverName = item.userName
                 })
               }
             }
@@ -320,17 +341,32 @@ export default {
       } else if (this.approvalUserId === null) {
         ui.showToast({ title: '请选择审批人' })
       } else {
-       this.paySubmit()
-      }
-    },
-    // 保存为草稿
-    saveDraft () {
-      if (this.askOffReason === '') {
-        ui.showToast({ title: '请输入请假事由' })
-      } else if (this.approvalUserId === null) {
-        ui.showToast({ title: '请选择审批人' })
-      } else {
-       this.paySubmit()
+        //  this.paySubmit()
+        
+        this.createTime = dayjs().format("YYYY-MM-DD HH:mm")
+
+        let LocalApprovalInfoList = ui.getStorageSync('LocalApprovalInfoList')
+        LocalApprovalInfoList.askOffApprovalInfoList.push({
+          proposerName: this.userName, // 申请人
+          approvalType: '请假', // 审批类型
+          askOffType: this.typeList[this.typeValue], // 请假类型
+          createTime: this.createTime, // 请假申请时间
+          startDateTime: this.qingjiaStartTime, // 开始时间
+          endDateTime: this.qingjiaEndTime, // 结束时间
+          askOffReason: this.askOffReason, // 请假原因
+          approverName: this.approverName // 审批人姓名
+        })
+        console.log('LocalApprovalInfoList:', LocalApprovalInfoList)
+        ui.setStorageSync('LocalApprovalInfoList', LocalApprovalInfoList)
+
+        ui.showToast({ title: '请假申请成功', icon: 'success' })
+        
+        window.setTimeout(() => {
+          ui.navigateTo({
+            url: '/pages/application/approval/myApproval'
+          })
+        }, 1000)
+
       }
     },
     // 提交请假申请
@@ -339,7 +375,7 @@ export default {
       ui.request({
         url: 'attendance/apply/leave/submit',
         data: {
-          "dateStart": this.sdataValue, // 联系单编号
+          "dateStart": this.sdataValue, // 请假开始时间
           "dateEnd": this.edataValue, // 项目 ID 号
           "periodStart": "one",
 	        "periodEnd": "two",
@@ -370,17 +406,27 @@ export default {
       })
     }
   },
-  // 日期组件计算
-  created () {
-  },
   mounted () {
     let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
     console.log("LocalUserInfo:", LocalUserInfo)
     this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
 
     this.sdataValue = dayjs().format("YYYY-MM-DD")
+    this.stimeValue = dayjs().format("HH:mm")
     this.edataValue = dayjs().format("YYYY-MM-DD")
+    this.etimeValue = dayjs().format("HH:mm")
     this.dayNumber = dayjs(this.edataValue).diff(dayjs(this.sdataValue), 'day')
+
+    // 初始化本地 审批列表 信息
+    let LocalApprovalInfoList = ui.getStorageSync('LocalApprovalInfoList')
+    console.log('LocalApprovalInfoList:', LocalApprovalInfoList)
+    if(!LocalApprovalInfoList){ // 不存在则创建
+      LocalApprovalInfoList = {
+        askOffApprovalInfoList: [], // 请假审批信息列表
+        buQianApprovalInfoList: [] // 补签审批信息列表 
+      }
+      ui.setStorageSync('LocalApprovalInfoList', LocalApprovalInfoList)
+    }
 
   }
 }

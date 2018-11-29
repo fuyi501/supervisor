@@ -9,7 +9,7 @@
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <ui-view class="nav_title">我发出的监理通知单</ui-view>
+          <ui-view class="nav_title">我发出的监理联系通知单</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="50">
           <ui-view class="nav_right">更多</ui-view>
@@ -20,35 +20,45 @@
     <ui-tab-view class="type-badge">
       <template slot="header">
         <ui-tab-view-header>
-          <ui-view>待回复</ui-view>
+          <ui-view>待确认</ui-view>
         </ui-tab-view-header>
         <ui-tab-view-header>
-          <ui-view>已回复</ui-view>
+          <ui-view>已确认</ui-view>
         </ui-tab-view-header>
       </template>
       <template slot="body">
         <ui-tab-view-body >
 
-          <!-- 待回复列表 -->
-          <ui-view class="list-view" ui:for="{{items}}" ui:for-item="item" >
-            <ui-row space="10">
+          <!-- 待确认列表 -->
+          <ui-view class="list-view" ui:for="{{contactReplyPendingList}}" ui:for-item="item">
+            <ui-row space="10" >
               <ui-col>
-                <ui-text class="titleName">{{item.titleName}}</ui-text>
+                <ui-text class="titleName">{{item.contactName}} 发出的联系回复单 </ui-text>
               </ui-col>
-              <ui-col vertical-align="middle" align="right" width=40 bindtap="openDetails(item)">
-                <ui-text class="titleName">详情</ui-text>
+              <ui-col vertical-align="middle" align="right" >
+                <ui-text class="titleTime"> {{item.contactReplyTime}} </ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">{{item.content}}</ui-text>
+                <ui-text class="list-content">编号：{{item.contactReplyNo}}</ui-text>
               </ui-col>
             </ui-row>
-            <ui-row space="20">
+            <ui-row space="10">
+              <ui-col>
+                <ui-text class="list-content">整改部位：{{item.contactReplyPosition}}</ui-text>
+              </ui-col>
+            </ui-row>
+            <ui-row space="10">
+              <ui-col>
+                <ui-text class="list-content">回复内容：{{item.contactReplyCheckContent}}</ui-text>
+              </ui-col>
+            </ui-row>
+            <ui-row space="20" ui:if="{{ item.accessoryContent }}">
               <ui-col >
                 <ui-view class="imageList_win">
-                  <ui-view class="image" ui:for="{{item.imgarr}}" ui:for-item="image" bindtap="previewImage(item.imgarr, image)">
-                    <ui-image src="{{image.imgsrc}}" width="{{ imgWidth }}" height="{{ imgHeight }}" mode="aspectFill"></ui-image>
+                  <ui-view class="image" ui:for="{{item.accessoryContent}}" ui:for-item="image" bindtap="previewImage(item.accessoryContent, image)">
+                    <ui-image src="{{image}}" width="{{ imgWidth }}" height="{{ imgHeight }}" mode="aspectFill"></ui-image>
                   </ui-view>
                 </ui-view>
               </ui-col>
@@ -56,45 +66,55 @@
             <ui-row space="10">
               <ui-col vertical-align="bottom" span=8>
                 <ui-view>
-                  <ui-text class="color6 small-font">{{item.source}} ·</ui-text>
-                  <ui-text class="color6 small-font">{{item.datetime}}</ui-text>
+                  <ui-text class="status small-font">{{item.state}} ·</ui-text>
+                  <ui-text class="color6 small-font">{{item.companyName}}</ui-text>
                 </ui-view>
               </ui-col>
-              <ui-col vertical-align="bottom" align="right" space-right="10">
+              <ui-col vertical-align="bottom" align="right" space-right="5" bindtap="openDetails(item)">
                 <ui-view>
-                  <ui-text class="color6 small-font">{{item.collect}}收藏</ui-text>
+                  <ui-text class="color6 small-font">查看详情</ui-text>
                 </ui-view>
               </ui-col>
             </ui-row>
           </ui-view>
 
-          <ui-view class="divider">
+          <!-- <ui-view class="divider">
             <ui-divider >没有新数据了</ui-divider>
-          </ui-view>
+          </ui-view> -->
 
         </ui-tab-view-body>
         <ui-tab-view-body >
 
-          <!-- 已回复列表 -->
-          <ui-view class="list-view" ui:for="{{items}}" ui:for-item="item" >
+          <!-- 已确认列表 -->
+          <ui-view class="list-view" ui:for="{{contactReplyRepliedList}}" ui:for-item="item">
+            <ui-row space="10" >
+              <ui-col>
+                <ui-text class="titleName">{{item.contactName}} 发出的联系回复单 </ui-text>
+              </ui-col>
+              <ui-col vertical-align="middle" align="right" >
+                <ui-text class="titleTime"> {{item.contactReplyTime}} </ui-text>
+              </ui-col>
+            </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="titleName">{{item.titleName}}</ui-text>
-              </ui-col>
-              <ui-col vertical-align="middle" align="right" width=40 bindtap="openDetails(item)">
-                <ui-text class="titleName">详情</ui-text>
+                <ui-text class="list-content">编号：{{item.contactReplyNo}}</ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">{{item.content}}</ui-text>
+                <ui-text class="list-content">整改部位：{{item.contactReplyPosition}}</ui-text>
               </ui-col>
             </ui-row>
-            <ui-row space="20">
+            <ui-row space="10">
               <ui-col>
+                <ui-text class="list-content">回复内容：{{item.contactReplyCheckContent}}</ui-text>
+              </ui-col>
+            </ui-row>
+            <ui-row space="20" ui:if="{{ item.accessoryContent }}">
+              <ui-col >
                 <ui-view class="imageList_win">
-                  <ui-view class="image" ui:for="{{item.imgarr}}" ui:for-item="image" bindtap="previewImage(item.imgarr, image)">
-                    <ui-image src="{{image.imgsrc}}" width="{{ imgWidth }}" height="{{ imgHeight }}" mode="aspectFill"></ui-image>
+                  <ui-view class="image" ui:for="{{item.accessoryContent}}" ui:for-item="image" bindtap="previewImage(item.accessoryContent, image)">
+                    <ui-image src="{{image}}" width="{{ imgWidth }}" height="{{ imgHeight }}" mode="aspectFill"></ui-image>
                   </ui-view>
                 </ui-view>
               </ui-col>
@@ -102,21 +122,22 @@
             <ui-row space="10">
               <ui-col vertical-align="bottom" span=8>
                 <ui-view>
-                  <ui-text class="color6 small-font">{{item.source}} ·</ui-text>
-                  <ui-text class="color6 small-font">{{item.datetime}}</ui-text>
+                  <ui-text class="status2 small-font">{{item.state}} ·</ui-text>
+                  <ui-text class="color6 small-font">{{item.companyName}}</ui-text>
                 </ui-view>
               </ui-col>
-              <ui-col vertical-align="bottom" align="right" space-right="10">
+              <ui-col vertical-align="bottom" align="right" space-right="5" bindtap="openDetails(item)">
                 <ui-view>
-                  <ui-text class="color6 small-font">{{item.collect}}收藏</ui-text>
+                  <ui-text class="color6 small-font">查看详情</ui-text>
                 </ui-view>
               </ui-col>
             </ui-row>
           </ui-view>
 
-          <ui-view class="divider">
+          <!-- <ui-view class="divider">
             <ui-divider >没有新数据了</ui-divider>
-          </ui-view>
+          </ui-view> -->
+
         </ui-tab-view-body>
       </template>
     </ui-tab-view>
@@ -131,76 +152,49 @@
     },
     data() {
       return {
+        tokenId: '',
         imgWidth: (ui.WIN_WIDTH-40)/4-8 + 'px', 
         imgHeight: (ui.WIN_WIDTH-40)/4-8 + 'px',
-        items: [
+
+        // 测试用
+        contactReplyPendingList: [ // 待确认列表
           {
-            "id": 1,
-            "type": "1",
-            "titleName": "傅毅发出的通知单",
-            "content": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
-            "datetime": "2018-10-22 13:33",
-            "collect": "10",
-            "source": "待回复",
-            "dataType": "hot",
-            "imgarr": [{
-                "id": 1,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 2,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 2,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              }
+            contactName: '傅毅', // 发联系回复单的人
+            contactReplyNo: 123, // 联系回复单编号
+            companyName: '监理部', // 项目部名称
+            constructionUnit: '', // 施工单位
+            projectManager: '', // 项目经理
+            contactReplyTime: '2018-11-29 12:23', // 联系单回复时间
+            contactReplyPosition: '', // 整改部位
+            contactReplyCheckContent: '是快递放假ask的飞机', // 检查内容
+            rectificationContent: '', // 整改情况
+            accessoryContent: [
+              "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading",
+              "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading",
+              "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
             ],
-            "articleType": [{
-              "id": 19,
-              "backgroundColor": "#d6e1f3",
-              "color": "#4285f4",
-              "content": "专题"
-            }]
-          },
-          {
-            "id": 2,
-            "type": "1",
-            "titleName": "傅毅发出的通知单",
-            "content": "这里有问题，需要修改",
-            "datetime": "2018-10-22 13:33",
-            "collect": "10",
-            "source": "已整改并回复",
-            "dataType": "hot",
-            "imgarr": [{
-                "id": 1,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 2,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 3,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 4,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 5,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              }
-            ],
-            "articleType": [{
-              "id": 19,
-              "backgroundColor": "#d6e1f3",
-              "color": "#4285f4",
-              "content": "专题"
-            }]
+            state: '待确认'
           }
-        ]
+        ], 
+        contactReplyRepliedList: [ // 已确认列表
+          {
+            contactName: '傅毅', // 发联系回复单的人
+            contactReplyNo: 123, // 联系回复单编号
+            companyName: '监理部', // 项目部名称
+            constructionUnit: '', // 施工单位
+            projectManager: '', // 项目经理
+            contactReplyTime: '2018-11-29 12:23', // 联系单回复时间
+            contactReplyPosition: '', // 整改部位
+            contactReplyCheckContent: '是快递放假ask的飞机', // 检查内容
+            rectificationContent: '', // 整改情况
+            accessoryContent: [
+              "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading",
+              "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading",
+              "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+            ],
+            state: '已确认'
+          }
+        ], 
       }
     },
     methods: {
@@ -208,26 +202,99 @@
         ui.navigateBack()
       },
       previewImage (imgarr, img) {
+        console.log('imgarr:', imgarr)
         let imgUrls = []
         for(let i in imgarr){
           console.log(imgarr[i])
-          imgUrls.push(imgarr[i].imgsrc)
+          imgUrls.push(imgarr[i])
         }
-        console.log(imgUrls)
+        console.log('imgUrls:', imgUrls)
         ui.previewImage({
-          current: img.imgsrc, // 当前显示图片的http链接
+          current: img, // 当前显示图片的http链接
           urls: imgUrls, // 需要预览的图片http链接列表
-          success: function (res) {
-            console.log(res)
+        })
+      },
+      openDetails (item) {
+        console.log(item)
+      },
+      getContactStateInfo () {
+        console.log('查询联系单状态信息')
+        ui.request({
+          url: 'sup/contact/list/all/1',
+          header: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.tokenId
           },
-          fail: function (res) {
-            console.log(res)
+          method: 'GET',
+          success: (result) => {
+            console.log("返回结果:",result)
+            if(result.data.code === 2000){
+              
+            }else{
+              console.log("查询联系单信息失败:",result)
+            }
+          },
+          fail: ({ errMsg }) => {
+            console.log("查询联系单信息失败:",errMsg)
+          }
+        })
+      },
+      getContactDetailInfo (contactId) {
+        console.log('查询联系单详细信息')
+        ui.request({
+          url: 'sup/contact/detail/' + contactId,
+          header: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.tokenId
+          },
+          method: 'GET',
+          success: (result) => {
+            console.log("返回结果:",result)
+            if(result.data.code === 2000){
+              
+              
+            }else{
+              console.log("查询联系单详细信息失败:",result)
+            }
+          },
+          fail: ({ errMsg }) => {
+            console.log("查询联系单详细信息失败:",errMsg)
           }
         })
       }
     },
     mounted() {
-      console.log("我发出的监理通知单 mounted", ui.WIN_WIDTH)
+      console.log("我发出的监理联系单 mounted")
+
+      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+      console.log("我发出的监理联系单:", LocalUserInfo)
+      this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
+      let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
+      console.log("我发出的监理联系单页面：", LocalProjectInfoList[0])
+      this.projectName = LocalProjectInfoList[0].itemName
+      this.projectId = LocalProjectInfoList[0].itemId
+
+      let LocalContactReplyInfoList = ui.getStorageSync('LocalContactReplyInfoList')
+      console.log('LocalContactReplyInfoList:', LocalContactReplyInfoList)
+
+      LocalContactReplyInfoList.contactReplyInfoList.forEach((item, index) => {
+
+        this.contactReplyPendingList.push({
+          contactName: '傅毅', // 发联系单的人
+          contactReplyNo: item.contactReplyNo,
+          contactReplyTime: item.contactReplyTime,
+          companyName: item.companyName,
+          constructionUnit: item.constructionUnit,
+          projectManager: item.projectManager,
+          contactReplyPosition: item.contactReplyPosition,
+          contactReplyCheckContent: item.contactReplyCheckContent,
+          rectificationContent: item.rectificationContent,
+          accessoryContent: item.accessoryContent,
+          state: '待确认'
+        })
+      })
+
     }
   }
 </script>
@@ -272,8 +339,17 @@
     padding: 5px 10px;
 
     .titleName {
-      color: #333;
+      color: #262626;
       font-size: 16px;
+    }
+    .titleTime {
+      color: #8c8c8c;
+      font-size: 12px;
+    }
+
+    .content_No {
+      color: #666;
+      font-size: 14px;
     }
 
     .list-content {
@@ -296,6 +372,12 @@
       }
     }
 
+    .status {
+      color: #FAAD14;
+    }
+    .status2 {
+      color: #1890ff;
+    }
     .color6 {
       color: #666;
     }

@@ -27,7 +27,7 @@
                 <ui-view class="app_text">我审批的</ui-view>       
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openMyApproval">
-                <ui-icon type="chucha1" color="#ffa940" size="40"></ui-icon>    
+                <ui-icon type="fasong" color="#ffa940" size="40"></ui-icon>    
                 <ui-view class="app_text">我发起的</ui-view>           
             </ui-col>
           </ui-row>
@@ -47,21 +47,21 @@
       <ui-row space-top=0 >
         <ui-col span=12>
           <ui-row>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openKaoQin">
-                <ui-icon type="daka2" color="#28aa91" size="30"></ui-icon>    
-                <ui-view class="app_text">考勤打卡</ui-view>       
-            </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openSignIn">
-                <ui-icon type="daka4" color="#ff525d" size="30"></ui-icon>    
-                <ui-view class="app_text">签到</ui-view>           
-            </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openAskOff">
-                <ui-icon type="qingjia1" color="#ff525d" size="30"></ui-icon>    
+                <ui-icon type="qingjia1" color="#1890ff" size="30"></ui-icon>    
                 <ui-view class="app_text">请假</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openBuKa">
-                <ui-icon type="buka1" color="#8bb93f" size="30"></ui-icon>    
+                <ui-icon type="buka1" color="#1890ff" size="30"></ui-icon>    
                 <ui-view class="app_text">补卡</ui-view>             
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openChuChai">
+                <ui-icon type="chucha1" color="#1890ff" size="30"></ui-icon>    
+                <ui-view class="app_text">出差</ui-view>           
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openJiaBan">
+                <ui-icon type="shigong1" color="#1890ff" size="30"></ui-icon>    
+                <ui-view class="app_text">加班</ui-view>             
             </ui-col>
           </ui-row>
         </ui-col>
@@ -99,18 +99,6 @@
           url: '/pages/application/approval/myApproval'
         })
       },
-      // 考勤
-      openKaoQin () {
-        ui.navigateTo({
-          url: '/pages/application/kaoqin/kaoqin'
-        })
-      },
-      // 签到
-      openSignIn () {
-        ui.navigateTo({
-          url: '/pages/application/signIn/signIn'
-        })
-      },
       // 请假
       openAskOff() {
         ui.navigateTo({
@@ -123,9 +111,15 @@
           url: '/pages/application/supplement/buqian'
         })
       },
+      openChuChai () {
+        ui.showToast({ title: '敬请期待', icon: 'success' })
+      },
+      openJiaBan () {
+        ui.showToast({ title: '敬请期待', icon: 'success' })
+      }
     },
     mounted() {
-      console.log("我的审批 mounted")
+      console.log("审批页面 mounted")
     }
   }
 </script>
