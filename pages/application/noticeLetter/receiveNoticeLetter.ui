@@ -9,7 +9,7 @@
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <ui-view class="nav_title">我收到的监理通知单</ui-view>
+          <ui-view class="nav_title">我审批的监理通知单</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="50">
           <ui-view class="nav_right">更多</ui-view>

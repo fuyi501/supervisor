@@ -165,7 +165,7 @@ export default {
         "backgroundColor": "#fff",
         "list": [
           {
-            "pagePath": "pages/application/rizhi/rizhiWrite",
+            "pagePath": "pages/application/rizhi/rizhi",
             "iconName": "daka2",
             "text": "写日志"
           },

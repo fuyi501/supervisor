@@ -362,7 +362,7 @@ export default {
         ui.showToast({ title: '请假申请成功', icon: 'success' })
         
         window.setTimeout(() => {
-          ui.navigateTo({
+          ui.redirectTo({
             url: '/pages/application/approval/myApproval'
           })
         }, 1000)

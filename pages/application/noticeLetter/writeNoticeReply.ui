@@ -29,7 +29,7 @@
           <ui-input
             placeholder="请输入项目监理机构名称"
             placeholder-style="color:#999B9E"
-            show-clear="{{false}}"
+            show-clear="{{true}}"
             ui:model="{{ companyName }}"
           ></ui-input>
         </ui-col>
@@ -44,7 +44,12 @@
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <ui-view class="">
-           {{ noticeNumber }}
+            <ui-input
+              placeholder="请输入联系单编号"
+              placeholder-style="color:#999B9E"
+              show-clear="{{true}}"
+              ui:model="{{ noticeReplyNo }}"
+            ></ui-input>
           </ui-view>
         </ui-col>
       </ui-row>
@@ -60,7 +65,7 @@
           <ui-input
             placeholder="请输入承包单位名称"
             placeholder-style="color:#999B9E"
-            show-clear="{{false}}"
+            show-clear="{{true}}"
             ui:model="{{ contractorUnit }}"
           ></ui-input>
         </ui-col>
@@ -122,7 +127,7 @@
           auto-height
           placeholder="请输入整改内容"
           placeholder-style="color:#999B9E" 
-          ui:model="{{ noticeReplyContent }}">
+          ui:model="{{ noticeReplyCheckContent }}">
         </ui-textarea>
       </ui-view>
 
@@ -130,16 +135,16 @@
       <ui-view class="accessory_wrap">
         <ui-text block>附件</ui-text>
         <ui-view class="accessory_content">
-          <ui-view class="accessory_list"
-          ui:for="{{ accessoryContent }}"
-          >
-            <ui-view class="close">x</ui-view>
-            <ui-image
-            src="{{ item }}"
-            mode='aspectFill'
-            width="60"
-            height="60"
-            ></ui-image>
+          <ui-view class="accessory_list" ui:for="{{ accessoryContent }}" ui:for-item="item">
+            <ui-view bindtap="deleteAccessory(index, item)">
+              <ui-view class="close">x</ui-view>
+              <ui-image
+              src="{{ item }}"
+              mode='aspectFill'
+              width="60"
+              height="60"
+              ></ui-image>
+            </ui-view>
           </ui-view>
           <ui-view class="add_accessory" bindtap="addAccessory">
             <ui-view>
@@ -171,27 +176,25 @@ export default {
   config: {
     navigationStyle: 'custom',
     backgroundColor: '#F6F6F6',
-    disableIosGesture: true,
-    navigationBarTextStyle: 'white',
     delay: true
   },
   data () {
     return {
+      tokenId: '',
       pageTitle: '监理工程师通知回复单',
       pageTitleRight: '更多',
       companyName: '监理三分部', // 项目监理机构
-      noticeNumber: '126号', // 通知单编号
+      noticeReplyNo: '126号', // 通知单编号
       contractorUnit: '', // 承包单位
       projectManager: '', // 项目经理
       noticeReplyTime: '', // 通知回复时间
       noticeReplyPosition: '二号隧道', // 整改部位
     
       // 通知单回复整改内容
-      noticeReplyContent: '', // 回复整改内容
+      noticeReplyCheckContent: '', // 回复整改内容
 
       // 附件
-      accessoryContent: [],
-      imgs: []
+      accessoryContent: []
     }
   },
   methods: {
@@ -203,27 +206,19 @@ export default {
         cancelButtonText: '继续填写',
         success: (result) => {
           if (result.confirm) {
-            // 取消返回键监听事件
-            ui.offBackButtonClick({
-              listener: this.navigateBack
-            })
             ui.navigateBack()
           }
         }
       })
     },
-    // 质量问题
-    qualitySwitchChange (val) {
-      console.log(val)
-      this.isQuality = val
-    },
-    // 安全问题
-    safeSwitchChange (val) {
-      this.isSafe = val
-    },
     // 添加附件
     addAccessory () {
       this.chooseImage(2)
+    },
+    // 删除附件
+    deleteAccessory (index, imgPath) {
+      console.log('删除：', index, imgPath)
+      this.accessoryContent.splice(index, 1)
     },
     chooseImage (index) {
       ui.chooseImage({
@@ -247,13 +242,28 @@ export default {
         ui.showToast({ title: '请输入承包单位' })
       } else if (this.projectManager === '') {
         ui.showToast({ title: '请输入项目经理' })
-      } else if (this.noticeReplyContent === '') {
+      } else if (this.noticeReplyCheckContent === '') {
         ui.showToast({ title: '请输入整改内容' })
       } else {
        this.paySubmit()
       }
     },
     paySubmit () {
+
+      let LocalNoticeReplyInfoList = ui.getStorageSync('LocalNoticeReplyInfoList')
+      LocalNoticeReplyInfoList.noticeReplyInfoList.push({
+        noticeReplyNo: this.noticeReplyNo,
+        noticeReplyTime: this.noticeReplyTime,
+        companyName: this.companyName,
+        constructionUnit: this.contractorUnit,  // 承包单位
+        projectManager: this.projectManager,
+        noticeReplyPosition: this.noticeReplyPosition,
+        noticeReplyCheckContent: this.noticeReplyCheckContent,
+        accessoryContent: this.accessoryContent
+      })
+      console.log('LocalNoticeReplyInfoList:', LocalNoticeReplyInfoList)
+      ui.setStorageSync('LocalNoticeReplyInfoList', LocalNoticeReplyInfoList)
+
       ui.showToast({ title: '提交成功', icon: 'success' })
       setTimeout(() => {
         ui.navigateBack()
@@ -261,9 +271,23 @@ export default {
     }
   },
   mounted () {
-    
+
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("监理工程师通知回复单:", LocalUserInfo)
+    this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
     this.noticeReplyTime = dayjs().format("YYYY-MM-DD HH:mm")
 
+    // 初始化本地 监理工程师通知回复单 信息
+    let LocalNoticeReplyInfoList = ui.getStorageSync('LocalNoticeReplyInfoList')
+    console.log('LocalNoticeReplyInfoList:', LocalNoticeReplyInfoList)
+    if(!LocalNoticeReplyInfoList){ // 不存在则创建
+      LocalNoticeReplyInfoList = {
+        noticeReplyInfoList: []
+      }
+      ui.setStorageSync('LocalNoticeReplyInfoList', LocalNoticeReplyInfoList)
+    }
+    
   }
 }
 </script>

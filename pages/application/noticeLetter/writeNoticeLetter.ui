@@ -18,6 +18,24 @@
     </ui-nav-bar>
 
     <ui-view class="form_content">
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="160" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            通知单编号
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-input
+            placeholder="请输入联系单编号"
+            placeholder-style="color:#999B9E"
+            show-clear="{{true}}"
+            ui:model="{{ noticeLetterNo }}"
+          ></ui-input>
+        </ui-col>
+      </ui-row>
+
       <ui-row height="50">
         <ui-col vertical-align="middle" align="left" width="160" space-left="10">
           <ui-view>
@@ -116,16 +134,16 @@
       <ui-view class="accessory_wrap">
         <ui-text block>附件</ui-text>
         <ui-view class="accessory_content">
-          <ui-view class="accessory_list"
-          ui:for="{{ accessoryContent }}"
-          >
-            <ui-view class="close">x</ui-view>
-            <ui-image
-            src="{{ item }}"
-            mode='aspectFill'
-            width="60"
-            height="60"
-            ></ui-image>
+          <ui-view class="accessory_list" ui:for="{{ accessoryContent }}" ui:for-item="item">
+            <ui-view bindtap="deleteAccessory(index, item)">
+              <ui-view class="close">x</ui-view>
+              <ui-image
+              src="{{ item }}"
+              mode='aspectFill'
+              width="60"
+              height="60"
+              ></ui-image>
+            </ui-view>
           </ui-view>
           <ui-view class="add_accessory" bindtap="addAccessory">
             <ui-view>
@@ -157,14 +175,15 @@ export default {
   config: {
     navigationStyle: 'custom',
     backgroundColor: '#F6F6F6',
-    disableIosGesture: true,
-    navigationBarTextStyle: 'white',
-    delay: true
+    delay: true,
+    cache: true
   },
   data () {
     return {
       pageTitle: '监理工程师通知单',
       pageTitleRight: '更多',
+      noticeLetterNo: '', // 通知单编号
+      contactLetterCon: '', // 通知单施工公司全部信息
       companyName: '沪通铁路工程IV标项目部',
       noticeTime: '', // 通知时间
       timeLimit: '3日内将整改完成并进行回复', // 整改时限
@@ -176,8 +195,7 @@ export default {
       noticeContent: '', // 通知内容
 
       // 附件
-      accessoryContent: [],
-      imgs: []
+      accessoryContent: []
     }
   },
   methods: {
@@ -189,10 +207,6 @@ export default {
         cancelButtonText: '继续填写',
         success: (result) => {
           if (result.confirm) {
-            // 取消返回键监听事件
-            ui.offBackButtonClick({
-              listener: this.navigateBack
-            })
             ui.navigateBack()
           }
         }
@@ -211,6 +225,12 @@ export default {
     addAccessory () {
       this.chooseImage(2)
     },
+    // 删除附件
+    deleteAccessory (index, imgPath) {
+      console.log('删除：', index, imgPath)
+      this.accessoryContent.splice(index, 1)
+    },
+    // 选择照片
     chooseImage (index) {
       ui.chooseImage({
         sourceType: sourceType[index],
@@ -236,7 +256,26 @@ export default {
       } else if (this.noticeContent === '') {
         ui.showToast({ title: '请输入通知内容' })
       } else {
-       this.paySubmit()
+      //  this.paySubmit()
+
+        let LocalNoticeLetterInfoList = ui.getStorageSync('LocalNoticeLetterInfoList')
+        LocalNoticeLetterInfoList.noticeLetterInfoList.push({
+          noticeLetterNo: this.noticeLetterNo,
+          noticeTime: this.noticeTime,
+          timeLimit: this.timeLimit,
+          noticeLetterCon: this.companyName, // 施工公司
+          noticeReason: this.noticeReason,
+          noticeContent: this.noticeContent,
+          accessoryContent: this.accessoryContent
+        })
+        console.log('LocalNoticeLetterInfoList:', LocalNoticeLetterInfoList)
+        ui.setStorageSync('LocalNoticeLetterInfoList', LocalNoticeLetterInfoList)
+
+        ui.showToast({ title: '提交成功', icon: 'success' })
+        
+        window.setTimeout(() => {
+          ui.navigateBack()
+        }, 1000)
       }
     },
     paySubmit () {
@@ -247,9 +286,28 @@ export default {
     }
   },
   mounted () {
-    
+
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("监理工程师通知单:", LocalUserInfo)
+    this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
+    let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
+    console.log("监理工程师通知单页面：", LocalProjectInfoList[0])
+    this.projectName = LocalProjectInfoList[0].itemName
+    this.projectId = LocalProjectInfoList[0].itemId
+
     this.noticeTime = dayjs().format("YYYY-MM-DD HH:mm")
 
+    // 初始化本地 工程师通知单 信息
+    let LocalNoticeLetterInfoList = ui.getStorageSync('LocalNoticeLetterInfoList')
+    console.log('LocalNoticeLetterInfoList:', LocalNoticeLetterInfoList)
+    if(!LocalNoticeLetterInfoList){ // 不存在则创建
+      LocalNoticeLetterInfoList = {
+        noticeLetterInfoList: []
+      }
+      ui.setStorageSync('LocalNoticeLetterInfoList', LocalNoticeLetterInfoList)
+    }
+    
   }
 }
 </script>

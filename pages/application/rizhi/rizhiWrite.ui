@@ -1,120 +1,173 @@
-<!---->
 <template>
-  <ui-page>
-    <ui-nav-bar slot="nav-bar" class="nav_bar">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
-          <ui-view>
-            <ui-icon type="arrow-left" size="20"></ui-icon>
+  <ui-view>
+    <ui-page>
+      <ui-nav-bar slot="nav-bar" class="nav_bar">
+        <ui-row height="46">
+          <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
+            <ui-view>
+              <ui-icon type="arrow-left" size="20" color="#3399ff"></ui-icon>
+            </ui-view>
+          </ui-col>
+          <ui-col vertical-align="middle" align="center">
+            <ui-view class="nav_title">项目日志</ui-view>
+          </ui-col>
+          <ui-col vertical-align="middle" align="center" width="50" bindtap="">
+            <ui-view class="nav-right">更多</ui-view>
+          </ui-col>
+        </ui-row>
+      </ui-nav-bar>
+
+      <!-- 日志列表 -->
+      <ui-view class="list-view" ui:for="{{items}}" ui:for-item="item" >
+        <ui-row space="10">
+          <ui-col>
+            <ui-text class="titleName">{{item.titleName}}</ui-text>
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" width=40 bindtap="openDetails(item)">
+            <ui-text class="titleName">详情</ui-text>
+          </ui-col>
+        </ui-row>
+        <ui-row space="10">
+          <ui-col>
+            <ui-text class="list-content">{{item.content}}</ui-text>
+          </ui-col>
+        </ui-row>
+        <ui-row space="20">
+          <ui-view class="imageList_win">
+            <ui-view class="image" ui:for="{{item.imgarr}}" ui:for-item="image" bindtap="previewImage(item.imgarr, image)">
+              <ui-image src="{{image.imgsrc}}" width="75" height="75" mode="aspectFill"></ui-image>
+            </ui-view>
           </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <ui-view class="nav_title">项目日志</ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="50">
-          <ui-view class="nav_right">更多</ui-view>
-        </ui-col>
-      </ui-row>
-    </ui-nav-bar>
+        </ui-row>
+        <ui-row space="10">
+          <ui-col vertical-align="bottom">
+            <ui-view>
+              <ui-text class="color6 small-font">{{item.source}} ·</ui-text>
+              <ui-text class="color6 small-font">{{item.datetime}}</ui-text>
+            </ui-view>
+          </ui-col>
+          <ui-col vertical-align="bottom" align="right" space-right="10">
+            <ui-view>
+              <ui-text class="color6 small-font">{{item.collect}}收藏</ui-text>
+            </ui-view>
+          </ui-col>
+        </ui-row>
+      </ui-view>
 
-    <!-- 应用 -->
-    <ui-row height="60" class="contacts_list1" space-top=10 bindtap="">
-      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
-        <ui-view class="left_icon">
-          <ui-icon type="zuzhi" color="#fff" size="24"></ui-icon>
-        </ui-view>
-      </ui-col>
-      <ui-col vertical-align="middle" space-left="15">
-        <ui-view class="text_content">个人日记</ui-view>
-      </ui-col>
-      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
-        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
-      </ui-col>
-    </ui-row>
-
-    <ui-row height="60" class="contacts_list2" space-top=10 bindtap="">
-      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
-        <ui-view class="left_icon">日
-          <!-- <ui-icon type="ribao1" color="#fff" size="30"></ui-icon> -->
-        </ui-view>
-      </ui-col>
-      <ui-col vertical-align="middle" space-left="15">
-        <ui-view class="text_content">监理日志</ui-view>
-      </ui-col>
-      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
-        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
-      </ui-col>
-    </ui-row>
-
-    <ui-row height="60" class="contacts_list2" bindtap="">
-      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
-        <ui-view class="left_icon">周
-          <!-- <ui-icon type="zhoubao1" color="#fff" size="24"></ui-icon> -->
-        </ui-view>
-      </ui-col>
-      <ui-col vertical-align="middle" space-left="15">
-        <ui-view class="text_content">监理周报</ui-view>
-      </ui-col>
-      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
-        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
-      </ui-col>
-    </ui-row>
-
-    <ui-row height="60" class="contacts_list2" bindtap="">
-      <ui-col width="50" space-left=10 align="center" vertical-align="middle">
-        <ui-view class="left_icon">月
-          <!-- <ui-icon type="yuebao" color="#fff" size="24"></ui-icon> -->
-        </ui-view>
-      </ui-col>
-      <ui-col vertical-align="middle" space-left="15">
-        <ui-view class="text_content">监理月报</ui-view>
-      </ui-col>
-      <ui-col vertical-align="middle" align="right" width="50" space-right="15" class="right_icon">
-        <ui-icon type="arrow-right" size="16" color="#BAB9BF"></ui-icon>
-      </ui-col>
-    </ui-row>
-
-
-  </ui-page>
+    </ui-page>
+  </ui-view>
 </template>
 
 <script>
   export default {
     config: {
-      navigationStyle: 'custom',
-      backgroundColor: '#fafafa',
+      navigationStyle: "custom",
+      backgroundColor: '#F6F6F6',
+      navigationBarTextStyle: "black",
+      scrollType: "div"
     },
     data() {
       return {
-
+        items: [
+          {
+            "id": 2,
+            "type": "1",
+            "titleName": "Velodyne推出了首款128线激光雷达",
+            "content": "Velodyne推出了首款128线激光雷达，据说它是全自动驾驶落地的利器-精选文章列表",
+            "datetime": "2018-10-22 13:33",
+            "collect": "10",
+            "source": "共享经济",
+            "dataType": "hot",
+            "imgarr": [{
+                "id": 2,
+                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+              },
+              {
+                "id": 2,
+                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+              },
+              {
+                "id": 2,
+                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+              }
+            ],
+            "articleType": [{
+              "id": 19,
+              "backgroundColor": "#d6e1f3",
+              "color": "#4285f4",
+              "content": "专题"
+            }]
+          },
+          {
+            "id": 2,
+            "type": "1",
+            "titleName": "Velodyne推出了首款128线激光雷达",
+            "content": "Velodyne推出了首款128线激光雷达，据说它是全自动驾驶落地的利器-精选文章列表",
+            "datetime": "2018-10-22 13:33",
+            "collect": "10",
+            "source": "共享经济",
+            "dataType": "hot",
+            "imgarr": [{
+                "id": 2,
+                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+              },
+              {
+                "id": 2,
+                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+              },
+              {
+                "id": 2,
+                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+              },
+              {
+                "id": 2,
+                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+              },
+              {
+                "id": 2,
+                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+              }
+            ],
+            "articleType": [{
+              "id": 19,
+              "backgroundColor": "#d6e1f3",
+              "color": "#4285f4",
+              "content": "专题"
+            }]
+          }
+        ]
       }
     },
     methods: {
-      navigateBack() {
+      navigateBack () {
         ui.navigateBack()
       },
-      // 我发出的通知单
-      openSendNoticeLetter() {
-        ui.navigateTo({
-          url: '/pages/application/noticeLetter/sendNoticeLetter'
-        })
+      openDetails (val) {
+        console.log(val)
+        // ui.navigateTo({
+        //   url: '/pages/templeteDemo/information/details'
+        // })
       },
-      // 我接收的通知单
-      openReceiveNoticeLetter() {
-        ui.navigateTo({
-          url: '/pages/application/noticeLetter/receiveNoticeLetter'
-        })
-      },
-      // 填写监理工程师通知单
-      writeNoticeLetter() {
-        ui.navigateTo({
-          url: '/pages/application/noticeLetter/writeNoticeLetter'
+      previewImage (imgarr, img) {
+        let imgUrls = []
+        for(let i in imgarr){
+          console.log(imgarr[i])
+          imgUrls.push(imgarr[i].imgsrc)
+        }
+        console.log(imgUrls)
+        ui.previewImage({
+          current: img.imgsrc, // 当前显示图片的http链接
+          urls: imgUrls, // 需要预览的图片http链接列表
+          success: function (res) {
+            console.log(res)
+          },
+          fail: function (res) {
+            console.log(res)
+          }
         })
       }
     },
-    mounted() {
-      console.log("项目日志 mounted")
-    }
+    mounted() {}
   }
 </script>
 
@@ -122,65 +175,62 @@
   .nav_bar {
     background: #fff;
 
-    .ui-icon {
-      color: #1890ff;
-    }
-
     .nav_title {
       color: #000;
-      font-size: 32rpx;
+      font-size: 16px;
       font-weight: bold;
     }
 
-    .nav_right {
-      color: #1890ff;
-      font-size: 16px;
+    .nav-right {
+      color: #3399ff;
+      font-size: 14px;
     }
   }
 
-  .contacts_list1 {
+  // 信息列表
+  .list-view {
+    margin: 10px;
     background-color: #fff;
+    padding: 5px 10px;
 
-    .left_icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10%;
-      background-color: #FCB300;
-      text-align: center;
-      line-height: 40px;
-      color: #fff;
+    .titleName {
+      color: #333;
       font-size: 16px;
     }
 
-    .text_content {
-      width: 100%;
-      height: 50px;
-      line-height: 50px;
-      color: #24292C;
+    .list-content {
+      color: #666;
+      font-size: 14px;
     }
+
+    // 中间图片
+    .imageList_win {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 auto;
+
+      .image {
+        margin: 3px;
+      }
+
+      .ui-image {
+        border-radius: 5px;
+      }
+    }
+
+    .color6 {
+      color: #666;
+    }
+
+    .small-font {
+      font-size: 12px;
+    }
+
   }
 
-  .contacts_list2 {
-    background-color: #fff;
-    .left_icon{
-      width: 40px;
-      height: 40px;
-      border-radius: 10%;
-      background-color:#1890ff; 
-      text-align: center;
-      line-height: 40px;
-      color: #fff;
-      font-size: 24px;
-    }
-    .text_content {
-      width: 100%;
-      height: 60px;
-      line-height: 60px;
-      color: #24292C;
-      .mix-1px(0, 0, 1, 0, #ccc);
-    }
-    .right_icon {
-      .mix-1px(0, 0, 1, 0, #ccc);
+  @media screen and (max-width: 320px) {
+    .small-font {
+      font-size: 10px;
     }
   }
 </style>

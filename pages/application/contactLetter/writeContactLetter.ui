@@ -239,7 +239,6 @@ export default {
         cancelButtonText: '继续填写',
         success: (result) => {
           if (result.confirm) {
-            
             ui.navigateBack()
           }
         }

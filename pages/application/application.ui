@@ -314,7 +314,7 @@ export default {
     // 日志
     openRiZhi () {
       ui.navigateTo({
-        url: '/pages/application/rizhi/rizhiWrite'
+        url: '/pages/application/rizhi/rizhi'
       })
     },
     // 审批

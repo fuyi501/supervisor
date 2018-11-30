@@ -30,25 +30,30 @@
         <ui-tab-view-body >
 
           <!-- 待回复列表 -->
-          <ui-view class="list-view" ui:for="{{items}}" ui:for-item="item" >
-            <ui-row space="10">
+          <ui-view class="list-view" ui:for="{{noticeLetterPendingList}}" ui:for-item="item" ui:if=" {{ item.state === '待回复' }} ">
+            <ui-row space="10" >
               <ui-col>
-                <ui-text class="titleName">{{item.titleName}}</ui-text>
+                <ui-text class="titleName">{{item.noticeName}} 发出的通知单 </ui-text>
               </ui-col>
-              <ui-col vertical-align="middle" align="right" width=40 bindtap="openDetails(item)">
-                <ui-text class="titleName">详情</ui-text>
+              <ui-col vertical-align="middle" align="right" bindtap="openDetails(item)">
+                <ui-text class="titleTime"> {{item.noticeTime}} </ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">{{item.content}}</ui-text>
+                <ui-text class="list-content">编号：{{item.noticeLetterNo}}</ui-text>
               </ui-col>
             </ui-row>
-            <ui-row space="20">
+            <ui-row space="10">
+              <ui-col>
+                <ui-text class="list-content">通知内容：{{item.noticeReason}}</ui-text>
+              </ui-col>
+            </ui-row>
+            <ui-row space="20" ui:if="{{ item.accessoryContent }}">
               <ui-col >
                 <ui-view class="imageList_win">
-                  <ui-view class="image" ui:for="{{item.imgarr}}" ui:for-item="image" bindtap="previewImage(item.imgarr, image)">
-                    <ui-image src="{{image.imgsrc}}" width="{{ imgWidth }}" height="{{ imgHeight }}" mode="aspectFill"></ui-image>
+                  <ui-view class="image" ui:for="{{item.accessoryContent}}" ui:for-item="image" bindtap="previewImage(item.accessoryContent, image)">
+                    <ui-image src="{{image}}" width="{{ imgWidth }}" height="{{ imgHeight }}" mode="aspectFill"></ui-image>
                   </ui-view>
                 </ui-view>
               </ui-col>
@@ -56,45 +61,50 @@
             <ui-row space="10">
               <ui-col vertical-align="bottom" span=8>
                 <ui-view>
-                  <ui-text class="color6 small-font">{{item.source}} ·</ui-text>
-                  <ui-text class="color6 small-font">{{item.datetime}}</ui-text>
+                  <ui-text class="status small-font">{{item.state}}</ui-text>
+                  <ui-text class="color6 small-font"> · {{item.timeLimit}}</ui-text>
                 </ui-view>
               </ui-col>
-              <ui-col vertical-align="bottom" align="right" space-right="10">
+              <ui-col vertical-align="bottom" align="right" space-right="5">
                 <ui-view>
-                  <ui-text class="color6 small-font">{{item.collect}}收藏</ui-text>
+                  <ui-text class="color6 small-font">查看详情</ui-text>
                 </ui-view>
               </ui-col>
             </ui-row>
           </ui-view>
 
-          <ui-view class="divider">
+          <!-- <ui-view class="divider">
             <ui-divider >没有新数据了</ui-divider>
-          </ui-view>
+          </ui-view> -->
 
         </ui-tab-view-body>
         <ui-tab-view-body >
 
           <!-- 已回复列表 -->
-          <ui-view class="list-view" ui:for="{{items}}" ui:for-item="item" >
+          <ui-view class="list-view" ui:for="{{noticeLetterRepliedList}}" ui:for-item="item">
+            <ui-row space="10" >
+              <ui-col>
+                <ui-text class="titleName">{{item.noticeName}} 发出的通知单 </ui-text>
+              </ui-col>
+              <ui-col vertical-align="middle" align="right">
+                <ui-text class="titleTime"> {{item.noticeTime}} </ui-text>
+              </ui-col>
+            </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="titleName">{{item.titleName}}</ui-text>
-              </ui-col>
-              <ui-col vertical-align="middle" align="right" width=40 bindtap="openDetails(item)">
-                <ui-text class="titleName">详情</ui-text>
+                <ui-text class="list-content">编号：{{item.noticeLetterNo}}</ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">{{item.content}}</ui-text>
+                <ui-text class="list-content">通知内容：{{item.noticeReason}}</ui-text>
               </ui-col>
             </ui-row>
-            <ui-row space="20">
-              <ui-col>
+            <ui-row space="20" ui:if="{{ item.accessoryContent }}">
+              <ui-col >
                 <ui-view class="imageList_win">
-                  <ui-view class="image" ui:for="{{item.imgarr}}" ui:for-item="image" bindtap="previewImage(item.imgarr, image)">
-                    <ui-image src="{{image.imgsrc}}" width="{{ imgWidth }}" height="{{ imgHeight }}" mode="aspectFill"></ui-image>
+                  <ui-view class="image" ui:for="{{item.accessoryContent}}" ui:for-item="image" bindtap="previewImage(item.accessoryContent, image)">
+                    <ui-image src="{{image}}" width="{{ imgWidth }}" height="{{ imgHeight }}" mode="aspectFill"></ui-image>
                   </ui-view>
                 </ui-view>
               </ui-col>
@@ -102,21 +112,21 @@
             <ui-row space="10">
               <ui-col vertical-align="bottom" span=8>
                 <ui-view>
-                  <ui-text class="color6 small-font">{{item.source}} ·</ui-text>
-                  <ui-text class="color6 small-font">{{item.datetime}}</ui-text>
+                  <ui-text class="status2 small-font">{{item.state}}</ui-text>
+                  <ui-text class="color6 small-font"> · {{item.timeLimit}}</ui-text>
                 </ui-view>
               </ui-col>
-              <ui-col vertical-align="bottom" align="right" space-right="10">
+              <ui-col vertical-align="bottom" align="right" space-right="5" bindtap="openDetails(item)">
                 <ui-view>
-                  <ui-text class="color6 small-font">{{item.collect}}收藏</ui-text>
+                  <ui-text class="color6 small-font">查看详情</ui-text>
                 </ui-view>
               </ui-col>
             </ui-row>
           </ui-view>
 
-          <ui-view class="divider">
+          <!-- <ui-view class="divider">
             <ui-divider >没有新数据了</ui-divider>
-          </ui-view>
+          </ui-view> -->
         </ui-tab-view-body>
       </template>
     </ui-tab-view>
@@ -133,72 +143,36 @@
       return {
         imgWidth: (ui.WIN_WIDTH-40)/4-8 + 'px', 
         imgHeight: (ui.WIN_WIDTH-40)/4-8 + 'px',
-        items: [
+        
+        // 测试用
+        noticeLetterPendingList: [ // 待回复列表
           {
-            "id": 1,
-            "type": "1",
-            "titleName": "傅毅发出的通知单",
-            "content": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
-            "datetime": "2018-10-22 13:33",
-            "collect": "10",
-            "source": "待回复",
-            "dataType": "hot",
-            "imgarr": [{
-                "id": 1,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 2,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 2,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              }
+            noticeName: '傅毅', // 发通知单的人
+            noticeLetterNo: 123,
+            noticeTime: '2018-11-29 12:23',
+            timeLimit: '3日内将整改完成并进行回复',
+            noticeLetterCon: '',
+            noticeReason: '是快递放假ask的飞机',
+            noticeContent: '',
+            accessoryContent: [
+              "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading",
+              "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading",
+              "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
             ],
-            "articleType": [{
-              "id": 19,
-              "backgroundColor": "#d6e1f3",
-              "color": "#4285f4",
-              "content": "专题"
-            }]
-          },
+            state: '待回复'
+          }
+        ], 
+        noticeLetterRepliedList: [ // 已回复列表
           {
-            "id": 2,
-            "type": "1",
-            "titleName": "傅毅发出的通知单",
-            "content": "这里有问题，需要修改",
-            "datetime": "2018-10-22 13:33",
-            "collect": "10",
-            "source": "已整改并回复",
-            "dataType": "hot",
-            "imgarr": [{
-                "id": 1,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 2,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 3,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 4,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 5,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              }
-            ],
-            "articleType": [{
-              "id": 19,
-              "backgroundColor": "#d6e1f3",
-              "color": "#4285f4",
-              "content": "专题"
-            }]
+            noticeName: '傅毅', // 发通知单的人
+            noticeLetterNo: 123,
+            noticeTime: '2018-11-30 12:34',
+            timeLimit: '',
+            noticeLetterCon: '',
+            noticeReason: '有问题要整改',
+            noticeContent: '',
+            accessoryContent: [],
+            state: '已回复'
           }
         ]
       }
@@ -208,26 +182,52 @@
         ui.navigateBack()
       },
       previewImage (imgarr, img) {
+        console.log('imgarr:', imgarr)
         let imgUrls = []
         for(let i in imgarr){
           console.log(imgarr[i])
-          imgUrls.push(imgarr[i].imgsrc)
+          imgUrls.push(imgarr[i])
         }
-        console.log(imgUrls)
+        console.log('imgUrls:', imgUrls)
         ui.previewImage({
-          current: img.imgsrc, // 当前显示图片的http链接
+          current: img, // 当前显示图片的http链接
           urls: imgUrls, // 需要预览的图片http链接列表
-          success: function (res) {
-            console.log(res)
-          },
-          fail: function (res) {
-            console.log(res)
-          }
         })
+      },
+      // 查看详情
+      openDetails (item) {
+        console.log(item)
       }
     },
     mounted() {
       console.log("我发出的监理通知单 mounted", ui.WIN_WIDTH)
+
+      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+      console.log("我发出的监理通知单:", LocalUserInfo)
+      this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
+      let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
+      console.log("我发出的监理通知单页面：", LocalProjectInfoList[0])
+      this.projectName = LocalProjectInfoList[0].itemName
+      this.projectId = LocalProjectInfoList[0].itemId
+
+      let LocalNoticeLetterInfoList = ui.getStorageSync('LocalNoticeLetterInfoList')
+      console.log('LocalNoticeLetterInfoList:', LocalNoticeLetterInfoList)
+
+      LocalNoticeLetterInfoList.noticeLetterInfoList.forEach((item, index) => {
+
+        this.noticeLetterPendingList.push({
+          noticeName: '傅毅', // 发通知单的人
+          noticeLetterNo: item.noticeLetterNo,
+          noticeTime: item.noticeTime,
+          timeLimit: item.timeLimit,
+          noticeLetterCon: item.noticeLetterCon,
+          noticeReason: item.noticeReason,
+          noticeContent: item.noticeContent,
+          accessoryContent: item.accessoryContent,
+          state: '待回复'
+        })
+      })
     }
   }
 </script>
@@ -272,8 +272,17 @@
     padding: 5px 10px;
 
     .titleName {
-      color: #333;
+      color: #262626;
       font-size: 16px;
+    }
+    .titleTime {
+      color: #8c8c8c;
+      font-size: 12px;
+    }
+
+    .content_No {
+      color: #666;
+      font-size: 14px;
     }
 
     .list-content {
@@ -296,6 +305,12 @@
       }
     }
 
+    .status {
+      color: #FAAD14;
+    }
+    .status2 {
+      color: #1890ff;
+    }
     .color6 {
       color: #666;
     }

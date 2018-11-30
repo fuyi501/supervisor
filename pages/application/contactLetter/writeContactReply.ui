@@ -45,7 +45,7 @@
         <ui-col vertical-align="middle" align="right" space-right="15">
           <ui-view class="">
             <ui-input
-              placeholder="请输入项目监理机构名称"
+              placeholder="请输入联系单编号"
               placeholder-style="color:#999B9E"
               show-clear="{{true}}"
               ui:model="{{ contactReplyNo }}"
