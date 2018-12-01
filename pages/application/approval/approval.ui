@@ -28,7 +28,7 @@
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openMyApproval">
                 <ui-icon type="fasong" color="#ffa940" size="40"></ui-icon>    
-                <ui-view class="app_text">我发起的</ui-view>           
+                <ui-view class="app_text">我的申请</ui-view>           
             </ui-col>
           </ui-row>
         </ui-col>

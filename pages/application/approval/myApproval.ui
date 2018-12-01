@@ -9,7 +9,7 @@
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <ui-view class="nav_title">我审批的</ui-view>
+          <ui-view class="nav_title">我的申请</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="50">
           <ui-view class="nav_right">更多</ui-view>
@@ -167,6 +167,10 @@
         })
       })
 
+      // 逆序，按时间顺序排列
+      this.myApprovalList.sort((a,b)=>{
+          return Date.parse(b.createTime) - Date.parse(a.createTime); // 时间逆序
+      })
     }
   }
 </script>
