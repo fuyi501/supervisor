@@ -295,6 +295,11 @@
         })
       })
 
+      // 逆序，按时间逆序排列
+      this.contactReplyPendingList.sort((a,b)=>{
+          return Date.parse(b.contactReplyTime) - Date.parse(a.contactReplyTime); // 时间逆序
+      })
+
     }
   }
 </script>

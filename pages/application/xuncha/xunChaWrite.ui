@@ -115,7 +115,7 @@
             <ui-view bindtap="deleteAccessory(index, item)">
               <ui-view class="close">x</ui-view>
               <ui-image
-              src="{{ item }}"
+              src="{{ item.imgsrc }}"
               mode='aspectFill'
               width="60"
               height="60"

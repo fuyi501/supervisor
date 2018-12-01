@@ -73,17 +73,17 @@
                 <ui-icon type="shenpi3" color="#faad14" size="30"></ui-icon>    
                 <ui-view class="app_text">审批</ui-view>           
             </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openAskOff">
+                <!-- <ui-icon type="qingjia1" color="#1890ff" size="30"></ui-icon>    
+                <ui-view class="app_text">请假</ui-view>            -->
+            </ui-col>
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openBuKa">
+                <!-- <ui-icon type="buka1" color="#1890ff" size="30"></ui-icon>    
+                <ui-view class="app_text">补卡</ui-view>              -->
+            </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
                 <!-- <ui-icon type="rizhi3" color="#ff525d" size="30"></ui-icon>    
                 <ui-view class="app_text"></ui-view> -->
-            </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <!-- <ui-icon type="pangzhan" color="#28aa91" size="30"></ui-icon> 
-                <ui-view class="app_text"></ui-view>  -->
-            </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <!-- <ui-icon type="xuncha" color="#fc9153" size="30"></ui-icon>    
-                <ui-view class="app_text"></ui-view>              -->
             </ui-col>
           </ui-row>
           
@@ -157,19 +157,19 @@
         <ui-col span=12>
           <ui-row>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="rizhi2" color="red" size="30"></ui-icon>    
+                <ui-icon type="rizhi2" color="#1890ff" size="30"></ui-icon>    
                 <ui-view class="app_text">汇报</ui-view>              
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="ribao1" color="#8bb93f" size="30"></ui-icon>    
+                <ui-icon type="ribao1" color="#1890ff" size="30"></ui-icon>    
                 <ui-view class="app_text">日报</ui-view>             
             </ui-col>
             <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="zhoubao1" color="#ff525d" size="30"></ui-icon>    
+                <ui-icon type="zhoubao1" color="#1890ff" size="30"></ui-icon>    
                 <ui-view class="app_text">周报</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="yuebao" color="red" size="30"></ui-icon>    
+                <ui-icon type="yuebao" color="#1890ff" size="30"></ui-icon>    
                 <ui-view class="app_text">月报</ui-view>              
             </ui-col>
           </ui-row>

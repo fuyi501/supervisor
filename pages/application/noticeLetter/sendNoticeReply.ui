@@ -247,6 +247,11 @@
         })
       })
 
+      // 逆序，按时间逆序排列
+      this.noticeReplyPendingList.sort((a,b)=>{
+          return Date.parse(b.noticeReplyTime) - Date.parse(a.noticeReplyTime); // 时间逆序
+      })
+
     }
   }
 </script>

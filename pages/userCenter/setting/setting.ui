@@ -98,7 +98,8 @@ export default {
       console.log(LocalUserInfo)
 
       ui.showToast({ title: '退出成功', icon: 'success' })
-      ui.clearStorage('LocalUserInfo')
+      ui.removeStorageSync('LocalUserInfo') // 移除本地数据缓存
+      ui.clearStorageSync() // 清除本地数据缓存
 
       // 这里应该跳转到登陆页面
       ui.navigateTo({

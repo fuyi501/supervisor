@@ -39,7 +39,7 @@
       </ui-row>
       <ui-row height="40" class="info_header" bindtap="">
         <ui-col span=12 vertical-align="middle" align="left" space-left=10>
-          <ui-view>地铁六号线标段一</ui-view>
+          <ui-view>{{ itemName }}</ui-view>
         </ui-col>
       </ui-row>
       <ui-row height="40" class="info_footer">
@@ -52,7 +52,7 @@
       </ui-row>
     </ui-view>
 
-    <ui-view class="data_info">2018-10-21 星期日</ui-view>
+    <ui-view class="data_info">{{ nowDate }}</ui-view>
 
     <ui-view class="template_list">
       <ui-view class="chart_template" >
@@ -161,6 +161,8 @@
 
 
 <script>
+import dayjs from '#/static/utils/dayjs'
+
   export default {
     config: {
       navigationStyle: 'custom',
@@ -169,19 +171,24 @@
     },
     data() {
       return {
-        isLogin: false,
-        nav_title: "项目管理",
-        scanShow: false,
-        src: 'http://images.uileader.com/20171103/5906a28c-0f12-4b71-8df2-98791d8716f6.jpg',
-
         // 下拉刷新
         pullDown: {
           distance: 50,
           disableContentMove: [''],
           onBegin: () => {},
-          onActive: this.getItems,
+          // onActive: this.getItems,
           // onAfter: this.handleAfter
         },
+
+        nav_title: "项目管理",
+        isLogin: false,
+        scanShow: false,
+        src: 'http://images.uileader.com/20171103/5906a28c-0f12-4b71-8df2-98791d8716f6.jpg',
+
+        tokenId: '',
+        itemId: '',
+        itemName: '',
+        nowDate: '',
         donut: {
           data: [
             {
@@ -216,15 +223,11 @@
               id: 3,
               name: '迟到'
             }
-
           ],
           textSize: 12,
           colorSchema: ['#2ec7ff', '#3f8ff1', '#ff574d']
         }
       }
-    },
-    created() {
-      console.log('isLogin:', this.isLogin)
     },
     methods: {
 
@@ -241,25 +244,14 @@
           success: function (result) {
             console.log("请求项目返回的数据:", result)
             if (result.statusCode === 200) {
-              ui.showToast({
-                title: '请求成功',
-                icon: 'success'
-              })
+              ui.showToast({title: '请求成功',icon: 'success'})
               that.items = result.data
-
             } else {
-              ui.showToast({
-                title: '请求失败',
-                icon: 'success'
-              })
+              ui.showToast({title: '请求失败',icon: 'success'})
             }
           },
-          fail: function ({
-            errMsg
-          }) {
-            ui.showToast({
-              title: '请求失败' + errMsg
-            })
+          fail: function ({errMsg}) {
+            ui.showToast({title: '请求失败' + errMsg})
           }
         })
       },
@@ -272,31 +264,60 @@
         if (text === '扫一扫') {
           // 只允许从相机扫码
           ui.scanCode({
-            onlyFromCamera: true,
+            onlyFromCamera: false,
             success: (res) => {
               console.log(res)
-              ui.showAlert({
-                title: '扫码结果',
-                content: res.result
-              })
+              ui.showAlert({title: '扫码结果',content: res.result})
             }
           })
         } else {
-          ui.showToast({
-            title: text
-          })
+          ui.showToast({title: text})
         }
       },
       // 查看项目详情
       handleItems(val) {
         console.log("项目名字：", val.projectName)
-        ui.setStorageSync('itemInfo', val)
-        ui.navigateTo({
-          url: '/pages/items/itemDetail'
-        })
       }
     },
     mounted() {
+
+      window.setTimeout(() => {
+        ui.closeSplashscreen()
+      }, 1000)
+
+      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+      console.log("工作首页 LocalUserInfo:", LocalUserInfo)
+      if(LocalUserInfo === null){
+        ui.navigateTo({
+          url: '/pages/userCenter/login/loginInterface'
+        })
+      }else if(!LocalUserInfo.isLogin){
+        ui.redirectTo({
+          url: '/pages/userCenter/login/loginInterface'
+        })
+      }
+
+      this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
+      let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
+      console.log("旁站页面：", LocalProjectInfoList[0])
+      this.itemName = LocalProjectInfoList[0].itemName
+      this.itemId = LocalProjectInfoList[0].itemId
+
+      let weekday = dayjs().day()
+      switch (weekday)
+      { 
+        case 0: weekday="星期日"; break;
+        case 1: weekday="星期一"; break;
+        case 2: weekday="星期二"; break;
+        case 3: weekday="星期三"; break;
+        case 4: weekday="星期四"; break;
+        case 5: weekday="星期五"; break;
+        case 6: weekday="星期六"; break;
+      }
+
+      this.nowDate = dayjs().format('YYYY-MM-DD ') + weekday
+      
       // this.getItems()
       
       // // 监听推送消息
@@ -322,25 +343,6 @@
       //     }
       //   })
       // })
-
-      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
-      console.log("工作首页 LocalUserInfo:", LocalUserInfo)
-      if(LocalUserInfo === null){
-        ui.navigateTo({
-          url: '/pages/userCenter/login/loginInterface'
-        })
-      }else{
-        if(!LocalUserInfo.isLogin){
-          ui.redirectTo({
-            url: '/pages/userCenter/login/loginInterface'
-          })
-        }
-      }
-      
-      window.setTimeout(() => {
-        ui.closeSplashscreen()
-      }, 1000)
-
     }
   }
 </script>

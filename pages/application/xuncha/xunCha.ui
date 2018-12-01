@@ -1,6 +1,6 @@
 <!---->
 <template>
-  <ui-page>
+  <ui-page page-load="{{ pageLoad }}">
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
         <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
@@ -17,7 +17,7 @@
       </ui-row>
     </ui-nav-bar>
 
-    <ui-tab-view class="type-badge">
+    <ui-tab-view class="type-badge" on-active="{{ getXunChaInfo }}" pull-down-distance="50">
       <template slot="header">
         <ui-tab-view-header>
           <ui-view>未完成</ui-view>
@@ -27,7 +27,7 @@
         </ui-tab-view-header>
       </template>
       <template slot="body">
-        <ui-tab-view-body >
+        <ui-tab-view-body enable-pull-down-refresh>
 
           <!-- 待审批列表 -->
           <ui-view class="list-view" ui:for="{{xunChaPendingList}}" ui:for-item="item" >
@@ -83,7 +83,7 @@
           </ui-view> -->
 
         </ui-tab-view-body>
-        <ui-tab-view-body >
+        <ui-tab-view-body enable-pull-down-refresh>
 
           <!-- 已审批列表 -->
           <ui-view class="list-view" ui:for="{{xunChaApprovalList}}" ui:for-item="item" >
@@ -158,15 +158,43 @@
     },
     data() {
       return {
+        pageLoad: {// 进入页面先判断是否有地理数据保存在 本地存储中
+          trigger: 'always',
+          handle: () => {
+            console.log("巡查 pageLoad")
+
+            // let LocalXunChaInfoList = ui.getStorageSync('LocalXunChaInfoList')
+            // console.log('LocalXunChaInfoList:', LocalXunChaInfoList)
+            // if(LocalXunChaInfoList){
+            //   LocalXunChaInfoList.xunChaInfoList.forEach((item, index) => {
+            //     this.xunChaPendingList.push({
+            //       xunChaNo: item.xunChaNo,
+            //       itemName: item.itemName,
+            //       xunChaTime: item.xunChaTime,
+            //       isReply: item.isReply, // 是否需要回复
+            //       xunChaPosition: item.xunChaPosition,
+            //       xunChaItemProblem: item.xunChaItemProblem,
+            //       xunChaResolution: item.xunChaResolution,
+            //       accessoryContent: item.accessoryContent,
+            //       state: '待审批'
+            //     })
+            //   })
+            //   // 逆序，按时间逆序排列
+            //   this.xunChaPendingList.sort((a,b)=>{
+            //       return Date.parse(b.xunChaTime) - Date.parse(a.xunChaTime); // 时间逆序
+            //   })
+            // }
+          }
+        },
         imgWidth: (ui.WIN_WIDTH-40)/4-8 + 'px', 
         imgHeight: (ui.WIN_WIDTH-40)/4-8 + 'px',
 
         xunChaPendingList: [ // 待审批列表
           {
             "id": 1,
-            "itemName": "傅毅发出的联系单",
+            "itemName": "地铁六号线标段一",
             "itemId": '',
-            "xunChaNo": "pz123",
+            "xunChaNo": "xc123",
             "xunChaTime": "2018-10-22 13:33",
             "xunChaPosition": "管道处",
             "xunChaItemProblem": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
@@ -191,11 +219,11 @@
         xunChaApprovalList: [ // 已审批列表
           {
             "id": 1,
-            "itemName": "傅毅发出的联系单",
+            "itemName": "地铁六号线标段一",
             "itemId": '',
-            "xunChaNo": "pz123",
+            "xunChaNo": "xc123",
             "xunChaTime": "2018-10-22 13:33",
-            "xunChaPosition": "待审批",
+            "xunChaPosition": "西门",
             "xunChaItemProblem": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
             "xunChaResolution": "整改",
             "state": "已审批",
@@ -224,9 +252,34 @@
         console.log(item)
       },
       addXunChaWrite () {
-        console.log('dianji')
         ui.navigateTo({
           url: '/pages/application/xuncha/xunChaWrite'
+        })
+      },
+      // 获取巡查信息
+      getXunChaInfo () {
+        
+        this.xunChaPendingList = []
+        
+        let LocalXunChaInfoList = ui.getStorageSync('LocalXunChaInfoList')
+        console.log('获取巡查信息:', LocalXunChaInfoList)
+
+        LocalXunChaInfoList.xunChaInfoList.forEach((item, index) => {
+
+          this.xunChaPendingList.push({
+            xunChaNo: item.xunChaNo,
+            itemName: item.itemName,
+            xunChaTime: item.xunChaTime,
+            xunChaPosition: item.xunChaPosition,
+            xunChaItemProblem: item.xunChaItemProblem,
+            xunChaResolution: item.xunChaResolution,
+            accessoryContent: item.accessoryContent,
+            state: '待审批'
+          })
+        })
+        // 逆序，按时间逆序排列
+        this.xunChaPendingList.sort((a,b)=>{
+            return Date.parse(b.xunChaTime) - Date.parse(a.xunChaTime); // 时间逆序
         })
       },
       previewImage (imgarr, img) {
@@ -258,18 +311,7 @@
         }
         ui.setStorageSync('LocalXunChaInfoList', LocalXunChaInfoList)
       }else{
-        LocalXunChaInfoList.xunChaInfoList.forEach((item, index) => {
-
-          this.xunChaPendingList.push({
-            xunChaNo: item.xunChaNo,
-            itemName: item.itemName,
-            xunChaTime: item.xunChaTime,
-            xunChaPosition: item.xunChaPosition,
-            xunChaContent: item.xunChaContent,
-            accessoryContent: item.accessoryContent,
-            state: '待审批'
-          })
-        })
+        this.getXunChaInfo()
       }
 
     }

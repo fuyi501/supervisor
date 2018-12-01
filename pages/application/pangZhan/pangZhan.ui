@@ -1,6 +1,6 @@
 <!---->
 <template>
-  <ui-page>
+  <ui-page page-load="{{ pageLoad }}">
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
         <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
@@ -17,7 +17,7 @@
       </ui-row>
     </ui-nav-bar>
 
-    <ui-tab-view class="type-badge">
+    <ui-tab-view class="type-badge" on-active="{{ getPangZhanInfo }}" pull-down-distance="50">
       <template slot="header">
         <ui-tab-view-header>
           <ui-view>未完成</ui-view>
@@ -27,7 +27,7 @@
         </ui-tab-view-header>
       </template>
       <template slot="body">
-        <ui-tab-view-body >
+        <ui-tab-view-body enable-pull-down-refresh>
 
           <!-- 待审批列表 -->
           <ui-view class="list-view" ui:for="{{pangZhanPendingList}}" ui:for-item="item" >
@@ -78,7 +78,7 @@
           </ui-view> -->
 
         </ui-tab-view-body>
-        <ui-tab-view-body >
+        <ui-tab-view-body enable-pull-down-refresh>
 
           <!-- 已审批列表 -->
           <ui-view class="list-view" ui:for="{{pangZhanApprovalList}}" ui:for-item="item" >
@@ -148,17 +148,43 @@
     },
     data() {
       return {
+        pageLoad: {// 进入页面先判断是否有地理数据保存在 本地存储中
+          trigger: 'always',
+          handle: () => {
+            console.log("旁站 pageLoad")
+
+            // let LocalPangZhanInfoList = ui.getStorageSync('LocalPangZhanInfoList')
+            // console.log('LocalPangZhanInfoList:', LocalPangZhanInfoList)
+            // if(LocalPangZhanInfoList){
+            //   LocalPangZhanInfoList.pangZhanInfoList.forEach((item, index) => {
+            //     this.pangZhanPendingList.push({
+            //       pangZhanNo: item.pangZhanNo,
+            //       itemName: item.itemName,
+            //       pangZhanTime: item.pangZhanTime,
+            //       pangZhanPosition: item.pangZhanPosition,
+            //       pangZhanContent: item.pangZhanContent,
+            //       accessoryContent: item.accessoryContent,
+            //       state: '待审批'
+            //     })
+            //   })
+            //   // 逆序，按时间逆序排列
+            //   this.pangZhanPendingList.sort((a,b)=>{
+            //       return Date.parse(b.pangZhanTime) - Date.parse(a.pangZhanTime); // 时间逆序
+            //   })
+            // }
+          }
+        },
         imgWidth: (ui.WIN_WIDTH-40)/4-8 + 'px', 
         imgHeight: (ui.WIN_WIDTH-40)/4-8 + 'px',
 
         pangZhanPendingList: [ // 待审批列表
           {
             "id": 1,
-            "itemName": "傅毅发出的联系单",
+            "itemName": "地铁六号线一标段",
             "itemId": '',
             "pangZhanNo": "pz123",
             "pangZhanTime": "2018-10-22 13:33",
-            "pangZhanPosition": "待审批",
+            "pangZhanPosition": "桥梁处",
             "pangZhanContent": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
             "state": "待审批",
             "accessoryContent": [{
@@ -180,11 +206,11 @@
         pangZhanApprovalList: [ // 已审批列表
           {
             "id": 1,
-            "itemName": "傅毅发出的联系单",
+            "itemName": "地铁六号线一标段",
             "itemId": '',
             "pangZhanNo": "pz123",
             "pangZhanTime": "2018-10-22 13:33",
-            "pangZhanPosition": "待审批",
+            "pangZhanPosition": "校园路",
             "pangZhanContent": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
             "state": "已审批",
             "accessoryContent": [{
@@ -212,9 +238,30 @@
         console.log(item)
       },
       addPangZhanWrite () {
-        console.log('dianji')
         ui.navigateTo({
           url: '/pages/application/pangZhan/pangZhanWrite'
+        })
+      },
+      // 获取 旁站 信息
+      getPangZhanInfo () {
+        this.pangZhanPendingList = []
+        let LocalPangZhanInfoList = ui.getStorageSync('LocalPangZhanInfoList')
+        console.log('获取旁站信息:', LocalPangZhanInfoList)
+        LocalPangZhanInfoList.pangZhanInfoList.forEach((item, index) => {
+
+          this.pangZhanPendingList.push({
+            pangZhanNo: item.pangZhanNo,
+            itemName: item.itemName,
+            pangZhanTime: item.pangZhanTime,
+            pangZhanPosition: item.pangZhanPosition,
+            pangZhanContent: item.pangZhanContent,
+            accessoryContent: item.accessoryContent,
+            state: '待审批'
+          })
+        })
+        // 逆序，按时间逆序排列
+        this.pangZhanPendingList.sort((a,b)=>{
+            return Date.parse(b.pangZhanTime) - Date.parse(a.pangZhanTime); // 时间逆序
         })
       },
       previewImage (imgarr, img) {
@@ -246,18 +293,7 @@
         }
         ui.setStorageSync('LocalPangZhanInfoList', LocalPangZhanInfoList)
       }else{
-        LocalPangZhanInfoList.pangZhanInfoList.forEach((item, index) => {
-
-          this.pangZhanPendingList.push({
-            pangZhanNo: item.pangZhanNo,
-            itemName: item.itemName,
-            pangZhanTime: item.pangZhanTime,
-            pangZhanPosition: item.pangZhanPosition,
-            pangZhanContent: item.pangZhanContent,
-            accessoryContent: item.accessoryContent,
-            state: '待审批'
-          })
-        })
+        this.getPangZhanInfo()
       }
 
     }

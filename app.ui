@@ -166,17 +166,17 @@ export default {
         "list": [
           {
             "pagePath": "pages/application/rizhi/rizhi",
-            "iconName": "daka2",
+            "iconName": "pangzhan2",
             "text": "写日志"
           },
           {
             "pagePath": "pages/application/rizhi/rizhiWatch",
-            "iconName": "daka4",
+            "iconName": "rizhi",
             "text": "看日志"
           },
           {
             "pagePath": "pages/application/rizhi/rizhiStatistics",
-            "iconName": "daka4",
+            "iconName": "baobiao",
             "text": "统计"
           }
         ]

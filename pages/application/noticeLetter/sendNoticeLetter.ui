@@ -228,6 +228,11 @@
           state: '待回复'
         })
       })
+
+      // 逆序，按时间逆序排列
+      this.noticeLetterPendingList.sort((a,b)=>{
+          return Date.parse(b.noticeTime) - Date.parse(a.noticeTime); // 时间逆序
+      })
     }
   }
 </script>
