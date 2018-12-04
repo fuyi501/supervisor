@@ -31,7 +31,7 @@
     </ui-view>
 
     <ui-view class="qiandaoCentent">
-      <ui-row height="100" border-bottom ui:for="{{qianDaoList}}" ui:for-item="qianDaoItem" ui:if="{{ qianDaoList.length > 0 }}">
+      <ui-row height="100" border-bottom ui:for="{{qianDaoList}}" ui:for-item="qianDaoItem" ui:if="{{ qianDaoList.length !== 0 }}">
         <ui-col width="80" align="center" vertical-align="middle">
           <ui-view class="left_icon">{{ getFirstName(qianDaoItem.name) }}</ui-view>
         </ui-col>
@@ -88,12 +88,12 @@ import dayjs from '#/static/utils/dayjs'
         latitude: 30.768075, // 纬度
         longitude: 103.986003, // 经度
         qianDaoList: [ // 签到数据列表
-          {  
-            name: '傅毅',
-            qianDaoTime: '11:20', 
-            qianDaoNumber: 1,
-            qianDaoAddress: '西南交大犀浦校区'
-          }
+          // {  
+          //   name: '傅毅',
+          //   qianDaoTime: '11:20', 
+          //   qianDaoNumber: 1,
+          //   qianDaoAddress: '西南交大犀浦校区'
+          // }
         ],
         markers: [
           // { // 地图上的 markers
@@ -113,6 +113,7 @@ import dayjs from '#/static/utils/dayjs'
       console.log('签到统计页面', LocalQianDaoInfo)
       if(LocalQianDaoInfo){
         let qianDaoInfoList = LocalQianDaoInfo.qianDaoInfoList
+        console.log(qianDaoInfoList)
         for( let i in qianDaoInfoList){
           this.qianDaoList.push({
             name: '傅毅',

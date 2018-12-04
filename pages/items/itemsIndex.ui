@@ -193,7 +193,7 @@ export default {
     let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
     console.log("组织项目信息：", LocalProjectInfoList)
     if(LocalProjectInfoList === null){
-      // this.getItemsInfo() // 现在暂时不在网上查
+      this.getItemsInfo() // 现在暂时不在网上查
     }else{
       this.LocalProjectInfoList = LocalProjectInfoList
     }

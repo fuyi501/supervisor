@@ -35,7 +35,7 @@
         </ui-col>
         <ui-col vertical-align="middle" align="right" space="20">
           <ui-view class="right_column">
-            {{ industry ? industry : '必填' }}
+            {{ industry ? industry.name : '必填' }}
             <ui-icon type="arrow-right" size="16" color="#999B9E"></ui-icon>
           </ui-view>
         </ui-col>

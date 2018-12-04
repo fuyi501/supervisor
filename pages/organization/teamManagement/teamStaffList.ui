@@ -210,6 +210,8 @@ export default {
 
     let LocalTeamTreeInfo = ui.getStorageSync('LocalTeamTreeInfo')
     console.log("团队组织树信息：", LocalTeamTreeInfo)
+      this.getTeamTreeInfo()
+
 
     if( LocalTeamTreeInfo === null ) {
       this.getTeamTreeInfo()

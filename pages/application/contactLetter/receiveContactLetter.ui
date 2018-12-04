@@ -1,4 +1,5 @@
 <!---->
+import rizhiUi from '../rizhi/rizhi.ui';
 <template>
   <ui-page>
     <ui-nav-bar slot="nav-bar" class="nav_bar">
@@ -30,25 +31,30 @@
         <ui-tab-view-body >
 
           <!-- 待审批列表 -->
-          <ui-view class="list-view" ui:for="{{contactLetterPendingList}}" ui:for-item="item" >
-            <ui-row space="10">
+          <ui-view class="list-view" ui:for="{{contactPendingList}}" ui:for-item="item" ui:if=" {{ item.state === '待审批' }} ">
+            <ui-row space="10" >
               <ui-col>
-                <ui-text class="titleName">{{item.titleName}}</ui-text>
+                <ui-text class="titleName">{{item.contactName}} 发出的联系单 </ui-text>
               </ui-col>
-              <ui-col vertical-align="middle" align="right" width=40 bindtap="openDetails(item)">
-                <ui-text class="titleName">详情</ui-text>
+              <ui-col vertical-align="middle" align="right" bindtap="openDetails(item)">
+                <ui-text class="titleTime"> {{item.contactTime}} </ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">{{item.content}}</ui-text>
+                <ui-text class="list-content">编号：{{item.contactLetterNo}}</ui-text>
               </ui-col>
             </ui-row>
-            <ui-row space="20">
+            <ui-row space="10">
+              <ui-col>
+                <ui-text class="list-content">联系内容：{{item.contactReason}}</ui-text>
+              </ui-col>
+            </ui-row>
+            <ui-row space="20" ui:if="{{ item.accessoryContent }}">
               <ui-col >
                 <ui-view class="imageList_win">
-                  <ui-view class="image" ui:for="{{item.imgarr}}" ui:for-item="image" bindtap="previewImage(item.imgarr, image)">
-                    <ui-image src="{{image.imgsrc}}" width="{{ imgWidth }}" height="{{ imgHeight }}" mode="aspectFill"></ui-image>
+                  <ui-view class="image" ui:for="{{item.accessoryContent}}" ui:for-item="image" bindtap="previewImage(item.accessoryContent, image)">
+                    <ui-image src="{{image}}" width="{{ imgWidth }}" height="{{ imgHeight }}" mode="aspectFill"></ui-image>
                   </ui-view>
                 </ui-view>
               </ui-col>
@@ -56,13 +62,13 @@
             <ui-row space="10">
               <ui-col vertical-align="bottom" span=8>
                 <ui-view>
-                  <ui-text class="color6 small-font">{{item.source}} ·</ui-text>
-                  <ui-text class="color6 small-font">{{item.datetime}}</ui-text>
+                  <ui-text class="status small-font">{{item.state}} ·</ui-text>
+                  <ui-text class="color6 small-font">{{item.timeLimit}}</ui-text>
                 </ui-view>
               </ui-col>
-              <ui-col vertical-align="bottom" align="right" space-right="10">
+              <ui-col vertical-align="bottom" align="right" space-right="5">
                 <ui-view>
-                  <ui-text class="color6 small-font">{{item.collect}}收藏</ui-text>
+                  <ui-text class="color6 small-font">查看详情</ui-text>
                 </ui-view>
               </ui-col>
             </ui-row>
@@ -76,10 +82,10 @@
         <ui-tab-view-body >
 
           <!-- 已审批列表 -->
-          <ui-view class="list-view" ui:for="{{contactLetterApprovalList}}" ui:for-item="item" >
-            <ui-row space="10">
+          <ui-view class="list-view" ui:for="{{contactApprovalList}}" ui:for-item="item" ui:if=" {{ item.state === '已完成' }} ">
+            <ui-row space="10" >
               <ui-col>
-                <ui-text class="titleName">{{item.titleName}}</ui-text>
+                <ui-text class="titleName">{{item.contactName}} 发出的联系单 </ui-text>
               </ui-col>
               <ui-col vertical-align="middle" align="right" width=40 bindtap="openDetails(item)">
                 <ui-text class="titleName">详情</ui-text>
@@ -87,10 +93,10 @@
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">{{item.content}}</ui-text>
+                <ui-text class="list-content">编号：{{item.contactId}} ，内容：{{item.content}}</ui-text>
               </ui-col>
             </ui-row>
-            <ui-row space="20">
+            <ui-row space="20" ui:if=" {{ item.imgarr }} ">
               <ui-col>
                 <ui-view class="imageList_win">
                   <ui-view class="image" ui:for="{{item.imgarr}}" ui:for-item="image" bindtap="previewImage(item.imgarr, image)">
@@ -102,13 +108,13 @@
             <ui-row space="10">
               <ui-col vertical-align="bottom" span=8>
                 <ui-view>
-                  <ui-text class="color6 small-font">{{item.source}} ·</ui-text>
+                  <ui-text class="color6 small-font">{{item.state}} ·</ui-text>
                   <ui-text class="color6 small-font">{{item.datetime}}</ui-text>
                 </ui-view>
               </ui-col>
               <ui-col vertical-align="bottom" align="right" space-right="10">
                 <ui-view>
-                  <ui-text class="color6 small-font">{{item.collect}}收藏</ui-text>
+                  <ui-text class="color6 small-font">10 收藏</ui-text>
                 </ui-view>
               </ui-col>
             </ui-row>
@@ -131,69 +137,38 @@
     },
     data() {
       return {
+        tokenId: '',
         imgWidth: (ui.WIN_WIDTH-40)/4-8 + 'px', 
         imgHeight: (ui.WIN_WIDTH-40)/4-8 + 'px',
-        contactLetterPendingList: [ // 待审批列表
+        contactPendingList: [ // 待审批列表
           {
-            "id": 1,
-            "type": "1",
-            "titleName": "傅毅发出的联系单",
-            "content": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
-            "datetime": "2018-10-22 13:33",
-            "collect": "10",
-            "source": "待审批",
-            "dataType": "hot",
-            "imgarr": [{
-                "id": 1,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 2,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 2,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              }
+            contactName: '傅毅', // 发联系单的人
+            contactLetterNo: 123,
+            contactTime: '2018-11-29 12:23',
+            timeLimit: '3日内将整改完成并进行回复',
+            contactLetterCon: '',
+            contactReason: '是快递放假ask的飞机',
+            contactContent: '',
+            accessoryContent: [
+              "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading",
+              "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading",
+              "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
             ],
-            "articleType": [{
-              "id": 19,
-              "backgroundColor": "#d6e1f3",
-              "color": "#4285f4",
-              "content": "专题"
-            }]
+            state: '待审批'
           }
         ],
 
-        contactLetterApprovalList: [ // 已审批列表
+        contactApprovalList: [ // 已审批列表
           {
-            "id": 1,
-            "type": "1",
-            "titleName": "傅毅发出的联系单",
-            "content": "这里有问题，需要修改",
-            "datetime": "2018-10-22 13:33",
-            "collect": "10",
-            "source": "已审批",
-            "dataType": "hot",
-            "imgarr": [{
-                "id": 1,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 2,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              },
-              {
-                "id": 3,
-                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
-              }
-            ],
-            "articleType": [{
-              "id": 19,
-              "backgroundColor": "#d6e1f3",
-              "color": "#4285f4",
-              "content": "专题"
-            }]
+            contactName: '傅毅', // 发联系单的人
+            contactLetterNo: 123,
+            contactTime: '',
+            timeLimit: '',
+            contactLetterCon: '',
+            contactReason: '',
+            contactContent: '',
+            accessoryContent: [],
+            state: '已审批'
           }
         ]
       }
@@ -205,27 +180,114 @@
       openDetails (item) {
         console.log(item)
       },
+      getContactStateInfo () {
+        console.log('查询联系单状态信息')
+        ui.request({
+          url: 'sup/contact/list/all/1',
+          header: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.tokenId
+          },
+          method: 'GET',
+          success: (result) => {
+            console.log("返回结果:",result)
+            if(result.data.code === 2000){
+              
+              let contactInfo = result.data.data.list
+              for(let i in contactInfo){
+                console.log(i, contactInfo[i])
+                this.getContactDetailInfo(contactInfo[i].id) 
+              }
+           
+            }else{
+              console.log("查询联系单信息失败:",result)
+            }
+          },
+          fail: ({ errMsg }) => {
+            console.log("查询联系单信息失败:",errMsg)
+          }
+        })
+      },
+      getContactDetailInfo (contactId) {
+        console.log('查询联系单详细信息')
+        ui.request({
+          url: 'sup/contact/detail/' + contactId,
+          header: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.tokenId
+          },
+          method: 'GET',
+          success: (result) => {
+            console.log("返回结果:",result)
+            if(result.data.code === 2000){
+
+              let listdd = result.data.data.list[0].content
+              console.log('listdd:', listdd)
+              let ddd = JSON.parse(listdd)
+              console.log(JSON.parse(listdd))
+
+              let contactInfo = result.data.data
+
+              this.contactPendingList.push({
+                contactName: contactInfo.list[0].charName, // 发联系单的人
+                contactLetterNo: contactInfo.no,
+                contactTime: contactInfo.createAt,
+                timeLimit: '3日内将整改完成并进行回复',
+                contactLetterCon: contactInfo.topUnitName,
+                contactReason: ddd[0],
+                // contactContent: list[2],
+                accessoryContent: ddd[1],
+                state: '待审批'
+              })
+
+              console.log(this.contactPendingList)
+
+              // 逆序，按时间逆序排列
+              this.contactPendingList.sort((a,b)=>{
+                  return Date.parse(b.contactTime) - Date.parse(a.contactTime); // 时间逆序
+              })
+              
+              // let contactInfo = result.data.data
+              
+              // this.contactDetailInfo.push({
+              //   id: contactInfo.list[0].id,
+              //   contactName: contactInfo.list[0].charName,
+              //   contactId: contactInfo.no,
+              //   content: contactInfo.list[0].content,
+              //   datetime: contactInfo.createAt,
+              //   state: contactInfo.state === 'processing' ? '处理中' : '已完成'
+              // })
+              // console.log(this.contactDetailInfo)
+              
+            }else{
+              console.log("查询联系单详细信息失败:",result)
+            }
+          },
+          fail: ({ errMsg }) => {
+            console.log("查询联系单详细信息失败:",errMsg)
+          }
+        })
+      },
       previewImage (imgarr, img) {
         let imgUrls = []
         for(let i in imgarr){
           console.log(imgarr[i])
-          imgUrls.push(imgarr[i].imgsrc)
+          imgUrls.push(imgarr[i])
         }
         console.log(imgUrls)
         ui.previewImage({
-          current: img.imgsrc, // 当前显示图片的http链接
+          current: img, // 当前显示图片的http链接
           urls: imgUrls, // 需要预览的图片http链接列表
-          success: function (res) {
-            console.log(res)
-          },
-          fail: function (res) {
-            console.log(res)
-          }
         })
       }
     },
     mounted() {
       console.log("我审批的监理联系单 mounted", ui.WIN_WIDTH)
+      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+      console.log("监理工作联系单:", LocalUserInfo)
+      this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
+      this.getContactStateInfo()
     }
   }
 </script>

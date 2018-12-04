@@ -300,9 +300,13 @@ import dayjs from '#/static/utils/dayjs'
       this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
 
       let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
-      console.log("旁站页面：", LocalProjectInfoList[0])
-      this.itemName = LocalProjectInfoList[0].itemName
-      this.itemId = LocalProjectInfoList[0].itemId
+      if(LocalProjectInfoList){
+        console.log("首页：", LocalProjectInfoList[0])
+        this.itemName = LocalProjectInfoList[0].itemName 
+        this.itemId = LocalProjectInfoList[0].itemId
+      }else{
+        this.itemName = '添加项目'
+      }
 
       let weekday = dayjs().day()
       switch (weekday)

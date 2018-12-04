@@ -227,7 +227,11 @@ export default {
       contactContent: '', // 联系内容
 
       // 附件
-      accessoryContent: []
+      accessoryContent: [
+        "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading",
+        "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading",
+        "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+      ]
     }
   },
   methods: {
@@ -320,26 +324,7 @@ export default {
       } else if (!this.contactContent) {
         ui.showToast({ title: '请输入联系内容' })
       } else {
-        // this.paySubmit()
-
-        let LocalContactLetterInfoList = ui.getStorageSync('LocalContactLetterInfoList')
-        LocalContactLetterInfoList.contactLetterInfoList.push({
-          contactLetterNo: this.contactLetterNo,
-          contactTime: this.contactTime,
-          timeLimit: this.timeLimit,
-          contactLetterCon: this.contactLetterCon,
-          contactReason: this.contactReason,
-          contactContent: this.contactContent,
-          accessoryContent: this.accessoryContent
-        })
-        console.log('LocalContactLetterInfoList:', LocalContactLetterInfoList)
-        ui.setStorageSync('LocalContactLetterInfoList', LocalContactLetterInfoList)
-
-        ui.showToast({ title: '提交成功', icon: 'success' })
-        
-        window.setTimeout(() => {
-          ui.navigateBack()
-        }, 1000)
+        this.paySubmit()
 
       }
     },
@@ -350,7 +335,7 @@ export default {
         data: {
           "no": this.contactLetterNo, // 联系单编号
           "projectId": this.projectId, // 项目 ID 号
-          "content": this.contactReason, // 联系原因
+          "content": [this.contactReason, this.accessoryContent], // 联系原因
           "fileId": null, // 
           "conUnitId": this.conUnitId, // 施工公司 ID 号
         },
@@ -364,7 +349,24 @@ export default {
           if(result.data.code === 2000){
             console.log("提交施工联系单信息成功:",result.data)
             
-            ui.navigateBack()
+            let LocalContactLetterInfoList = ui.getStorageSync('LocalContactLetterInfoList')
+            LocalContactLetterInfoList.contactLetterInfoList.push({
+              contactLetterNo: this.contactLetterNo,
+              contactTime: this.contactTime,
+              timeLimit: this.timeLimit,
+              contactLetterCon: this.contactLetterCon,
+              contactReason: this.contactReason,
+              contactContent: this.contactContent,
+              accessoryContent: this.accessoryContent
+            })
+            console.log('LocalContactLetterInfoList:', LocalContactLetterInfoList)
+            ui.setStorageSync('LocalContactLetterInfoList', LocalContactLetterInfoList)
+
+            ui.showToast({ title: '提交成功', icon: 'success' })
+            
+            window.setTimeout(() => {
+              ui.navigateBack()
+            }, 1000)
       
           }else{
             console.log("提交施工联系单信息失败:",result)
@@ -383,9 +385,12 @@ export default {
     this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
 
     let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
-    console.log("监理工作联系单页面：", LocalProjectInfoList[0])
-    this.projectName = LocalProjectInfoList[0].itemName
-    this.projectId = LocalProjectInfoList[0].itemId
+    if(LocalProjectInfoList[0]){
+      console.log("监理工作联系单页面：", LocalProjectInfoList[0])
+      this.projectName = LocalProjectInfoList[0].itemName
+      this.projectId = LocalProjectInfoList[0].itemId
+    }
+    
 
     this.contactTime = dayjs().format("YYYY-MM-DD HH:mm")
 
