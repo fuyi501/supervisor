@@ -1,0 +1,442 @@
+<!--note.ui-->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">{{ pageTitle }}</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right">{{ pageTitleRight }}</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="form_content">
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            问题名称
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-input
+            placeholder="请输入问题名称"
+            placeholder-style="color:#999B9E"
+            show-clear="{{true}}"
+            ui:model="{{ itemName }}"
+          ></ui-input>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            单位工程
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-input
+            placeholder="请输入单位工程名称"
+            placeholder-style="color:#999B9E"
+            show-clear="{{true}}"
+            ui:model="{{ itemName }}"
+          ></ui-input>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            问题部位
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-input
+            placeholder="请输入问题部位"
+            placeholder-style="color:#999B9E"
+            show-clear="{{true}}"
+            ui:model="{{ itemName }}"
+          ></ui-input>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="90" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            施工单位
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-input
+            placeholder="请输入施工单位名称"
+            placeholder-style="color:#999B9E"
+            show-clear="{{true}}"
+            ui:model="{{ constructionUnit }}"
+          ></ui-input>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50" border-bottom bindtap="openSelectConTeam">
+        <ui-col vertical-align="middle" align="left" width="140" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            问题跟踪人
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-view class="active2" ui:if=" !companyName "> 请选择
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
+          <ui-view class="active" ui:else> {{ companyName }}
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            限期完成时间
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-view class="">
+           {{ xunChaTime }}
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="15" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" space="20">
+          <ui-switch title="下发监理通知单" bindchange="qualitySwitchChange"></ui-switch>
+        </ui-col>
+      </ui-row>
+
+      <!-- 附件 -->
+      <ui-view class="accessory_wrap">
+        <ui-text block>附件</ui-text>
+        <ui-view class="accessory_content">
+          <ui-view class="accessory_list" ui:for="{{ accessoryContent }}" ui:for-item="item">
+            <ui-view bindtap="deleteAccessory(index, item)">
+              <ui-view class="close">x</ui-view>
+              <ui-image
+              src="{{ item.imgsrc }}"
+              mode='aspectFill'
+              width="60"
+              height="60"
+              ></ui-image>
+            </ui-view>
+          </ui-view>
+          <ui-view class="add_accessory" bindtap="addAccessory">
+            <ui-view>
+              <ui-icon type="add" size="20" color="#B3B5B5"></ui-icon>
+            </ui-view>
+          </ui-view>
+        </ui-view>
+      </ui-view>
+
+      <!-- 提交按钮 -->
+      <ui-row height="60" space-top="10">
+        <ui-col vertical-align="middle" align="center" space="30">
+          <ui-button type="primary" bindtap="submit">立即提交</ui-button>
+        </ui-col>
+      </ui-row>
+
+    </ui-view>
+  </ui-page>
+</template>
+
+<script>
+
+import dayjs from '#/static/utils/dayjs'
+
+const sourceType = [['camera'], ['album'], ['camera', 'album']]
+const sizeType = [['compressed'], ['original'], ['compressed', 'original']]
+
+export default {
+  config: {
+    navigationStyle: 'custom',
+    backgroundColor: '#F6F6F6',
+    disableIosGesture: true,
+    navigationBarTextStyle: 'white',
+    delay: true
+  },
+  data () {
+    return {
+      pageTitle: '质量问题',
+      pageTitleRight: '统计',
+      tokenId: '',
+      itemName: '',
+      itemId: '',
+      xunChaNo: '', 
+      xunChaTime: '', // 巡查时间
+      isReply: false, // 是否回复
+      xunChaPosition: '', // 巡查部位
+
+      // 存在的问题
+      xunChaItemProblem: '', 
+      // 处理意见
+      xunChaResolution: '',
+      // 附件
+      accessoryContent: []
+    }
+  },
+  methods: {
+    // 返回按钮
+    navigateBack () {
+      ui.showConfirm({
+        content: '表单尚未提交，你要离开么？',
+        confirmButtonText: '离开',
+        cancelButtonText: '继续填写',
+        success: (result) => {
+          if (result.confirm) {
+            ui.navigateBack()
+          }
+        }
+      })
+    },
+    // 是否回复
+    handleSwitchChange (val) {
+      this.isReply = val
+    },
+    // 添加附件
+    addAccessory () {
+      this.chooseImage(2)
+    },
+    // 删除附件
+    deleteAccessory (index, imgPath) {
+      console.log('删除：', index, imgPath)
+      this.accessoryContent.splice(index, 1)
+    },
+    chooseImage (index) {
+      ui.chooseImage({
+        sourceType: sourceType[index],
+        sizeType: sizeType[1],
+        success: (res) => {
+          res.tempFilePaths.forEach((item, index) => {
+            // this.accessoryContent.push(item)
+            this.accessoryContent.push({
+              id: index,
+              imgsrc: item
+            })
+          })
+        },
+        fail: (res) => {
+          console.log("添加照片失败")
+        }
+      })
+    },
+    // 提交
+    submit () {
+      if (this.itemName === '') {
+        ui.showToast({ title: '请输入单位工程名称' })
+      } else if (this.xunChaItemProblem === '') {
+        ui.showToast({ title: '请输入存在的问题' })
+      } else if (this.xunChaResolution === '') {
+        ui.showToast({ title: '请输入处理意见' })
+      } else {
+      //  this.paySubmit()
+        let LocalXunChaInfoList = ui.getStorageSync('LocalXunChaInfoList')
+        LocalXunChaInfoList.xunChaInfoList.push({
+          xunChaNo: this.xunChaNo,
+          itemName: this.itemName,
+          xunChaTime: this.xunChaTime,
+          isReply: this.isReply, // 是否需要回复
+          xunChaPosition: this.xunChaPosition,
+          xunChaItemProblem: this.xunChaItemProblem,
+          xunChaResolution: this.xunChaResolution,
+          accessoryContent: this.accessoryContent
+        })
+        console.log('LocalXunChaInfoList:', LocalXunChaInfoList)
+        ui.setStorageSync('LocalXunChaInfoList', LocalXunChaInfoList)
+
+        ui.showToast({ title: '提交成功', icon: 'success' })
+        
+        window.setTimeout(() => {
+          ui.navigateBack()
+        }, 1000)
+      }
+    },
+    paySubmit () {
+      ui.showToast({ title: '提交成功', icon: 'success' })
+      setTimeout(() => {
+        ui.navigateBack()
+      }, 1000)
+    }
+  },
+  mounted () {
+    
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("旁站:", LocalUserInfo)
+    this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
+    let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
+    console.log("旁站页面：", LocalProjectInfoList[0])
+    this.itemName = LocalProjectInfoList[0].itemName
+    this.itemId = LocalProjectInfoList[0].itemId
+
+    this.xunChaTime = dayjs().format("YYYY-MM-DD HH:mm")
+
+  }
+}
+</script>
+
+<style lang="less">
+// 导航栏
+.nav_bar {
+  background: #fff;
+  .ui-icon {
+    color: #1890ff;
+  }
+  .nav_title {
+    color: #000;
+    font-size: 32rpx;
+    font-weight: bold;
+  }
+  .nav_right{
+    color: #1890ff;
+    font-size: 16px;
+  }
+}
+
+// 表单内容
+.form_content{
+  padding-top: 10px;
+  // .mix-1px(1, 0, 1, 0, #ccc);
+  .ui-row{
+    background: #fff;
+    .mix-1px(0, 0, 1, 0, #ccc);
+    .ui-view{
+      font-size: 14px;
+      color: #1A1E23;
+      &.right_column{
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+      }
+    }
+    .ui-row{
+      width: 100%;
+      .right_column{
+        width: 95%;
+        font-size: 12px;
+      }
+      .ui-textarea-wrapper{
+        padding: 10px;
+      }
+    }
+    .weui-cell{
+      padding: 0;
+    }
+    .ui-input{
+      border:0px;
+      padding: 0px;
+      .ui-input-inner{
+        height: 33px;
+        width: 100%;
+        text-align: right;
+      }
+    }
+  }
+}
+
+// 回复注意部分的样式
+.attention{
+  font-size: 12px;
+  color: #ccc;
+  padding: 0px 10px;
+}
+
+// 详情描述
+.detail_description{
+  margin-bottom: 10px;
+  background: #fff;
+  .ui-icon {
+    padding-left: 10px;
+  }
+  .ui-text{
+    // width: 70px;
+    text-align: left;
+    line-height: 30px;
+    color: #1A1E23;
+    font-size: 14px;
+  }
+  .ui-textarea-wrapper{
+    border: 0;
+    padding: 10px;
+  }
+}
+
+// 附件
+.accessory_wrap{
+  margin-bottom: 10px;
+  background: #fff;
+  padding: 0px 10px 10px 10px;
+  .ui-text{
+    text-align: left;
+    line-height: 40px;
+    color: #1A1E23;
+  }
+  .accessory_content{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+
+    .add_accessory{
+      display: inline-flex;
+      text-align: center;
+      .ui-view{
+        margin-right: 10px;
+        text-align: center;
+        width: 60px;
+        height: 60px;
+        background-color: #F4F4F4;
+        line-height: 60px;
+        text-align: center;
+      }
+    }
+    .accessory_list{
+      display: inline-flex;
+      margin-right: 5px;
+      position: relative;
+      .close{
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        z-index: 9;
+        background-color: #14171B;
+        line-height:15px;
+        text-align: center;
+        font-size: 12px;
+        color: #fff;
+      }
+    }
+  }
+}
+
+//弹窗
+.ui-confirm-content{
+  text-align: center;
+}
+
+</style>

@@ -1,0 +1,345 @@
+<!--note.ui-->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">{{ pageTitle }}</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50" bindtap="submit">
+          <ui-view class="nav_right">{{ pageTitleRight }}</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="form_content">
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            公告标题
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-input
+            placeholder="请输入公告标题"
+            placeholder-style="color:#999B9E"
+            show-clear="{{true}}"
+            ui:model="{{ announcementName }}"
+          ></ui-input>
+        </ui-col>
+      </ui-row>
+
+      <ui-view style="margin-top:10px" class="detail_description">
+        <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+        <ui-text>公告内容</ui-text>
+        <ui-textarea 
+          maxlength="-1" 
+          auto-height
+          placeholder="请输入公告内容"
+          placeholder-style="color:#999B9E" 
+          ui:model="{{ announcementContent }}">
+        </ui-textarea>
+      </ui-view>
+
+      <!-- 附件 -->
+      <ui-view class="accessory_wrap">
+        <ui-text block>附件</ui-text>
+        <ui-view class="accessory_content">
+          <ui-view class="accessory_list" ui:for="{{ accessoryContent }}" ui:for-item="item">
+            <ui-view bindtap="deleteAccessory(index, item)">
+              <ui-view class="close">x</ui-view>
+              <ui-image
+              src="{{ item.imgsrc }}"
+              mode='aspectFill'
+              width="60"
+              height="60"
+              ></ui-image>
+            </ui-view>
+          </ui-view>
+          <ui-view class="add_accessory" bindtap="addAccessory">
+            <ui-view>
+              <ui-icon type="add" size="20" color="#B3B5B5"></ui-icon>
+            </ui-view>
+          </ui-view>
+        </ui-view>
+      </ui-view>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="90" space-left="10">
+          <ui-view>
+            发送范围
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="10">
+          {{ recipientNo }} 人
+        </ui-col>
+      </ui-row>
+
+    </ui-view>
+  </ui-page>
+</template>
+
+<script>
+
+import dayjs from '#/static/utils/dayjs'
+
+const sourceType = [['camera'], ['album'], ['camera', 'album']]
+const sizeType = [['compressed'], ['original'], ['compressed', 'original']]
+
+export default {
+  config: {
+    navigationStyle: 'custom',
+    backgroundColor: '#F6F6F6',
+    delay: true,
+    cache: true
+  },
+  data () {
+    return {
+      pageTitle: '发公告',
+      pageTitleRight: '发布',
+      tokenId: '',
+      announcementName: '开会了',
+      announcementTime: '', // 公告时间
+      announcementContent: '', // 公告内容
+
+      // 附件
+      accessoryContent: [],
+
+      // 接收人
+      recipientNo: 0,
+      recipient: [
+        {
+          id: '123',
+          name: '傅毅'
+        }
+      ]
+    }
+  },
+  methods: {
+    // 返回按钮
+    navigateBack () {
+      ui.navigateBack()
+    },
+    // 添加附件
+    addAccessory () {
+      this.chooseImage(2)
+    },
+    // 删除附件
+    deleteAccessory (index, imgPath) {
+      console.log('删除：', index, imgPath)
+      this.accessoryContent.splice(index, 1)
+    },
+    // 选择照片
+    chooseImage (index) {
+      ui.chooseImage({
+        sourceType: sourceType[index],
+        sizeType: sizeType[1],
+        success: (res) => {
+          res.tempFilePaths.forEach((item, index) => {
+            // this.accessoryContent.push(item)
+            this.accessoryContent.push({
+              id: index,
+              imgsrc: item
+            })
+
+          })
+        },
+        fail: (res) => {
+          console.log("添加照片失败")
+        }
+      })
+    },
+    // 提交
+    submit () {
+      if (this.announcementName === '') {
+        ui.showToast({ title: '请输入公告标题' })
+      } else if (this.announcementContent === '') {
+        ui.showToast({ title: '请输入公告内容' })
+      } else {
+      //  this.paySubmit()
+
+        let LocalAnnouncementInfoList = ui.getStorageSync('LocalAnnouncementInfoList')
+        LocalAnnouncementInfoList.announcementInfoList.push({
+          announcementName: this.announcementName,
+          announcementContent: this.announcementContent,
+          announcementTime: this.announcementTime,
+          accessoryContent: this.accessoryContent
+        })
+        console.log('LocalAnnouncementInfoList:', LocalAnnouncementInfoList)
+        ui.setStorageSync('LocalAnnouncementInfoList', LocalAnnouncementInfoList)
+
+        ui.showToast({ title: '发布成功', icon: 'success' })
+        
+        window.setTimeout(() => {
+          ui.navigateBack()
+        }, 1000)
+      }
+    },
+    paySubmit () {
+      ui.showToast({ title: '发布成功', icon: 'success' })
+      setTimeout(() => {
+        ui.navigateBack()
+      }, 1000)
+    }
+  },
+  mounted () {
+    
+    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+    console.log("公告:", LocalUserInfo)
+    this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
+    this.announcementTime = dayjs().format("YYYY-MM-DD HH:mm")
+
+  }
+}
+</script>
+
+<style lang="less">
+// 导航栏
+.nav_bar {
+  background: #fff;
+  .ui-icon {
+    color: #1890ff;
+  }
+  .nav_title {
+    color: #000;
+    font-size: 32rpx;
+    font-weight: bold;
+  }
+  .nav_right{
+    color: #1890ff;
+    font-size: 16px;
+  }
+}
+
+// 表单内容
+.form_content{
+  padding-top: 10px;
+  // .mix-1px(1, 0, 1, 0, #ccc);
+  .ui-row{
+    background: #fff;
+    .mix-1px(0, 0, 1, 0, #ccc);
+    .ui-view{
+      font-size: 14px;
+      color: #1A1E23;
+      &.right_column{
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+      }
+    }
+    .ui-row{
+      width: 100%;
+      .right_column{
+        width: 95%;
+        font-size: 12px;
+      }
+      .ui-textarea-wrapper{
+        padding: 10px;
+      }
+    }
+    .weui-cell{
+      padding: 0;
+    }
+    .ui-input{
+      border:0px;
+      padding: 0px;
+      .ui-input-inner{
+        height: 33px;
+        width: 100%;
+        text-align: right;
+      }
+    }
+  }
+}
+
+// 回复注意部分的样式
+.attention{
+  font-size: 12px;
+  color: #ccc;
+  padding: 0px 10px;
+}
+
+// 详情描述
+.detail_description{
+  margin-bottom: 10px;
+  background: #fff;
+  .ui-icon {
+    padding-left: 10px;
+  }
+  .ui-text{
+    // width: 70px;
+    text-align: left;
+    line-height: 30px;
+    color: #1A1E23;
+    font-size: 14px;
+  }
+  .ui-textarea-wrapper{
+    border: 0;
+    padding: 10px;
+  }
+}
+
+// 附件
+.accessory_wrap{
+  margin-bottom: 10px;
+  background: #fff;
+  padding: 0px 10px 10px 10px;
+  .ui-text{
+    text-align: left;
+    line-height: 40px;
+    color: #1A1E23;
+  }
+  .accessory_content{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+
+    .add_accessory{
+      display: inline-flex;
+      text-align: center;
+      .ui-view{
+        margin-right: 10px;
+        text-align: center;
+        width: 60px;
+        height: 60px;
+        background-color: #F4F4F4;
+        line-height: 60px;
+        text-align: center;
+      }
+    }
+    .accessory_list{
+      display: inline-flex;
+      margin-right: 5px;
+      position: relative;
+      .close{
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        z-index: 9;
+        background-color: #14171B;
+        line-height:15px;
+        text-align: center;
+        font-size: 12px;
+        color: #fff;
+      }
+    }
+  }
+}
+
+//弹窗
+.ui-confirm-content{
+  text-align: center;
+}
+
+</style>

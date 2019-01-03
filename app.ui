@@ -94,7 +94,26 @@ export default {
       "pages/organization/organizationIndex",
       "pages/items/itemManagement/itemsTodoList",
       "pages/items/itemManagement/itemsReviewList",
-      "pages/application/kaoqin/kqSetting/kqRules","pages/application/kaoqin/kqSetting/selectKQDays","pages/application/pangZhan/pangZhanWrite","pages/application/xuncha/xunChaWrite"],
+      "pages/application/kaoqin/kqSetting/kqRules",
+      "pages/application/kaoqin/kqSetting/selectKQDays",
+      "pages/application/pangZhan/pangZhanWrite",
+      "pages/application/xuncha/xunChaWrite",
+      "pages/application/yanShou/yanShou",
+      "pages/application/yanShou/yanShouWrite",
+      "pages/application/zhiLiang/zhiLiang",
+      "pages/application/zhiLiang/zhiLiangWrite",
+      "pages/application/safe/safe",
+      "pages/application/safe/safeWrite",
+      "pages/application/jianZhengQuYang/jianZheng",
+      "pages/application/jianZhengQuYang/shiYan",
+      "pages/application/jianZhengQuYang/caiLiaoWrite",
+
+      "pages/application/material/inMaterial",
+      "pages/application/material/inDevice",
+
+      "pages/application/announcement/announcement",
+      "pages/application/announcement/announcementWrite",
+      "pages/application/material/material"],
     "theme": {
       "theme-color": "#3399ff"
     },

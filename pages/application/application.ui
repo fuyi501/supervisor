@@ -73,7 +73,7 @@
               <ui-icon type="shenpi3" color="#faad14" size="30"></ui-icon>    
               <ui-view class="app_text">审批</ui-view>           
             </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openAnnouncement">
               <ui-icon type="gonggao3" color="#1890ff" size="30"></ui-icon>    
               <ui-view class="app_text">公告</ui-view>           
             </ui-col>
@@ -134,9 +134,28 @@
                 <ui-icon type="xuncha3" color="#fc9153" size="30"></ui-icon>    
                 <ui-view class="app_text">巡查记录</ui-view>             
             </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openYanShou">
               <ui-icon type="yanshou1" color="#ff525d" size="30"></ui-icon>    
               <ui-view class="app_text">验收</ui-view> 
+            </ui-col>
+          </ui-row>
+
+          <ui-row>
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="openMaterial">
+                <ui-icon type="yanshou1" color="#ff525d" size="30"></ui-icon>    
+                <ui-view class="app_text">材料进场</ui-view>           
+            </ui-col>
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="safe2" color="#fc9153" size="30"></ui-icon>    
+                <ui-view class="app_text">见证取样</ui-view>             
+            </ui-col>
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
+                <ui-icon type="safe2" color="#fc9153" size="30"></ui-icon>    
+                <ui-view class="app_text">安全履职</ui-view>             
+            </ui-col>
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="openZhiLiang">
+                <ui-icon type="zhiliang1" color="#28aa91" size="30"></ui-icon> 
+                <ui-view class="app_text">质量控制</ui-view> 
             </ui-col>
           </ui-row>
         </ui-col>
@@ -178,35 +197,6 @@
                 <ui-icon type="yanshou1" color="#ff525d" size="30"></ui-icon>    
                 <ui-view class="app_text">工作台账</ui-view>           
             </ui-col>
-            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="safe2" color="#fc9153" size="30"></ui-icon>    
-                <ui-view class="app_text">安全履职</ui-view>             
-            </ui-col>
-            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="zhiliang1" color="#28aa91" size="30"></ui-icon> 
-                <ui-view class="app_text">质量控制</ui-view> 
-            </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-              <ui-icon type="jindu2" color="#8bb93f" size="30"></ui-icon>    
-              <ui-view class="app_text">进度控制</ui-view> 
-            </ui-col>
-          </ui-row>
-        </ui-col>
-      </ui-row>
-    </ui-view>
-
-    <ui-view class="app_box">
-      <ui-row space-top=5>
-        <ui-col width="5" align="center" vertical-align="middle">
-          <ui-view class="front_line"></ui-view>
-        </ui-col>
-        <ui-col class="centerInfo" space-left=10>
-          高效统计
-        </ui-col>
-      </ui-row>
-      <ui-row space-top=0 >
-        <ui-col span=12>
-          <ui-row>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
                 <ui-icon type="daka2" color="#28aa91" size="30"></ui-icon>    
                 <ui-view class="app_text">成员动态</ui-view>       
@@ -216,12 +206,8 @@
                 <ui-view class="app_text">考勤统计</ui-view>           
             </ui-col>
             <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="daka2" color="#ff525d" size="30"></ui-icon>    
-                <ui-view class="app_text">签到统计</ui-view>           
-            </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
-                <ui-icon type="jindu2" color="#8bb93f" size="30"></ui-icon>    
-                <ui-view class="app_text">进度统计</ui-view>             
+              <ui-icon type="jindu2" color="#8bb93f" size="30"></ui-icon>    
+              <ui-view class="app_text">进度控制</ui-view> 
             </ui-col>
           </ui-row>
         </ui-col>
@@ -310,6 +296,22 @@ export default {
         url: '/pages/application/contactLetter/contactReplyIndex'
       })
     },
+    // 材料进场
+    openMaterial () {
+      ui.navigateTo({
+        url: '/pages/application/material/material'
+      })
+    },
+    openYanShou () {
+      ui.navigateTo({
+        url: '/pages/application/yanShou/yanShou'
+      })
+    },
+    openZhiLiang () {
+      ui.navigateTo({
+        url: '/pages/application/zhiLiang/zhiLiang'
+      })
+    },
     // 日志
     openRiZhi () {
       ui.navigateTo({
@@ -320,6 +322,12 @@ export default {
     openApproval () {
       ui.navigateTo({
         url: '/pages/application/approval/approval'
+      })
+    },
+    // 公告
+    openAnnouncement () {
+      ui.navigateTo({
+        url: '/pages/application/announcement/announcement'
       })
     }
   },
