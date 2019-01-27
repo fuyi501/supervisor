@@ -113,7 +113,7 @@ export default {
 
       "pages/application/announcement/announcement",
       "pages/application/announcement/announcementWrite",
-      "pages/application/material/material"],
+      "pages/application/material/material","pages/application/material/deviceInfo"],
     "theme": {
       "theme-color": "#3399ff"
     },

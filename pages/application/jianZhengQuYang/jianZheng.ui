@@ -1,448 +1,450 @@
-<!--note.ui-->
+<!---->
 <template>
-  <ui-page>
+  <ui-page page-load="{{ pageLoad }}">
     <ui-nav-bar slot="nav-bar" class="nav_bar">
       <ui-row height="46">
-        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="50" bindtap="navigateBack">
           <ui-view>
             <ui-icon type="arrow-left" size="20"></ui-icon>
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <ui-view class="nav_title">{{ pageTitle }}</ui-view>
+          <ui-view class="nav_title">见证取样</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="50">
-          <ui-view class="nav_right">{{ pageTitleRight }}</ui-view>
+          <ui-view class="nav_right">更多</ui-view>
         </ui-col>
       </ui-row>
     </ui-nav-bar>
-    
-    <ui-view class="form_content">
-      <ui-row height="50" border-bottom bindtap="openSelectConTeam">
-        <ui-col vertical-align="middle" align="left" width="140" space-left="10">
-          <ui-view>
-            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            试验材料/类别
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-view class="active2" ui:if=" !companyName "> 请选择
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
-          <ui-view class="active" ui:else> {{ companyName }}
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
-        </ui-col>
-      </ui-row>
 
-      <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
-          <ui-view>
-            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            施工单位
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-input
-            placeholder="请输入施工单位"
-            placeholder-style="color:#999B9E"
-            show-clear="{{true}}"
-            ui:model="{{ itemName }}"
-          ></ui-input>
-        </ui-col>
-      </ui-row>
+    <ui-tab-view class="type-badge" on-active="{{ getJianZhengInfo }}" pull-down-distance="50">
+      <template slot="header">
+        <ui-tab-view-header>
+          <ui-view>未完成</ui-view>
+        </ui-tab-view-header>
+        <ui-tab-view-header>
+          <ui-view>已完成</ui-view>
+        </ui-tab-view-header>
+      </template>
+      <template slot="body">
+        <ui-tab-view-body enable-pull-down-refresh>
 
-      <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
-          <ui-view>
-            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            单位工程
+          <!-- 待完成列表 -->
+          <ui-view class="list-view" ui:for="{{jianZhengPendingList}}" ui:for-item="item" >
+            <ui-row space="10">
+              <ui-col>
+                <ui-text class="titleName">{{item.itemName}}</ui-text>
+              </ui-col>
+              <ui-col vertical-align="middle" align="right" width=40 >
+                <!-- <ui-text class="titleName">查看详情</ui-text> -->
+              </ui-col>
+            </ui-row>
+            <ui-row space="10">
+              <ui-col>
+                <ui-text class="list-content">{{item.jianZhengType}}</ui-text>
+              </ui-col>
+            </ui-row>
+            <ui-row space="10">
+              <ui-col>
+                <ui-text class="list-content">材料信息：{{item.jianZhengContent}}</ui-text>
+              </ui-col>
+            </ui-row>
+            <ui-row space="20">
+              <ui-col>
+                <ui-view class="imageList_win">
+                  <ui-view class="image" ui:for="{{item.accessoryContent}}" ui:for-item="image" bindtap="previewImage(item.accessoryContent, image)">
+                    <ui-image src="{{image.imgsrc}}" width="{{ imgWidth }}" height="{{ imgHeight }}" mode="aspectFill"></ui-image>
+                  </ui-view>
+                </ui-view>
+              </ui-col>
+            </ui-row>
+            <ui-row space="10">
+              <ui-col vertical-align="bottom" span=8>
+                <ui-view>
+                  <ui-text class="color6 small-font">{{item.state}}</ui-text>
+                  <ui-text class="color6 small-font"> · {{item.jianZhengTime}}</ui-text>
+                </ui-view>
+              </ui-col>
+              <ui-col vertical-align="bottom" align="right" space-right="10" bindtap="openDetails(item)">
+                <ui-view>
+                  <ui-text class="color6 small-font">查看详情</ui-text>
+                </ui-view>
+              </ui-col>
+            </ui-row>
           </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-input
-            placeholder="请输入单位工程名称"
-            placeholder-style="color:#999B9E"
-            show-clear="{{true}}"
-            ui:model="{{ itemName }}"
-          ></ui-input>
-        </ui-col>
-      </ui-row>
 
-      <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
-          <ui-view>
-            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            实验部位
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-input
-            placeholder="请输入实验部位"
-            placeholder-style="color:#999B9E"
-            show-clear="{{true}}"
-            ui:model="{{ itemName }}"
-          ></ui-input>
-        </ui-col>
-      </ui-row>
+          <!-- <ui-view class="divider">
+            <ui-divider >没有新数据了</ui-divider>
+          </ui-view> -->
 
-      <ui-row height="50" border-bottom bindtap="openSelectConTeam">
-        <ui-col vertical-align="middle" align="left" width="140" space-left="10">
-          <ui-view>
-            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            开始时间
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-view class="active2" ui:if=" !companyName "> 请选择
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
-          <ui-view class="active" ui:else> {{ companyName }}
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
-        </ui-col>
-      </ui-row>
+        </ui-tab-view-body>
+        <ui-tab-view-body enable-pull-down-refresh>
 
-      <ui-row height="50" border-bottom bindtap="openSelectConTeam">
-        <ui-col vertical-align="middle" align="left" width="140" space-left="10">
-          <ui-view>
-            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            结束时间
+          <!-- 已完成列表 -->
+          <ui-view class="list-view" ui:for="{{jianZhengApprovalList}}" ui:for-item="item" >
+            <ui-row space="10">
+              <ui-col>
+                <ui-text class="titleName">{{item.itemName}}</ui-text>
+              </ui-col>
+              <ui-col vertical-align="middle" align="right" width=40 >
+                <!-- <ui-text class="titleName">查看详情</ui-text> -->
+              </ui-col>
+            </ui-row>
+            <ui-row space="10">
+              <ui-col>
+                <ui-text class="list-content">{{item.jianZhengType}}</ui-text>
+              </ui-col>
+            </ui-row>
+            <ui-row space="10">
+              <ui-col>
+                <ui-text class="list-content">材料信息：{{item.jianZhengContent}}</ui-text>
+              </ui-col>
+            </ui-row>
+            <ui-row space="20">
+              <ui-col>
+                <ui-view class="imageList_win">
+                  <ui-view class="image" ui:for="{{item.accessoryContent}}" ui:for-item="image" bindtap="previewImage(item.accessoryContent, image)">
+                    <ui-image src="{{image.imgsrc}}" width="{{ imgWidth }}" height="{{ imgHeight }}" mode="aspectFill"></ui-image>
+                  </ui-view>
+                </ui-view>
+              </ui-col>
+            </ui-row>
+            <ui-row space="10">
+              <ui-col vertical-align="bottom" span=8>
+                <ui-view>
+                  <ui-text class="color6 small-font">{{item.state}}</ui-text>
+                  <ui-text class="color6 small-font"> · {{item.jianZhengTime}}</ui-text>
+                </ui-view>
+              </ui-col>
+              <ui-col vertical-align="bottom" align="right" space-right="10" bindtap="openDetails(item)">
+                <ui-view>
+                  <ui-text class="color6 small-font">查看详情</ui-text>
+                </ui-view>
+              </ui-col>
+            </ui-row>
           </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-view class="active2" ui:if=" !companyName "> 请选择
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
-          <ui-view class="active" ui:else> {{ companyName }}
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
-        </ui-col>
-      </ui-row>
 
-      <ui-row height="50">
-        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
-          <ui-view>
-            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            实验结果
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-view class="">
-           {{ xunChaTime }}
-          </ui-view>
-        </ui-col>
-      </ui-row>
+          <!-- <ui-view class="divider">
+            <ui-divider >没有新数据了</ui-divider>
+          </ui-view> -->
+        </ui-tab-view-body>
+      </template>
+    </ui-tab-view>
 
-      <!-- 附件 -->
-      <ui-view class="accessory_wrap">
-        <ui-text block>现场照片</ui-text>
-        <ui-view class="accessory_content">
-          <ui-view class="accessory_list" ui:for="{{ accessoryContent }}" ui:for-item="item">
-            <ui-view bindtap="deleteAccessory(index, item)">
-              <ui-view class="close">x</ui-view>
-              <ui-image
-              src="{{ item.imgsrc }}"
-              mode='aspectFill'
-              width="60"
-              height="60"
-              ></ui-image>
-            </ui-view>
+    <ui-fixed-view style="z-index:1000" top="-30" left="-25" >
+      <ui-pop-icon blur="light" mask-hide-delay="500" hide-on-tap="{{hideOnTap}}" bindhide="dismiss" bindmaskhide="maskhide" left="{{offsetX-48}}" ui:model="toggle" class="pop-icon-demo3" animate="bounce" >
+        <ui-pop-icon-item item-color="#45ddd2" top="-30" left="-7" bindtap="openShiYan">
+          <ui-text style="position: absolute;left: -67px;top: 11px;">试验见证</ui-text>
+          <ui-view class="icon_view">
+            <ui-icon type="add" size="20"></ui-icon>
           </ui-view>
-          <ui-view class="add_accessory" bindtap="addAccessory">
-            <ui-view>
-              <ui-icon type="add" size="20" color="#B3B5B5"></ui-icon>
-            </ui-view>
+        </ui-pop-icon-item>
+        <ui-pop-icon-item item-color="#45ddd2" top="-90" left="-7" bindtap="openCaiLiao">
+          <ui-text style="position: absolute;left: -67px;top: 11px;">材料见证</ui-text>
+          <ui-view class="icon_view">
+            <ui-icon type="add" size="20"></ui-icon>
           </ui-view>
-        </ui-view>
+        </ui-pop-icon-item>
+      </ui-pop-icon>
+    </ui-fixed-view>
+
+    <ui-fixed-view style="z-index:100;" bottom="50" right="30" bindtap="togglepopicon">
+      <ui-view class="addbtn">
+        <ui-icon type="add" size="24"></ui-icon>
       </ui-view>
+    </ui-fixed-view>
 
-      <!-- 提交按钮 -->
-      <ui-row height="60" space-top="10">
-        <ui-col vertical-align="middle" align="center" space="30">
-          <ui-button type="primary" bindtap="submit">立即提交</ui-button>
-        </ui-col>
-      </ui-row>
-
-    </ui-view>
   </ui-page>
 </template>
 
 <script>
-
-import dayjs from '#/static/utils/dayjs'
-
-const sourceType = [['camera'], ['album'], ['camera', 'album']]
-const sizeType = [['compressed'], ['original'], ['compressed', 'original']]
-
-export default {
-  config: {
-    navigationStyle: 'custom',
-    backgroundColor: '#F6F6F6',
-    disableIosGesture: true,
-    navigationBarTextStyle: 'white',
-    delay: true
-  },
-  data () {
-    return {
-      pageTitle: '质量问题',
-      pageTitleRight: '统计',
-      tokenId: '',
-      itemName: '',
-      itemId: '',
-      xunChaNo: '', 
-      xunChaTime: '', // 巡查时间
-      isReply: false, // 是否回复
-      xunChaPosition: '', // 巡查部位
-
-      // 存在的问题
-      xunChaItemProblem: '', 
-      // 处理意见
-      xunChaResolution: '',
-      // 附件
-      accessoryContent: []
-    }
-  },
-  methods: {
-    // 返回按钮
-    navigateBack () {
-      ui.showConfirm({
-        content: '表单尚未提交，你要离开么？',
-        confirmButtonText: '离开',
-        cancelButtonText: '继续填写',
-        success: (result) => {
-          if (result.confirm) {
-            ui.navigateBack()
+  export default {
+    config: {
+      navigationStyle: 'custom',
+      backgroundColor: '#F6F6F6',
+    },
+    data() {
+      return {
+        bottom: 30,
+        toggle: false,
+        height: ui.DEFAULT_CONTENT_HEIGHT + 'px',
+        canClick: true,
+        hideOnTap: true,
+        offsetX: ui.WIN_WIDTH,
+        pageLoad: {// 进入页面先判断是否有地理数据保存在 本地存储中
+          trigger: 'always',
+          handle: () => {
+            console.log("见证取样 pageLoad")
           }
-        }
-      })
-    },
-    // 是否回复
-    handleSwitchChange (val) {
-      this.isReply = val
-    },
-    // 添加附件
-    addAccessory () {
-      this.chooseImage(2)
-    },
-    // 删除附件
-    deleteAccessory (index, imgPath) {
-      console.log('删除：', index, imgPath)
-      this.accessoryContent.splice(index, 1)
-    },
-    chooseImage (index) {
-      ui.chooseImage({
-        sourceType: sourceType[index],
-        sizeType: sizeType[1],
-        success: (res) => {
-          res.tempFilePaths.forEach((item, index) => {
-            // this.accessoryContent.push(item)
-            this.accessoryContent.push({
-              id: index,
-              imgsrc: item
-            })
-          })
         },
-        fail: (res) => {
-          console.log("添加照片失败")
-        }
-      })
-    },
-    // 提交
-    submit () {
-      if (this.itemName === '') {
-        ui.showToast({ title: '请输入单位工程名称' })
-      } else if (this.xunChaItemProblem === '') {
-        ui.showToast({ title: '请输入存在的问题' })
-      } else if (this.xunChaResolution === '') {
-        ui.showToast({ title: '请输入处理意见' })
-      } else {
-      //  this.paySubmit()
-        let LocalXunChaInfoList = ui.getStorageSync('LocalXunChaInfoList')
-        LocalXunChaInfoList.xunChaInfoList.push({
-          xunChaNo: this.xunChaNo,
-          itemName: this.itemName,
-          xunChaTime: this.xunChaTime,
-          isReply: this.isReply, // 是否需要回复
-          xunChaPosition: this.xunChaPosition,
-          xunChaItemProblem: this.xunChaItemProblem,
-          xunChaResolution: this.xunChaResolution,
-          accessoryContent: this.accessoryContent
-        })
-        console.log('LocalXunChaInfoList:', LocalXunChaInfoList)
-        ui.setStorageSync('LocalXunChaInfoList', LocalXunChaInfoList)
+        imgWidth: (ui.WIN_WIDTH-40)/4-8 + 'px', 
+        imgHeight: (ui.WIN_WIDTH-40)/4-8 + 'px',
 
-        ui.showToast({ title: '提交成功', icon: 'success' })
-        
-        window.setTimeout(() => {
-          ui.navigateBack()
-        }, 1000)
+        jianZhengPendingList: [ // 待完成列表
+          {
+            "id": 1,
+            "itemName": "地铁六号线一标段",
+            "itemId": '',
+            "jianZhengNo": "pz123",
+            "jianZhengTime": "2018-10-22 13:33",
+            "jianZhengType": "材料见证",
+            "jianZhengContent": "材料信息",
+            "state": "待完成",
+            "accessoryContent": [{
+                "id": 1,
+                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+              },
+              {
+                "id": 2,
+                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+              },
+              {
+                "id": 3,
+                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+              }
+            ]
+          }
+        ],
+
+        jianZhengApprovalList: [ // 已完成列表
+          {
+            "id": 1,
+            "itemName": "地铁六号线一标段",
+            "itemId": '',
+            "jianZhengNo": "pz123",
+            "jianZhengTime": "2018-10-22 13:33",
+            "jianZhengType": "材料见证",
+            "jianZhengContent": "材料信息",
+            "state": "已完成",
+            "accessoryContent": [{
+                "id": 1,
+                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+              },
+              {
+                "id": 2,
+                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+              },
+              {
+                "id": 2,
+                "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
+              }
+            ]
+          }
+        ]
       }
     },
-    paySubmit () {
-      ui.showToast({ title: '提交成功', icon: 'success' })
-      setTimeout(() => {
+    methods: {
+      navigateBack() {
         ui.navigateBack()
-      }, 1000)
+      },
+      openDetails (item) {
+        console.log(item)
+      },
+      openShiYan () {
+        ui.navigateTo({
+          url: '/pages/application/jianZhengQuYang/shiYan'
+        })
+      },
+      openCaiLiao () {
+        ui.navigateTo({
+          url: '/pages/application/jianZhengQuYang/caiLiaoWrite'
+        })
+      },
+      addJianZhengWrite () {
+        ui.navigateTo({
+          url: '/pages/application/material/inMaterial'
+        })
+      },
+      // 获取 见证取样 信息
+      getJianZhengInfo () {
+        // this.jianZhengPendingList = []
+        let LocalJianZhengInfoList = ui.getStorageSync('LocalJianZhengInfoList')
+        console.log('获取见证取样信息:', LocalJianZhengInfoList)
+        LocalJianZhengInfoList.jianZhengInfoList.forEach((item, index) => {
+
+          this.jianZhengPendingList.push({
+            jianZhengNo: item.jianZhengNo,
+            itemName: item.itemName,
+            jianZhengType: item.jianZhengType,
+            jianZhengTime: item.jianZhengTime,
+            jianZhengContent: item.jianZhengContent,
+            accessoryContent: item.accessoryContent,
+            state: '待完成'
+          })
+        })
+        // 逆序，按时间逆序排列
+        this.jianZhengPendingList.sort((a,b)=>{
+            return Date.parse(b.jianZhengTime) - Date.parse(a.jianZhengTime); // 时间逆序
+        })
+      },
+      previewImage (imgarr, img) {
+        let imgUrls = []
+        for(let i in imgarr){
+          console.log(imgarr[i])
+          imgUrls.push(imgarr[i].imgsrc)
+        }
+        console.log(imgUrls)
+        ui.previewImage({
+          current: img.imgsrc, // 当前显示图片的http链接
+          urls: imgUrls, // 需要预览的图片http链接列表
+        })
+      },
+      // too ()
+      // 点击开始／关闭按钮
+      togglepopicon() {
+        if (this.toggle) {
+          if (this.canClick) {
+            this.canClick = false
+            this.toggle = false
+          }
+        } else {
+          if (this.canClick) {
+            this.canClick = false
+            this.toggle = true
+            this.hideOnTap = false
+            setTimeout(() => {
+              this.canClick = true
+              this.hideOnTap = true
+            }, 700)
+          }
+        }
+      },
+      // 点击遮罩触发，安卓回退时触发
+      dismiss () {
+        if (this.canClick) {
+          this.canClick = false
+          this.toggle = false
+        }
+      },
+      // 设置mask延时的情况下，mask关闭时触发，安卓回退时触发
+      maskhide() {
+        this.canClick = true
+      },
+    },
+    mounted() {
+      console.log("见证取样记录 mounted")
+
+      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+      console.log("见证取样记录:", LocalUserInfo)
+      this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
+      // 初始化本地 见证取样 信息
+      let LocalJianZhengInfoList = ui.getStorageSync('LocalJianZhengInfoList')
+      console.log('LocalJianZhengInfoList:', LocalJianZhengInfoList)
+      if(!LocalJianZhengInfoList){ // 不存在则创建
+        LocalJianZhengInfoList = {
+          jianZhengInfoList: []
+        }
+        ui.setStorageSync('LocalJianZhengInfoList', LocalJianZhengInfoList)
+      }else{
+        this.getJianZhengInfo()
+      }
+
     }
-  },
-  mounted () {
-    
-    let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
-    console.log("旁站:", LocalUserInfo)
-    this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
-
-    let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
-    console.log("旁站页面：", LocalProjectInfoList[0])
-    this.itemName = LocalProjectInfoList[0].itemName
-    this.itemId = LocalProjectInfoList[0].itemId
-
-    this.xunChaTime = dayjs().format("YYYY-MM-DD HH:mm")
-
   }
-}
 </script>
 
 <style lang="less">
-// 导航栏
-.nav_bar {
-  background: #fff;
-  .ui-icon {
-    color: #1890ff;
-  }
-  .nav_title {
-    color: #000;
-    font-size: 32rpx;
-    font-weight: bold;
-  }
-  .nav_right{
-    color: #1890ff;
-    font-size: 16px;
-  }
-}
-
-// 表单内容
-.form_content{
-  padding-top: 10px;
-  // .mix-1px(1, 0, 1, 0, #ccc);
-  .ui-row{
+  .nav_bar {
     background: #fff;
-    .mix-1px(0, 0, 1, 0, #ccc);
-    .ui-view{
+
+    .ui-icon {
+      color: #1890ff;
+    }
+
+    .nav_title {
+      color: #000;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .nav_right {
+      color: #1890ff;
+      font-size: 16px;
+    }
+  }
+
+  .type-badge {
+    height: 300px;
+    .ui-badge {
+      position: absolute;
+      right: 8px;
+      top: 2px;
+      font-size: 20rpx;
+
+      &.ui-badge-dot {
+        padding: 3px;
+      }
+    }
+  }
+
+  // 信息列表
+  .list-view {
+    margin: 10px;
+    background-color: #fff;
+    padding: 5px 10px;
+
+    .titleName {
+      color: #333;
+      font-size: 16px;
+    }
+
+    .list-content {
+      color: #666;
       font-size: 14px;
-      color: #1A1E23;
-      &.right_column{
-        width: 100%;
-        height: 35px;
-        line-height: 35px;
+    }
+
+    // 中间图片
+    .imageList_win {
+      display: flex;
+      flex-wrap: wrap;
+      // margin: 0 auto;
+
+      .image {
+        margin: 4px;
+      }
+
+      .ui-image {
+        border-radius: 5px;
       }
     }
-    .ui-row{
-      width: 100%;
-      .right_column{
-        width: 95%;
-        font-size: 12px;
-      }
-      .ui-textarea-wrapper{
-        padding: 10px;
-      }
+
+    .color6 {
+      color: #666;
     }
-    .weui-cell{
-      padding: 0;
+
+    .small-font {
+      font-size: 12px;
     }
-    .ui-input{
-      border:0px;
-      padding: 0px;
-      .ui-input-inner{
-        height: 33px;
-        width: 100%;
-        text-align: right;
-      }
+
+  }
+
+  @media screen and (max-width: 320px) {
+    .small-font {
+      font-size: 10px;
     }
+  }
+
+  .divider {
+    width:200px;
+    margin:0 auto;
+    margin-bottom:10px;
+  }
+  // 右下固定按钮
+.addbtn{
+  width:53px;
+  height:53px;
+  background-color:#1F95FF; // #fdd15c
+  line-height:53px;
+  color:#fff;
+  text-align:center;
+  border-radius:50%;
+}
+.pop-icon-demo3 {
+  .icon_view{
+    height: 100%;
+    z-index: 9;
+    .mix-flex-center();
   }
 }
-
-// 回复注意部分的样式
-.attention{
-  font-size: 12px;
-  color: #ccc;
-  padding: 0px 10px;
-}
-
-// 详情描述
-.detail_description{
-  margin-bottom: 10px;
-  background: #fff;
-  .ui-icon {
-    padding-left: 10px;
-  }
-  .ui-text{
-    // width: 70px;
-    text-align: left;
-    line-height: 30px;
-    color: #1A1E23;
-    font-size: 14px;
-  }
-  .ui-textarea-wrapper{
-    border: 0;
-    padding: 10px;
-  }
-}
-
-// 附件
-.accessory_wrap{
-  margin-bottom: 10px;
-  background: #fff;
-  padding: 0px 10px 10px 10px;
-  .ui-text{
-    text-align: left;
-    line-height: 40px;
-    color: #1A1E23;
-  }
-  .accessory_content{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 100%;
-
-    .add_accessory{
-      display: inline-flex;
-      text-align: center;
-      .ui-view{
-        margin-right: 10px;
-        text-align: center;
-        width: 60px;
-        height: 60px;
-        background-color: #F4F4F4;
-        line-height: 60px;
-        text-align: center;
-      }
-    }
-    .accessory_list{
-      display: inline-flex;
-      margin-right: 5px;
-      position: relative;
-      .close{
-        position: absolute;
-        top: -3px;
-        right: -3px;
-        width: 15px;
-        height: 15px;
-        border-radius: 50%;
-        z-index: 9;
-        background-color: #14171B;
-        line-height:15px;
-        text-align: center;
-        font-size: 12px;
-        color: #fff;
-      }
-    }
-  }
-}
-
-//弹窗
-.ui-confirm-content{
-  text-align: center;
-}
-
 </style>

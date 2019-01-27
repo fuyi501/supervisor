@@ -9,7 +9,7 @@
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <ui-view class="nav_title">巡查记录</ui-view>
+          <ui-view class="nav_title">质量控制</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="50">
           <ui-view class="nav_right">更多</ui-view>
@@ -17,7 +17,7 @@
       </ui-row>
     </ui-nav-bar>
 
-    <ui-tab-view class="type-badge" on-active="{{ getXunChaInfo }}" pull-down-distance="50">
+    <ui-tab-view class="type-badge" on-active="{{ getZhiLiangInfo }}" pull-down-distance="50">
       <template slot="header">
         <ui-tab-view-header>
           <ui-view>未完成</ui-view>
@@ -30,7 +30,7 @@
         <ui-tab-view-body enable-pull-down-refresh>
 
           <!-- 待审批列表 -->
-          <ui-view class="list-view" ui:for="{{xunChaPendingList}}" ui:for-item="item" >
+          <ui-view class="list-view" ui:for="{{zhiLiangPendingList}}" ui:for-item="item" >
             <ui-row space="10">
               <ui-col>
                 <ui-text class="titleName">{{item.itemName}}</ui-text>
@@ -41,17 +41,12 @@
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">巡查部位：{{item.xunChaPosition}}</ui-text>
+                <ui-text class="list-content">问题部位：{{item.zhiLiangPosition}}</ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">巡查内容：{{item.xunChaItemProblem}}</ui-text>
-              </ui-col>
-            </ui-row>
-            <ui-row space="10">
-              <ui-col>
-                <ui-text class="list-content">处理意见：{{item.xunChaResolution}}</ui-text>
+                <ui-text class="list-content">问题内容：{{item.zhiLiangContent}}</ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="20">
@@ -67,7 +62,7 @@
               <ui-col vertical-align="bottom" span=8>
                 <ui-view>
                   <ui-text class="color6 small-font">{{item.state}}</ui-text>
-                  <ui-text class="color6 small-font"> · {{item.xunChaTime}}</ui-text>
+                  <ui-text class="color6 small-font"> · {{item.zhiLiangTime}}</ui-text>
                 </ui-view>
               </ui-col>
               <ui-col vertical-align="bottom" align="right" space-right="10" bindtap="openDetails(item)">
@@ -86,7 +81,7 @@
         <ui-tab-view-body enable-pull-down-refresh>
 
           <!-- 已审批列表 -->
-          <ui-view class="list-view" ui:for="{{xunChaApprovalList}}" ui:for-item="item" >
+          <ui-view class="list-view" ui:for="{{zhiLiangApprovalList}}" ui:for-item="item" >
             <ui-row space="10">
               <ui-col>
                 <ui-text class="titleName">{{item.itemName}}</ui-text>
@@ -97,17 +92,12 @@
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">巡查部位：{{item.xunChaPosition}}</ui-text>
+                <ui-text class="list-content">问题部位：{{item.zhiLiangPosition}}</ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">巡查内容：{{item.xunChaItemProblem}}</ui-text>
-              </ui-col>
-            </ui-row>
-            <ui-row space="10">
-              <ui-col>
-                <ui-text class="list-content">处理意见：{{item.xunChaResolution}}</ui-text>
+                <ui-text class="list-content">问题内容：{{item.zhiLiangContent}}</ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="20">
@@ -123,7 +113,7 @@
               <ui-col vertical-align="bottom" span=8>
                 <ui-view>
                   <ui-text class="color6 small-font">{{item.state}}</ui-text>
-                  <ui-text class="color6 small-font"> · {{item.xunChaTime}}</ui-text>
+                  <ui-text class="color6 small-font"> · {{item.zhiLiangTime}}</ui-text>
                 </ui-view>
               </ui-col>
               <ui-col vertical-align="bottom" align="right" space-right="10" bindtap="openDetails(item)">
@@ -141,7 +131,7 @@
       </template>
     </ui-tab-view>
 
-    <ui-fixed-view style="z-index:1;" bottom="50" right="30" bindtap="addXunChaWrite">
+    <ui-fixed-view style="z-index:1;" bottom="50" right="30" bindtap="addZhiLiangWrite">
       <ui-view class="addbtn">
         <ui-icon type="add" size="24"></ui-icon>
       </ui-view>
@@ -161,45 +151,22 @@
         pageLoad: {// 进入页面先判断是否有地理数据保存在 本地存储中
           trigger: 'always',
           handle: () => {
-            console.log("巡查 pageLoad")
-
-            // let LocalXunChaInfoList = ui.getStorageSync('LocalXunChaInfoList')
-            // console.log('LocalXunChaInfoList:', LocalXunChaInfoList)
-            // if(LocalXunChaInfoList){
-            //   LocalXunChaInfoList.xunChaInfoList.forEach((item, index) => {
-            //     this.xunChaPendingList.push({
-            //       xunChaNo: item.xunChaNo,
-            //       itemName: item.itemName,
-            //       xunChaTime: item.xunChaTime,
-            //       isReply: item.isReply, // 是否需要回复
-            //       xunChaPosition: item.xunChaPosition,
-            //       xunChaItemProblem: item.xunChaItemProblem,
-            //       xunChaResolution: item.xunChaResolution,
-            //       accessoryContent: item.accessoryContent,
-            //       state: '待审批'
-            //     })
-            //   })
-            //   // 逆序，按时间逆序排列
-            //   this.xunChaPendingList.sort((a,b)=>{
-            //       return Date.parse(b.xunChaTime) - Date.parse(a.xunChaTime); // 时间逆序
-            //   })
-            // }
+            console.log("质量 pageLoad")
           }
         },
         imgWidth: (ui.WIN_WIDTH-40)/4-8 + 'px', 
         imgHeight: (ui.WIN_WIDTH-40)/4-8 + 'px',
 
-        xunChaPendingList: [ // 待审批列表
+        zhiLiangPendingList: [ // 待审批列表
           {
             "id": 1,
             "itemName": "地铁六号线标段一",
             "itemId": '',
-            "xunChaNo": "xc123",
-            "xunChaTime": "2018-10-22 13:33",
-            "xunChaPosition": "管道处",
-            "xunChaItemProblem": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
-            "xunChaResolution": "整改",
-            "state": "待审批",
+            "zhiLiangNo": "xc123",
+            "zhiLiangTime": "2018-10-22 13:33",
+            "zhiLiangPosition": "管道处",
+            "zhiLiangContent": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
+            "state": "整改中",
             "accessoryContent": [{
                 "id": 1,
                 "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
@@ -216,16 +183,15 @@
           }
         ],
 
-        xunChaApprovalList: [ // 已审批列表
+        zhiLiangApprovalList: [ // 已审批列表
           {
             "id": 1,
             "itemName": "地铁六号线标段一",
             "itemId": '',
-            "xunChaNo": "xc123",
-            "xunChaTime": "2018-10-22 13:33",
-            "xunChaPosition": "西门",
-            "xunChaItemProblem": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
-            "xunChaResolution": "整改",
+            "zhiLiangNo": "xc123",
+            "zhiLiangTime": "2018-10-22 13:33",
+            "zhiLiangPosition": "西门",
+            "zhiLiangContent": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
             "state": "已审批",
             "accessoryContent": [{
                 "id": 1,
@@ -251,35 +217,36 @@
       openDetails (item) {
         console.log(item)
       },
-      addXunChaWrite () {
+      addZhiLiangWrite () {
         ui.navigateTo({
           url: '/pages/application/zhiLiang/zhiLiangWrite'
         })
       },
-      // 获取巡查信息
-      getXunChaInfo () {
+      // 获取质量信息
+      getZhiLiangInfo () {
         
-        this.xunChaPendingList = []
+        // this.zhiLiangPendingList = []
         
-        let LocalXunChaInfoList = ui.getStorageSync('LocalXunChaInfoList')
-        console.log('获取巡查信息:', LocalXunChaInfoList)
+        let LocalZhiLiangInfoList = ui.getStorageSync('LocalZhiLiangInfoList')
+        console.log('获取质量信息:', LocalZhiLiangInfoList)
 
-        LocalXunChaInfoList.xunChaInfoList.forEach((item, index) => {
+        LocalZhiLiangInfoList.zhiLiangInfoList.forEach((item, index) => {
 
-          this.xunChaPendingList.push({
-            xunChaNo: item.xunChaNo,
+          this.zhiLiangPendingList.push({
+            zhiLiangNo: item.zhiLiangNo,
             itemName: item.itemName,
-            xunChaTime: item.xunChaTime,
-            xunChaPosition: item.xunChaPosition,
-            xunChaItemProblem: item.xunChaItemProblem,
-            xunChaResolution: item.xunChaResolution,
+            zhiLiangTime: item.zhiLiangTime,
+            zhiLiangName: item.zhiLiangName,
+            zhiLiangPosition: item.zhiLiangPosition,
+            zhiLiangContent: item.zhiLiangContent,
+            zhiLiangMan: item.zhiLiangMan,
             accessoryContent: item.accessoryContent,
-            state: '待审批'
+            state: '整改中'
           })
         })
         // 逆序，按时间逆序排列
-        this.xunChaPendingList.sort((a,b)=>{
-            return Date.parse(b.xunChaTime) - Date.parse(a.xunChaTime); // 时间逆序
+        this.zhiLiangPendingList.sort((a,b)=>{
+            return Date.parse(b.zhiLiangTime) - Date.parse(a.zhiLiangTime); // 时间逆序
         })
       },
       previewImage (imgarr, img) {
@@ -296,22 +263,22 @@
       }
     },
     mounted() {
-      console.log("巡查记录 mounted")
+      console.log("质量控制 mounted")
 
       let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
-      console.log("巡查记录:", LocalUserInfo)
+      console.log("质量控制:", LocalUserInfo)
       this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
 
-      // 初始化本地 巡查 信息
-      let LocalXunChaInfoList = ui.getStorageSync('LocalXunChaInfoList')
-      console.log('LocalXunChaInfoList:', LocalXunChaInfoList)
-      if(!LocalXunChaInfoList){ // 不存在则创建
-        LocalXunChaInfoList = {
-          xunChaInfoList: []
+      // 初始化本地 质量 信息
+      let LocalZhiLiangInfoList = ui.getStorageSync('LocalZhiLiangInfoList')
+      console.log('LocalZhiLiangInfoList:', LocalZhiLiangInfoList)
+      if(!LocalZhiLiangInfoList){ // 不存在则创建
+        LocalZhiLiangInfoList = {
+          zhiLiangInfoList: []
         }
-        ui.setStorageSync('LocalXunChaInfoList', LocalXunChaInfoList)
+        ui.setStorageSync('LocalZhiLiangInfoList', LocalZhiLiangInfoList)
       }else{
-        this.getXunChaInfo()
+        this.getZhiLiangInfo()
       }
 
     }

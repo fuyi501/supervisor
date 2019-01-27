@@ -145,11 +145,11 @@
                 <ui-icon type="yanshou1" color="#ff525d" size="30"></ui-icon>    
                 <ui-view class="app_text">材料进场</ui-view>           
             </ui-col>
-            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="openJianZheng">
                 <ui-icon type="safe2" color="#fc9153" size="30"></ui-icon>    
                 <ui-view class="app_text">见证取样</ui-view>             
             </ui-col>
-            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="openSafe">
                 <ui-icon type="safe2" color="#fc9153" size="30"></ui-icon>    
                 <ui-view class="app_text">安全履职</ui-view>             
             </ui-col>
@@ -302,9 +302,19 @@ export default {
         url: '/pages/application/material/material'
       })
     },
+    openJianZheng () {
+      ui.navigateTo({
+        url: '/pages/application/jianZhengQuYang/jianZheng'
+      })
+    },
     openYanShou () {
       ui.navigateTo({
         url: '/pages/application/yanShou/yanShou'
+      })
+    },
+    openSafe () {
+      ui.navigateTo({
+        url: '/pages/application/safe/safe'
       })
     },
     openZhiLiang () {

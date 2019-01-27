@@ -36,9 +36,7 @@
         </ui-col>
       </ui-row>
 
-      
-
-      <ui-row height="50" border-bottom bindtap="openSelectConTeam">
+      <ui-row height="50" border-bottom>
         <ui-col vertical-align="middle" align="left" width="140" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
@@ -46,16 +44,11 @@
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-view class="active2" ui:if=" !companyName "> 请选择
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
-          <ui-view class="active" ui:else> {{ companyName }}
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
+          {{ jinChangTime }}
         </ui-col>
       </ui-row>
 
-      <ui-row height="50" border-bottom bindtap="openSelectConTeam">
+      <ui-row height="50" border-bottom>
         <ui-col vertical-align="middle" align="left" width="140" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
@@ -63,16 +56,11 @@
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-view class="active2" ui:if=" !companyName "> 请选择
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
-          <ui-view class="active" ui:else> {{ companyName }}
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
+          {{ jianZhengTime }}
         </ui-col>
       </ui-row>
 
-      <ui-row height="50" border-bottom bindtap="openSelectConTeam">
+      <ui-row height="50" border-bottom>
         <ui-col vertical-align="middle" align="left" width="140" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
@@ -80,16 +68,16 @@
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-view class="active2" ui:if=" !companyName "> 请选择
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
-          <ui-view class="active" ui:else> {{ companyName }}
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
+          <ui-input
+            placeholder="请输入材料名称"
+            placeholder-style="color:#999B9E"
+            show-clear="{{true}}"
+            ui:model="{{ materialName }}"
+          ></ui-input>
         </ui-col>
       </ui-row>
 
-      <ui-row height="50" border-bottom bindtap="openSelectConTeam">
+      <ui-row height="50" border-bottom>
         <ui-col vertical-align="middle" align="left" width="140" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
@@ -97,29 +85,29 @@
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-view class="active2" ui:if=" !companyName "> 请选择
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
-          <ui-view class="active" ui:else> {{ companyName }}
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
+          <ui-input
+            placeholder="请输入材料品牌"
+            placeholder-style="color:#999B9E"
+            show-clear="{{true}}"
+            ui:model="{{ materialBrand }}"
+          ></ui-input>
         </ui-col>
       </ui-row>
 
-      <ui-row height="50" border-bottom bindtap="openSelectConTeam">
+      <ui-row height="50" border-bottom>
         <ui-col vertical-align="middle" align="left" width="140" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            计数单位
+            材料数量
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-view class="active2" ui:if=" !companyName "> 请选择
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
-          <ui-view class="active" ui:else> {{ companyName }}
-            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
-          </ui-view>
+          <ui-input
+            placeholder="请输入材料数量"
+            placeholder-style="color:#999B9E"
+            show-clear="{{true}}"
+            ui:model="{{ materialCount }}"
+          ></ui-input>
         </ui-col>
       </ui-row>
 
@@ -179,15 +167,12 @@ export default {
       tokenId: '',
       itemName: '',
       itemId: '',
-      xunChaNo: '', 
-      xunChaTime: '', // 巡查时间
-      isReply: false, // 是否回复
-      xunChaPosition: '', // 巡查部位
+      jinChangTime: '', 
+      jianZhengTime: '', 
+      materialName: '', 
+      materialBrand: '',
+      materialCount: '',
 
-      // 存在的问题
-      xunChaItemProblem: '', 
-      // 处理意见
-      xunChaResolution: '',
       // 附件
       accessoryContent: []
     }
@@ -195,20 +180,7 @@ export default {
   methods: {
     // 返回按钮
     navigateBack () {
-      ui.showConfirm({
-        content: '表单尚未提交，你要离开么？',
-        confirmButtonText: '离开',
-        cancelButtonText: '继续填写',
-        success: (result) => {
-          if (result.confirm) {
-            ui.navigateBack()
-          }
-        }
-      })
-    },
-    // 是否回复
-    handleSwitchChange (val) {
-      this.isReply = val
+      ui.navigateBack()
     },
     // 添加附件
     addAccessory () {
@@ -241,25 +213,19 @@ export default {
     submit () {
       if (this.itemName === '') {
         ui.showToast({ title: '请输入单位工程名称' })
-      } else if (this.xunChaItemProblem === '') {
-        ui.showToast({ title: '请输入存在的问题' })
-      } else if (this.xunChaResolution === '') {
-        ui.showToast({ title: '请输入处理意见' })
       } else {
       //  this.paySubmit()
-        let LocalXunChaInfoList = ui.getStorageSync('LocalXunChaInfoList')
-        LocalXunChaInfoList.xunChaInfoList.push({
-          xunChaNo: this.xunChaNo,
+        let LocalJianZhengInfoList = ui.getStorageSync('LocalJianZhengInfoList')
+        LocalJianZhengInfoList.jianZhengInfoList.push({
+          jianZhengNo: this.jianZhengNo,
           itemName: this.itemName,
-          xunChaTime: this.xunChaTime,
-          isReply: this.isReply, // 是否需要回复
-          xunChaPosition: this.xunChaPosition,
-          xunChaItemProblem: this.xunChaItemProblem,
-          xunChaResolution: this.xunChaResolution,
+          jianZhengTime: this.jianZhengTime,
+          jianZhengType: '材料见证',
+          jianZhengContent: this.materialName + this.materialBrand + this.materialCount,
           accessoryContent: this.accessoryContent
         })
-        console.log('LocalXunChaInfoList:', LocalXunChaInfoList)
-        ui.setStorageSync('LocalXunChaInfoList', LocalXunChaInfoList)
+        console.log('LocalJianZhengInfoList:', LocalJianZhengInfoList)
+        ui.setStorageSync('LocalJianZhengInfoList', LocalJianZhengInfoList)
 
         ui.showToast({ title: '提交成功', icon: 'success' })
         
@@ -278,15 +244,11 @@ export default {
   mounted () {
     
     let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
-    console.log("旁站:", LocalUserInfo)
+    console.log("材料见证:", LocalUserInfo)
     this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
 
-    let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
-    console.log("旁站页面：", LocalProjectInfoList[0])
-    this.itemName = LocalProjectInfoList[0].itemName
-    this.itemId = LocalProjectInfoList[0].itemId
-
-    this.xunChaTime = dayjs().format("YYYY-MM-DD HH:mm")
+    this.jianZhengTime = dayjs().format("YYYY-MM-DD HH:mm")
+    this.jinChangTime = dayjs().format("YYYY-MM-DD HH:mm")
 
   }
 }

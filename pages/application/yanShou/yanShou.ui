@@ -9,7 +9,7 @@
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <ui-view class="nav_title">巡查记录</ui-view>
+          <ui-view class="nav_title">验收记录</ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="50">
           <ui-view class="nav_right">更多</ui-view>
@@ -17,7 +17,7 @@
       </ui-row>
     </ui-nav-bar>
 
-    <ui-tab-view class="type-badge" on-active="{{ getXunChaInfo }}" pull-down-distance="50">
+    <ui-tab-view class="type-badge" on-active="{{ getYanShouInfo }}" pull-down-distance="50">
       <template slot="header">
         <ui-tab-view-header>
           <ui-view>未完成</ui-view>
@@ -30,7 +30,7 @@
         <ui-tab-view-body enable-pull-down-refresh>
 
           <!-- 待审批列表 -->
-          <ui-view class="list-view" ui:for="{{xunChaPendingList}}" ui:for-item="item" >
+          <ui-view class="list-view" ui:for="{{yanShouPendingList}}" ui:for-item="item" >
             <ui-row space="10">
               <ui-col>
                 <ui-text class="titleName">{{item.itemName}}</ui-text>
@@ -41,17 +41,12 @@
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">巡查部位：{{item.xunChaPosition}}</ui-text>
+                <ui-text class="list-content">验收部位：{{item.yanShouPosition}}</ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">巡查内容：{{item.xunChaItemProblem}}</ui-text>
-              </ui-col>
-            </ui-row>
-            <ui-row space="10">
-              <ui-col>
-                <ui-text class="list-content">处理意见：{{item.xunChaResolution}}</ui-text>
+                <ui-text class="list-content">验收内容：{{item.yanShouItemProblem}}</ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="20">
@@ -67,7 +62,7 @@
               <ui-col vertical-align="bottom" span=8>
                 <ui-view>
                   <ui-text class="color6 small-font">{{item.state}}</ui-text>
-                  <ui-text class="color6 small-font"> · {{item.xunChaTime}}</ui-text>
+                  <ui-text class="color6 small-font"> · {{item.yanShouTime}}</ui-text>
                 </ui-view>
               </ui-col>
               <ui-col vertical-align="bottom" align="right" space-right="10" bindtap="openDetails(item)">
@@ -86,7 +81,7 @@
         <ui-tab-view-body enable-pull-down-refresh>
 
           <!-- 已审批列表 -->
-          <ui-view class="list-view" ui:for="{{xunChaApprovalList}}" ui:for-item="item" >
+          <ui-view class="list-view" ui:for="{{yanShouApprovalList}}" ui:for-item="item" >
             <ui-row space="10">
               <ui-col>
                 <ui-text class="titleName">{{item.itemName}}</ui-text>
@@ -97,17 +92,12 @@
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">巡查部位：{{item.xunChaPosition}}</ui-text>
+                <ui-text class="list-content">验收部位：{{item.yanShouPosition}}</ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">巡查内容：{{item.xunChaItemProblem}}</ui-text>
-              </ui-col>
-            </ui-row>
-            <ui-row space="10">
-              <ui-col>
-                <ui-text class="list-content">处理意见：{{item.xunChaResolution}}</ui-text>
+                <ui-text class="list-content">验收内容：{{item.yanShouItemProblem}}</ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="20">
@@ -123,7 +113,7 @@
               <ui-col vertical-align="bottom" span=8>
                 <ui-view>
                   <ui-text class="color6 small-font">{{item.state}}</ui-text>
-                  <ui-text class="color6 small-font"> · {{item.xunChaTime}}</ui-text>
+                  <ui-text class="color6 small-font"> · {{item.yanShouTime}}</ui-text>
                 </ui-view>
               </ui-col>
               <ui-col vertical-align="bottom" align="right" space-right="10" bindtap="openDetails(item)">
@@ -141,7 +131,7 @@
       </template>
     </ui-tab-view>
 
-    <ui-fixed-view style="z-index:1;" bottom="50" right="30" bindtap="addXunChaWrite">
+    <ui-fixed-view style="z-index:1;" bottom="50" right="30" bindtap="addYanShouWrite">
       <ui-view class="addbtn">
         <ui-icon type="add" size="24"></ui-icon>
       </ui-view>
@@ -161,44 +151,22 @@
         pageLoad: {// 进入页面先判断是否有地理数据保存在 本地存储中
           trigger: 'always',
           handle: () => {
-            console.log("巡查 pageLoad")
+            console.log("验收 pageLoad")
 
-            // let LocalXunChaInfoList = ui.getStorageSync('LocalXunChaInfoList')
-            // console.log('LocalXunChaInfoList:', LocalXunChaInfoList)
-            // if(LocalXunChaInfoList){
-            //   LocalXunChaInfoList.xunChaInfoList.forEach((item, index) => {
-            //     this.xunChaPendingList.push({
-            //       xunChaNo: item.xunChaNo,
-            //       itemName: item.itemName,
-            //       xunChaTime: item.xunChaTime,
-            //       isReply: item.isReply, // 是否需要回复
-            //       xunChaPosition: item.xunChaPosition,
-            //       xunChaItemProblem: item.xunChaItemProblem,
-            //       xunChaResolution: item.xunChaResolution,
-            //       accessoryContent: item.accessoryContent,
-            //       state: '待审批'
-            //     })
-            //   })
-            //   // 逆序，按时间逆序排列
-            //   this.xunChaPendingList.sort((a,b)=>{
-            //       return Date.parse(b.xunChaTime) - Date.parse(a.xunChaTime); // 时间逆序
-            //   })
-            // }
           }
         },
         imgWidth: (ui.WIN_WIDTH-40)/4-8 + 'px', 
         imgHeight: (ui.WIN_WIDTH-40)/4-8 + 'px',
 
-        xunChaPendingList: [ // 待审批列表
+        yanShouPendingList: [ // 待审批列表
           {
             "id": 1,
             "itemName": "地铁六号线标段一",
             "itemId": '',
-            "xunChaNo": "xc123",
-            "xunChaTime": "2018-10-22 13:33",
-            "xunChaPosition": "管道处",
-            "xunChaItemProblem": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
-            "xunChaResolution": "整改",
+            "yanShouNo": "xc123",
+            "yanShouTime": "2018-10-22 13:33",
+            "yanShouPosition": "管道处",
+            "yanShouItemProblem": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
             "state": "待审批",
             "accessoryContent": [{
                 "id": 1,
@@ -216,16 +184,15 @@
           }
         ],
 
-        xunChaApprovalList: [ // 已审批列表
+        yanShouApprovalList: [ // 已审批列表
           {
             "id": 1,
             "itemName": "地铁六号线标段一",
             "itemId": '',
-            "xunChaNo": "xc123",
-            "xunChaTime": "2018-10-22 13:33",
-            "xunChaPosition": "西门",
-            "xunChaItemProblem": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
-            "xunChaResolution": "整改",
+            "yanShouNo": "xc123",
+            "yanShouTime": "2018-10-22 13:33",
+            "yanShouPosition": "西门",
+            "yanShouItemProblem": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
             "state": "已审批",
             "accessoryContent": [{
                 "id": 1,
@@ -251,35 +218,34 @@
       openDetails (item) {
         console.log(item)
       },
-      addXunChaWrite () {
+      addYanShouWrite () {
         ui.navigateTo({
           url: '/pages/application/yanShou/yanShouWrite'
         })
       },
-      // 获取巡查信息
-      getXunChaInfo () {
+      // 获取验收信息
+      getYanShouInfo () {
         
-        this.xunChaPendingList = []
+        this.yanShouPendingList = []
         
-        let LocalXunChaInfoList = ui.getStorageSync('LocalXunChaInfoList')
-        console.log('获取巡查信息:', LocalXunChaInfoList)
+        let LocalYanShouInfoList = ui.getStorageSync('LocalYanShouInfoList')
+        console.log('获取验收信息:', LocalYanShouInfoList)
 
-        LocalXunChaInfoList.xunChaInfoList.forEach((item, index) => {
+        LocalYanShouInfoList.yanShouInfoList.forEach((item, index) => {
 
-          this.xunChaPendingList.push({
-            xunChaNo: item.xunChaNo,
+          this.yanShouPendingList.push({
+            yanShouNo: item.yanShouNo,
             itemName: item.itemName,
-            xunChaTime: item.xunChaTime,
-            xunChaPosition: item.xunChaPosition,
-            xunChaItemProblem: item.xunChaItemProblem,
-            xunChaResolution: item.xunChaResolution,
+            yanShouTime: item.yanShouTime,
+            yanShouPosition: item.yanShouPosition,
+            yanShouItemProblem: item.yanShouItemProblem,
             accessoryContent: item.accessoryContent,
             state: '待审批'
           })
         })
         // 逆序，按时间逆序排列
-        this.xunChaPendingList.sort((a,b)=>{
-            return Date.parse(b.xunChaTime) - Date.parse(a.xunChaTime); // 时间逆序
+        this.yanShouPendingList.sort((a,b)=>{
+            return Date.parse(b.yanShouTime) - Date.parse(a.yanShouTime); // 时间逆序
         })
       },
       previewImage (imgarr, img) {
@@ -296,22 +262,22 @@
       }
     },
     mounted() {
-      console.log("巡查记录 mounted")
+      console.log("验收记录 mounted")
 
       let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
-      console.log("巡查记录:", LocalUserInfo)
+      console.log("验收记录:", LocalUserInfo)
       this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
 
-      // 初始化本地 巡查 信息
-      let LocalXunChaInfoList = ui.getStorageSync('LocalXunChaInfoList')
-      console.log('LocalXunChaInfoList:', LocalXunChaInfoList)
-      if(!LocalXunChaInfoList){ // 不存在则创建
-        LocalXunChaInfoList = {
-          xunChaInfoList: []
+      // 初始化本地 验收 信息
+      let LocalYanShouInfoList = ui.getStorageSync('LocalYanShouInfoList')
+      console.log('LocalYanShouInfoList:', LocalYanShouInfoList)
+      if(!LocalYanShouInfoList){ // 不存在则创建
+        LocalYanShouInfoList = {
+          yanShouInfoList: []
         }
-        ui.setStorageSync('LocalXunChaInfoList', LocalXunChaInfoList)
+        ui.setStorageSync('LocalYanShouInfoList', LocalYanShouInfoList)
       }else{
-        this.getXunChaInfo()
+        this.getYanShouInfo()
       }
 
     }

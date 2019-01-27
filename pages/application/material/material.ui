@@ -11,13 +11,13 @@
         <ui-col vertical-align="middle" align="center">
           <ui-view class="nav_title">材料进场</ui-view>
         </ui-col>
-        <ui-col vertical-align="middle" align="center" width="50" bindtap="addPangZhanWrite">
+        <ui-col vertical-align="middle" align="center" width="50" bindtap="addCaiLiaoWrite">
           <ui-view class="nav_right">更多</ui-view>
         </ui-col>
       </ui-row>
     </ui-nav-bar>
 
-    <ui-tab-view class="type-badge" on-active="{{ getPangZhanInfo }}" pull-down-distance="50">
+    <ui-tab-view class="type-badge" on-active="{{ getCaiLiaoInfo }}" pull-down-distance="50">
       <template slot="header">
         <ui-tab-view-header>
           <ui-view>未完成</ui-view>
@@ -29,8 +29,8 @@
       <template slot="body">
         <ui-tab-view-body enable-pull-down-refresh>
 
-          <!-- 待审批列表 -->
-          <ui-view class="list-view" ui:for="{{pangZhanPendingList}}" ui:for-item="item" >
+          <!-- 待完成列表 -->
+          <ui-view class="list-view" ui:for="{{caiLiaoPendingList}}" ui:for-item="item" >
             <ui-row space="10">
               <ui-col>
                 <ui-text class="titleName">{{item.itemName}}</ui-text>
@@ -41,12 +41,12 @@
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">材料进场部位：{{item.pangZhanPosition}}</ui-text>
+                <ui-text class="list-content">{{item.caiLiaoType}}</ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">材料进场内容：{{item.pangZhanContent}}</ui-text>
+                <ui-text class="list-content">材料信息：{{item.caiLiaoContent}}</ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="20">
@@ -62,7 +62,7 @@
               <ui-col vertical-align="bottom" span=8>
                 <ui-view>
                   <ui-text class="color6 small-font">{{item.state}}</ui-text>
-                  <ui-text class="color6 small-font"> · {{item.pangZhanTime}}</ui-text>
+                  <ui-text class="color6 small-font"> · {{item.caiLiaoTime}}</ui-text>
                 </ui-view>
               </ui-col>
               <ui-col vertical-align="bottom" align="right" space-right="10" bindtap="openDetails(item)">
@@ -80,8 +80,8 @@
         </ui-tab-view-body>
         <ui-tab-view-body enable-pull-down-refresh>
 
-          <!-- 已审批列表 -->
-          <ui-view class="list-view" ui:for="{{pangZhanApprovalList}}" ui:for-item="item" >
+          <!-- 已完成列表 -->
+          <ui-view class="list-view" ui:for="{{caiLiaoApprovalList}}" ui:for-item="item" >
             <ui-row space="10">
               <ui-col>
                 <ui-text class="titleName">{{item.itemName}}</ui-text>
@@ -92,12 +92,12 @@
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">材料进场部位：{{item.pangZhanPosition}}</ui-text>
+                <ui-text class="list-content">{{item.caiLiaoType}}</ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="10">
               <ui-col>
-                <ui-text class="list-content">材料进场内容：{{item.pangZhanContent}}</ui-text>
+                <ui-text class="list-content">材料信息：{{item.caiLiaoContent}}</ui-text>
               </ui-col>
             </ui-row>
             <ui-row space="20">
@@ -113,7 +113,7 @@
               <ui-col vertical-align="bottom" span=8>
                 <ui-view>
                   <ui-text class="color6 small-font">{{item.state}}</ui-text>
-                  <ui-text class="color6 small-font"> · {{item.pangZhanTime}}</ui-text>
+                  <ui-text class="color6 small-font"> · {{item.caiLiaoTime}}</ui-text>
                 </ui-view>
               </ui-col>
               <ui-col vertical-align="bottom" align="right" space-right="10" bindtap="openDetails(item)">
@@ -148,7 +148,7 @@
       </ui-pop-icon>
     </ui-fixed-view>
 
-    <ui-fixed-view style="z-index:1;" bottom="50" right="30" bindtap="togglepopicon">
+    <ui-fixed-view style="z-index:100;" bottom="50" right="30" bindtap="togglepopicon">
       <ui-view class="addbtn">
         <ui-icon type="add" size="24"></ui-icon>
       </ui-view>
@@ -180,16 +180,16 @@
         imgWidth: (ui.WIN_WIDTH-40)/4-8 + 'px', 
         imgHeight: (ui.WIN_WIDTH-40)/4-8 + 'px',
 
-        pangZhanPendingList: [ // 待审批列表
+        caiLiaoPendingList: [ // 待完成列表
           {
             "id": 1,
             "itemName": "地铁六号线一标段",
             "itemId": '',
-            "pangZhanNo": "pz123",
-            "pangZhanTime": "2018-10-22 13:33",
-            "pangZhanPosition": "桥梁处",
-            "pangZhanContent": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
-            "state": "待审批",
+            "caiLiaoNo": "pz123",
+            "caiLiaoTime": "2018-10-22 13:33",
+            "caiLiaoType": "设备进场",
+            "caiLiaoContent": "材料信息",
+            "state": "待完成",
             "accessoryContent": [{
                 "id": 1,
                 "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
@@ -206,16 +206,16 @@
           }
         ],
 
-        pangZhanApprovalList: [ // 已审批列表
+        caiLiaoApprovalList: [ // 已完成列表
           {
             "id": 1,
             "itemName": "地铁六号线一标段",
             "itemId": '',
-            "pangZhanNo": "pz123",
-            "pangZhanTime": "2018-10-22 13:33",
-            "pangZhanPosition": "校园路",
-            "pangZhanContent": "这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改这里有问题，需要修改",
-            "state": "已审批",
+            "caiLiaoNo": "pz123",
+            "caiLiaoTime": "2018-10-22 13:33",
+            "caiLiaoType": "设备进场",
+            "caiLiaoContent": "材料信息",
+            "state": "已完成",
             "accessoryContent": [{
                 "id": 1,
                 "imgsrc": "https://pic.36krcnd.com/201711/30082030/ofer4v0qixxbzys5!heading"
@@ -250,31 +250,31 @@
           url: '/pages/application/material/inDevice'
         })
       },
-      addPangZhanWrite () {
+      addCaiLiaoWrite () {
         ui.navigateTo({
           url: '/pages/application/material/inMaterial'
         })
       },
       // 获取 材料进场 信息
-      getPangZhanInfo () {
-        this.pangZhanPendingList = []
-        let LocalPangZhanInfoList = ui.getStorageSync('LocalPangZhanInfoList')
-        console.log('获取材料进场信息:', LocalPangZhanInfoList)
-        LocalPangZhanInfoList.pangZhanInfoList.forEach((item, index) => {
+      getCaiLiaoInfo () {
+        // this.caiLiaoPendingList = []
+        let LocalCaiLiaoInfoList = ui.getStorageSync('LocalCaiLiaoInfoList')
+        console.log('获取材料进场信息:', LocalCaiLiaoInfoList)
+        LocalCaiLiaoInfoList.caiLiaoInfoList.forEach((item, index) => {
 
-          this.pangZhanPendingList.push({
-            pangZhanNo: item.pangZhanNo,
+          this.caiLiaoPendingList.push({
+            caiLiaoNo: item.caiLiaoNo,
             itemName: item.itemName,
-            pangZhanTime: item.pangZhanTime,
-            pangZhanPosition: item.pangZhanPosition,
-            pangZhanContent: item.pangZhanContent,
+            caiLiaoType: item.caiLiaoType,
+            caiLiaoTime: item.caiLiaoTime,
+            caiLiaoContent: item.caiLiaoName + item.caiLiaoBrand + item.caiLiaocountingUnit + item.jinChangResult + item.Notes,
             accessoryContent: item.accessoryContent,
-            state: '待审批'
+            state: '待完成'
           })
         })
         // 逆序，按时间逆序排列
-        this.pangZhanPendingList.sort((a,b)=>{
-            return Date.parse(b.pangZhanTime) - Date.parse(a.pangZhanTime); // 时间逆序
+        this.caiLiaoPendingList.sort((a,b)=>{
+            return Date.parse(b.caiLiaoTime) - Date.parse(a.caiLiaoTime); // 时间逆序
         })
       },
       previewImage (imgarr, img) {
@@ -329,15 +329,15 @@
       this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
 
       // 初始化本地 材料进场 信息
-      let LocalPangZhanInfoList = ui.getStorageSync('LocalPangZhanInfoList')
-      console.log('LocalPangZhanInfoList:', LocalPangZhanInfoList)
-      if(!LocalPangZhanInfoList){ // 不存在则创建
-        LocalPangZhanInfoList = {
-          pangZhanInfoList: []
+      let LocalCaiLiaoInfoList = ui.getStorageSync('LocalCaiLiaoInfoList')
+      console.log('LocalCaiLiaoInfoList:', LocalCaiLiaoInfoList)
+      if(!LocalCaiLiaoInfoList){ // 不存在则创建
+        LocalCaiLiaoInfoList = {
+          caiLiaoInfoList: []
         }
-        ui.setStorageSync('LocalPangZhanInfoList', LocalPangZhanInfoList)
+        ui.setStorageSync('LocalCaiLiaoInfoList', LocalCaiLiaoInfoList)
       }else{
-        this.getPangZhanInfo()
+        this.getCaiLiaoInfo()
       }
 
     }
@@ -443,7 +443,7 @@
 .pop-icon-demo3 {
   .icon_view{
     height: 100%;
-    z-index: 999;
+    z-index: 9;
     .mix-flex-center();
   }
 }

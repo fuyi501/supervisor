@@ -18,37 +18,7 @@
     </ui-nav-bar>
     
     <ui-view class="form_content">
-
-      <ui-row height="50" border-bottom>
-        <ui-col vertical-align="middle" align="left" width="140" space-left="10">
-          <ui-view>
-            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            施工单位
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-input
-            placeholder="请输入施工单位"
-            placeholder-style="color:#999B9E"
-            show-clear="{{true}}"
-            ui:model="{{ itemName }}"
-          ></ui-input>
-        </ui-col>
-      </ui-row>
-
-      <ui-row height="50" border-bottom>
-        <ui-col vertical-align="middle" align="left" width="140" space-left="10">
-          <ui-view>
-            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            进场时间
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15">
-          {{ deviceTime }}
-        </ui-col>
-      </ui-row>
-
-      <ui-row height="50" border-bottom>
+      <ui-row height="50" border-bottom bindtap="">
         <ui-col vertical-align="middle" align="left" width="140" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
@@ -56,16 +26,16 @@
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-input
-            placeholder="请输入设备名称"
-            placeholder-style="color:#999B9E"
-            show-clear="{{true}}"
-            ui:model="{{ deviceName }}"
-          ></ui-input>
+          <ui-view class="active2" ui:if=" !companyName "> 请选择
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
+          <ui-view class="active" ui:else> {{ deviceName }}
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
         </ui-col>
       </ui-row>
 
-      <ui-row height="50" border-bottom>
+      <ui-row height="50" border-bottom bindtap="">
         <ui-col vertical-align="middle" align="left" width="140" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
@@ -73,83 +43,63 @@
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-input
-            placeholder="请输入设备品牌"
-            placeholder-style="color:#999B9E"
-            show-clear="{{true}}"
-            ui:model="{{ deviceBrand }}"
-          ></ui-input>
+          <ui-view class="active2" ui:if=" !companyName "> 请选择
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
+          <ui-view class="active" ui:else> {{ deviceBrand }}
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
         </ui-col>
       </ui-row>
 
-      <ui-row height="50" border-bottom>
+      <ui-row height="50" border-bottom bindtap="">
         <ui-col vertical-align="middle" align="left" width="140" space-left="10">
           <ui-view>
             <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            设备数量
+            计数单位
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-view class="active2" ui:if=" !companyName "> 请选择
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
+          <ui-view class="active" ui:else> {{ countingUnit }}
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50" border-bottom bindtap="">
+        <ui-col vertical-align="middle" align="left" width="140" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            合同约定品牌
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-view class="active2" ui:if=" !companyName "> 请选择
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
+          <ui-view class="active" ui:else> {{ isContractBrand }}
+            <ui-icon type="arrow-right" size="16" color="#656565"></ui-icon>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="50">
+        <ui-col vertical-align="middle" align="left" width="120" space-left="10">
+          <ui-view>
+            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
+            使用部位
           </ui-view>
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <ui-input
-            placeholder="请输入设备数量"
+            placeholder="请输入使用部位"
             placeholder-style="color:#999B9E"
             show-clear="{{true}}"
-            ui:model="{{ deviceCount }}"
+            ui:model="{{ usePosition }}"
           ></ui-input>
-        </ui-col>
-      </ui-row>
-
-      <ui-row height="50" border-bottom>
-        <ui-col vertical-align="middle" align="left" width="140" space-left="10">
-          <ui-view>
-            <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-            进场结果
-          </ui-view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15">
-          <ui-picker title="" range="{{ jinChangResultList }}" value="{{ jinChangResult }}" bindchange="handleJinChangResult"></ui-picker>
-        </ui-col>
-      </ui-row>
-
-      <ui-view style="margin-top:10px" class="detail_description">
-        <ui-icon type="bixuan" size="10" color="red"></ui-icon>
-        <ui-text>备注</ui-text>
-        <ui-textarea 
-          maxlength="-1" 
-          auto-height
-          placeholder="请输入备注信息"
-          placeholder-style="color:#999B9E" 
-          ui:model="{{ deviceNotes }}">
-        </ui-textarea>
-      </ui-view>
-
-      <!-- 附件 -->
-      <ui-view class="accessory_wrap">
-        <ui-text block>现场照片及证明文件</ui-text>
-        <ui-view class="accessory_content">
-          <ui-view class="accessory_list" ui:for="{{ accessoryContent }}" ui:for-item="item">
-            <ui-view bindtap="deleteAccessory(index, item)">
-              <ui-view class="close">x</ui-view>
-              <ui-image
-              src="{{ item.imgsrc }}"
-              mode='aspectFill'
-              width="60"
-              height="60"
-              ></ui-image>
-            </ui-view>
-          </ui-view>
-          <ui-view class="add_accessory" bindtap="addAccessory">
-            <ui-view>
-              <ui-icon type="add" size="20" color="#B3B5B5"></ui-icon>
-            </ui-view>
-          </ui-view>
-        </ui-view>
-      </ui-view>
-
-      <!-- 提交按钮 -->
-      <ui-row height="60" space-top="10">
-        <ui-col vertical-align="middle" align="center" space="30">
-          <ui-button type="primary" bindtap="submit">立即提交</ui-button>
         </ui-col>
       </ui-row>
 
@@ -161,9 +111,6 @@
 
 import dayjs from '#/static/utils/dayjs'
 
-const sourceType = [['camera'], ['album'], ['camera', 'album']]
-const sizeType = [['compressed'], ['original'], ['compressed', 'original']]
-
 export default {
   config: {
     navigationStyle: 'custom',
@@ -174,21 +121,15 @@ export default {
   },
   data () {
     return {
-      pageTitle: '设备进场任务',
-      pageTitleRight: '统计',
+      pageTitle: '设备信息',
+      pageTitleRight: '完成',
       tokenId: '',
-      itemName: '',
-      itemId: '',
-      deviceNo: '', 
-      deviceTime: '', // 设备进场时间
-      deviceName: '', // 设备名称
-      deviceBrand: '', 
-      deviceCount: '',
-      jinChangResult: 0,
-      jinChangResultList: ['请选择', '进场', '退场'],
-      deviceNotes: '',
-      // 附件
-      accessoryContent: []
+      
+      deviceName: '',
+      deviceBrand: '',
+      countingUnit: '', // 计数单位
+      isContractBrand: '', // 是否是合同约定品牌
+      usePosition: '', // 使用部位
     }
   },
   methods: {
@@ -196,57 +137,33 @@ export default {
     navigateBack () {
       ui.navigateBack()
     },
-    handleJinChangResult (val) {
-      this.jinChangResult = val
-    },
-    // 添加附件
-    addAccessory () {
-      this.chooseImage(2)
-    },
-    // 删除附件
-    deleteAccessory (index, imgPath) {
-      console.log('删除：', index, imgPath)
-      this.accessoryContent.splice(index, 1)
-    },
-    chooseImage (index) {
-      ui.chooseImage({
-        sourceType: sourceType[index],
-        sizeType: sizeType[1],
-        success: (res) => {
-          res.tempFilePaths.forEach((item, index) => {
-            // this.accessoryContent.push(item)
-            this.accessoryContent.push({
-              id: index,
-              imgsrc: item
-            })
-          })
-        },
-        fail: (res) => {
-          console.log("添加照片失败")
-        }
-      })
-    },
     // 提交
     submit () {
-      if (this.itemName === '') {
-        ui.showToast({ title: '请输入单位工程名称' })
-      } else {
+      if (this.deviceName === '') {
+        ui.showToast({ title: '请输入设备名称' })
+      } else if (this.deviceBrand === '') {
+        ui.showToast({ title: '请输入设备品牌' })
+      } else if (this.countingUnit === '') {
+        ui.showToast({ title: '请输入计数单位' })
+      } else if (this.isContractBrand === '') {
+        ui.showToast({ title: '请输入合同约定品牌' })
+      } else if (this.usePosition === '') {
+        ui.showToast({ title: '请输入使用部位' })
+      } {
       //  this.paySubmit()
-        let LocalCaiLiaoInfoList = ui.getStorageSync('LocalCaiLiaoInfoList')
-        LocalCaiLiaoInfoList.caiLiaoInfoList.push({
-          caiLiaoNo: this.deviceNo,
-          caiLiaoType: '设备进场',
-          itemName: this.itemName,
-          caiLiaoTime: this.deviceTime,
-          caiLiaoName: this.deviceName,
-          caiLiaoBrand: this.deviceBrand,
-          caiLiaocountingUnit: this.deviceCount,
-          jinChangResult: this.jinChangResultList[this.jinChangResult],
-          Notes: this.deviceNotes,
+        let LocalXunChaInfoList = ui.getStorageSync('LocalXunChaInfoList')
+        LocalXunChaInfoList.xunChaInfoList.push({
+          xunChaNo: this.xunChaNo,
+          deviceName: this.deviceName,
+          xunChaTime: this.xunChaTime,
+          isReply: this.isReply, // 是否需要回复
+          xunChaPosition: this.xunChaPosition,
+          xunChaItemProblem: this.xunChaItemProblem,
+          xunChaResolution: this.xunChaResolution,
           accessoryContent: this.accessoryContent
         })
-        console.log('LocalCaiLiaoInfoList:', LocalCaiLiaoInfoList)
-        ui.setStorageSync('LocalCaiLiaoInfoList', LocalCaiLiaoInfoList)
+        console.log('LocalXunChaInfoList:', LocalXunChaInfoList)
+        ui.setStorageSync('LocalXunChaInfoList', LocalXunChaInfoList)
 
         ui.showToast({ title: '提交成功', icon: 'success' })
         
@@ -265,10 +182,15 @@ export default {
   mounted () {
     
     let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
-    console.log("设备进场:", LocalUserInfo)
+    console.log("旁站:", LocalUserInfo)
     this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
 
-    this.deviceTime = dayjs().format("YYYY-MM-DD HH:mm")
+    let LocalProjectInfoList = ui.getStorageSync('LocalProjectInfoList')
+    console.log("旁站页面：", LocalProjectInfoList[0])
+    this.deviceName = LocalProjectInfoList[0].deviceName
+    this.itemId = LocalProjectInfoList[0].itemId
+
+    this.xunChaTime = dayjs().format("YYYY-MM-DD HH:mm")
 
   }
 }
