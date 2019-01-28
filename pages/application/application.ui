@@ -77,7 +77,7 @@
               <ui-icon type="gonggao3" color="#1890ff" size="30"></ui-icon>    
               <ui-view class="app_text">公告</ui-view>           
             </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openMeeting">
               <ui-icon type="huiyi1" color="#1890ff" size="30"></ui-icon>    
               <ui-view class="app_text">会议</ui-view>             
             </ui-col>
@@ -174,11 +174,11 @@
       <ui-row space-top=0>
         <ui-col span=12>
           <ui-row>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openDaily">
                 <ui-icon type="rizhi2" color="#1890ff" size="30"></ui-icon>    
                 <ui-view class="app_text">汇报</ui-view>              
             </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openDaily">
                 <ui-icon type="ribao1" color="#1890ff" size="30"></ui-icon>    
                 <ui-view class="app_text">日报</ui-view>             
             </ui-col>
@@ -193,7 +193,7 @@
           </ui-row>
 
           <ui-row>
-            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="">
+            <ui-col  class="app_list" vertical-align="middle" align="center" bindtap="openTaiZhang">
                 <ui-icon type="yanshou1" color="#ff525d" size="30"></ui-icon>    
                 <ui-view class="app_text">工作台账</ui-view>           
             </ui-col>
@@ -258,6 +258,11 @@ export default {
     openBuKa () {
       ui.navigateTo({
         url: '/pages/application/supplement/buqian'
+      })
+    },
+    openMeeting () {
+      ui.navigateTo({
+        url: '/pages/application/meeting/meeting'
       })
     },
     // 巡查
@@ -328,6 +333,11 @@ export default {
         url: '/pages/application/rizhi/rizhi'
       })
     },
+    openDaily () {
+      ui.navigateTo({
+        url: '/pages/application/report/daily'
+      })
+    },
     // 审批
     openApproval () {
       ui.navigateTo({
@@ -338,6 +348,12 @@ export default {
     openAnnouncement () {
       ui.navigateTo({
         url: '/pages/application/announcement/announcement'
+      })
+    },
+    // 台账 
+    openTaiZhang () {
+      ui.navigateTo({
+        url: '/pages/application/taiZhang/taiZhang'
       })
     }
   },

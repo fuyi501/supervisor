@@ -113,7 +113,10 @@ export default {
 
       "pages/application/announcement/announcement",
       "pages/application/announcement/announcementWrite",
-      "pages/application/material/material","pages/application/material/deviceInfo"],
+      "pages/application/material/material",
+      "pages/application/material/deviceInfo",
+      "pages/application/meeting/meeting",
+      "pages/application/meeting/meetingWrite","pages/application/taiZhang/taiZhang","pages/application/report/daily","pages/application/report/weekly","pages/application/report/monthly"],
     "theme": {
       "theme-color": "#3399ff"
     },

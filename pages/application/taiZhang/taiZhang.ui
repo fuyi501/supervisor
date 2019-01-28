@@ -1,0 +1,329 @@
+<!---->
+<template>
+  <ui-page page-load="{{ pageLoad }}">
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10" width="70" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">工作台账</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="70" bindtap="taizhangSetting">
+          <ui-view class="nav_right">设置</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view style="text-align: center; background-color:#fff;">
+      <ui-line
+        value="{{data2}}"
+        width="{{winWidth}}"
+        height="250"
+        is-animated="true"
+        color-schema = "{{data2.colorSchema}}"
+        grid="full"
+        line-width = "1"
+        tooltip="true"
+        body-fill-color="rgba(0,0,0,.7)"
+        tooltip-width="150"
+        title-fill-color="#fff"
+        border-stroke-color="#fff"
+        x-axis-format="custom"
+        x-axis-custom-format="%m月"
+        x-ticks="{{8}}"
+        ></ui-line>
+      <ui-legend
+        value="{{legendData.legend}}"
+        width="{{winWidth}}"
+        height="50"
+        is-animated="true"
+        is-horizontal="true"
+        color-schema="{{legendData.colorSchema}}"
+        ></ui-legend>
+    </ui-view>
+
+
+  </ui-page>
+</template>
+
+<script>
+  export default {
+    config: {
+      navigationStyle: 'custom',
+      backgroundColor: '#F6F6F6',
+    },
+    data() {
+      return {
+        pageLoad: {// 进入页面先判断是否有地理数据保存在 本地存储中
+          trigger: 'always',
+          handle: () => {
+            console.log("工作台账 pageLoad")
+          }
+        },
+        winWidth: ui.WIN_WIDTH,
+        data2: {
+          dataByTopic: [
+            {
+              topicName: '巡查',
+              topic: 123,
+              dates: [
+                {
+                  date: '2017-03-01',
+                  value: 23
+                },
+                {
+                  date: '2017-04-01',
+                  value: 32
+                },
+                {
+                  date: '2017-05-01',
+                  value: 24
+                },
+                {
+                  date: '2017-06-01',
+                  value: 29
+                },
+                {
+                  date: '2017-07-01',
+                  value: 45
+                },
+                {
+                  date: '2017-08-01',
+                  value: 53
+                },
+                {
+                  date: '2017-09-01',
+                  value: 35
+                },
+                {
+                  date: '2017-10-01',
+                  value: 65
+                }
+              ]
+            }, {
+              topicName: '旁站',
+              topic: 345,
+              dates: [
+                {
+                  date: '2017-03-01',
+                  value: 53
+                },
+                {
+                  date: '2017-04-01',
+                  value: 75
+                },
+                {
+                  date: '2017-05-01',
+                  value: 67
+                },
+                {
+                  date: '2017-06-01',
+                  value: 78
+                },
+                {
+                  date: '2017-07-01',
+                  value: 86
+                },
+                {
+                  date: '2017-08-01',
+                  value: 74
+                },
+                {
+                  date: '2017-09-01',
+                  value: 89
+                },
+                {
+                  date: '2017-10-01',
+                  value: 98
+                }
+              ]
+            }
+          ],
+          colorSchema: ['#e60012', '#39f']
+        },
+        isFixAxis: ui.IS_IOS,
+        legendData: {
+          legend: [
+            {
+              id: 1,
+              quantity: 3,
+              name: '巡查'
+            },
+            {
+              id: 2,
+              quantity: 3,
+              name: '旁站'
+            },
+            {
+              id: 3,
+              quantity: 3,
+              name: '通知单'
+            },
+            {
+              id: 4,
+              quantity: 3,
+              name: '联系单'
+            }
+
+          ],
+          colorSchema: ['#e60012', '#39f', '#36cd6a', '#23d8dc']
+        }
+
+      }
+    },
+    methods: {
+      navigateBack() {
+        ui.navigateBack()
+      },
+      taizhangSetting () {
+        // ui.navigateTo({
+        //   url: '/pages/application/meeting/meetingWrite'
+        // })
+      },
+      // 获取 工作台账 信息
+      getMeetingInfo () {
+        // this.MeetingInfoList = []
+        let LocalMeetingInfoList = ui.getStorageSync('LocalMeetingInfoList')
+        console.log('获取信息:', LocalMeetingInfoList)
+        // LocalMeetingInfoList.meetingInfoList.forEach((item, index) => {
+
+        //   this.meetingInfoList.push({
+        //     meetingName: item.meetingName,
+        //     meetingTime: item.meetingTime,
+        //     meetingContent: item.meetingContent,
+        //     accessoryContent: item.accessoryContent
+        //   })
+        // })
+        // // 逆序，按时间逆序排列
+        // this.meetingInfoList.sort((a,b)=>{
+        //     return Date.parse(b.meetingTime) - Date.parse(a.meetingTime); // 时间逆序
+        // })
+      }
+    },
+    mounted() {
+      console.log("工作台账 mounted")
+
+      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+      console.log("工作台账:", LocalUserInfo)
+      this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+
+      // 初始化本地 工作台账 信息
+      let LocalMeetingInfoList = ui.getStorageSync('LocalMeetingInfoList')
+      console.log('LocalMeetingInfoList:', LocalMeetingInfoList)
+      if(!LocalMeetingInfoList){ // 不存在则创建
+        LocalMeetingInfoList = {
+          meetingInfoList: []
+        }
+        ui.setStorageSync('LocalMeetingInfoList', LocalMeetingInfoList)
+      }else{
+        this.getMeetingInfo()
+      }
+
+    }
+  }
+</script>
+
+<style lang="less">
+  .nav_bar {
+    background: #fff;
+
+    .ui-icon {
+      color: #1890ff;
+    }
+
+    .nav_title {
+      color: #000;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .nav_right {
+      color: #1890ff;
+      font-size: 16px;
+    }
+  }
+
+  .type-badge {
+    height: 300px;
+    .ui-badge {
+      position: absolute;
+      right: 8px;
+      top: 2px;
+      font-size: 20rpx;
+
+      &.ui-badge-dot {
+        padding: 3px;
+      }
+    }
+  }
+
+  // 信息列表
+  .list-view {
+    margin: 10px;
+    background-color: #fff;
+    padding: 5px 10px;
+
+    .titleName {
+      color: #333;
+      font-size: 16px;
+    }
+
+    .list-content {
+      color: #666;
+      font-size: 14px;
+    }
+
+    // 中间图片
+    .imageList_win {
+      display: flex;
+      flex-wrap: wrap;
+      // margin: 0 auto;
+
+      .image {
+        margin: 4px;
+      }
+
+      .ui-image {
+        border-radius: 5px;
+      }
+    }
+
+    .color6 {
+      color: #666;
+    }
+
+    .small-font {
+      font-size: 12px;
+    }
+
+  }
+
+  @media screen and (max-width: 320px) {
+    .small-font {
+      font-size: 10px;
+    }
+  }
+
+  .divider {
+    width:200px;
+    margin:0 auto;
+    margin-bottom:10px;
+  }
+  // 右下固定按钮
+.addbtn{
+  width:53px;
+  height:53px;
+  background-color:#1F95FF; // #fdd15c
+  line-height:53px;
+  color:#fff;
+  text-align:center;
+  border-radius:50%;
+}
+.vertical-marker{
+  stroke:#e60012;
+  stroke-width:.5
+}
+</style>

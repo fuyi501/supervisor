@@ -32,7 +32,7 @@
       </ui-col>
     </ui-row>
 
-    <ui-row height="60" class="contacts_list2" space-top=10 bindtap="">
+    <ui-row height="60" class="contacts_list2" space-top=10 bindtap="openDaily">
       <ui-col width="50" space-left=10 align="center" vertical-align="middle">
         <ui-view class="left_icon">日
           <!-- <ui-icon type="ribao1" color="#fff" size="30"></ui-icon> -->
@@ -93,24 +93,11 @@
       navigateBack() {
         ui.navigateBack()
       },
-      // 我发出的通知单
-      openSendNoticeLetter() {
+      openDaily () {
         ui.navigateTo({
-          url: '/pages/application/noticeLetter/sendNoticeLetter'
+          url: '/pages/application/report/daily'
         })
       },
-      // 我接收的通知单
-      openReceiveNoticeLetter() {
-        ui.navigateTo({
-          url: '/pages/application/noticeLetter/receiveNoticeLetter'
-        })
-      },
-      // 填写监理工程师通知单
-      writeNoticeLetter() {
-        ui.navigateTo({
-          url: '/pages/application/noticeLetter/writeNoticeLetter'
-        })
-      }
     },
     mounted() {
       console.log("项目日志 mounted")
