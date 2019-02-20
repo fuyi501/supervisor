@@ -1,0 +1,288 @@
+<!--mapComprehensive.ui-->
+<template>
+  <ui-page>
+    <ui-nav-bar slot="nav-bar" class="nav_bar">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="left" space-left="10"  width="50" bindtap="navigateBack">
+          <ui-view>
+            <ui-icon type="arrow-left" size="20"></ui-icon>
+          </ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <ui-view class="nav_title">成员动态</ui-view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50">
+          <ui-view class="nav_right">报表</ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+
+    <ui-view class="map_container" style="{{ {height:mapHeight} }}">
+      <ui-map 
+      class="map" 
+      id="map" 
+      longitude="{{longitude}}" 
+      latitude="{{latitude}}" 
+      scale="14" 
+      markers="{{markers}}"
+      show-location="true" 
+      bindmarkertap="makertap">
+      </ui-map>
+    </ui-view>
+
+    <ui-view class="qiandaoCentent" bindtap="openDetailInfo">
+      <ui-row height="120" >
+        <ui-col width="80" align="center" vertical-align="middle">
+          <ui-view class="left_icon">{{ getFirstName('傅毅') }}</ui-view>
+        </ui-col>
+        <ui-col space-right="10" vertical-align="middle">
+          <ui-view class="qiandao-info">
+            <ui-view class="qiandao-name">傅毅</ui-view>
+            <ui-view class="qiandao-time">
+              {{textData.name}}
+            </ui-view>
+            <ui-view class="qiandao-addr">
+              <ui-icon type="map1" size="16" color="#1890ff"></ui-icon>
+              {{textData.address}}
+            </ui-view>
+          </ui-view>
+        </ui-col>
+      </ui-row>
+    </ui-view>
+
+  </ui-page>
+</template>
+
+
+<script>
+
+import dayjs from '#/static/utils/dayjs'
+
+  var amapFile = require('amap-touchui')
+  var key = '4216f7d550dc95ef4ac91e3c0ee6a19a'
+  var icon = require('#/images/map/ic_map_mode2.png'),
+    iconActive = require('#/images/map/ic_map_mode_active2.png')
+
+  export default {
+    config: {
+      navigationStyle: 'custom',
+      // backgroundColor: '#F6F6F6',
+    },
+    data() {
+      return {
+        tokenId: '', // token
+        avatarBase64: '', // 头像
+        mapHeight: ui.DEFAULT_CONTENT_HEIGHT-120 + 'px',
+        latitude: 30.768075, // 纬度
+        longitude: 103.986003, // 经度
+        qianDaoList: [ // 签到数据列表
+          // {  
+          //   name: '傅毅',
+          //   qianDaoTime: '11:20', 
+          //   qianDaoNumber: 1,
+          //   qianDaoAddress: '西南交大犀浦校区'
+          // }
+        ],
+        textData: {},
+        markers: [{
+          id: 1,
+          latitude: 30.768075,
+          longitude: 103.986003,
+          iconPath: icon,
+          width: 32,
+          height: 32
+        }, {
+          id: 2,
+          latitude: 30.758075,
+          longitude: 103.986003,
+          iconPath: icon,
+          width: 32,
+          height: 32
+        }, {
+          id: 3,
+          latitude: 30.748075,
+          longitude: 103.986003,
+          iconPath: icon,
+          width: 32,
+          height: 32
+        }, {
+          id: 4,
+          latitude: 30.738075,
+          longitude: 103.986003,
+          iconPath: icon,
+          width: 32,
+          height: 32
+        }],
+        // markers: [
+          // { // 地图上的 markers
+          //   id: 1,
+          //   latitude: 30.764259,
+          //   longitude: 103.986475,
+          //   iconPath: icon,
+          //   width: 32,
+          //   height: 32
+          // }
+        // ],
+      }
+    },
+    mounted() {
+      console.log('成员动态页面 mounted')
+
+      let LocalUserInfo = ui.getStorageSync('LocalUserInfo')
+      console.log("成员动态页面:", LocalUserInfo)
+      this.tokenId = LocalUserInfo.tokenId ? LocalUserInfo.tokenId : ''
+      this.avatarBase64 = LocalUserInfo.avatarBase64 ? LocalUserInfo.avatarBase64 : icon
+
+      for( let i in this.markers){
+        this.markers[i].iconPath = this.avatarBase64
+      }
+
+      var obj = [103.986003, 30.768075]
+
+      this.reserveAddr(obj, 0)
+
+    },
+    methods: {
+      navigateBack () {
+        ui.navigateBack()
+      },
+      openDetailInfo () {
+        console.log(this.textData)
+      },
+      // 解析姓氏
+      getFirstName(name) {
+        let firstName = name.substr(0,1)
+        return firstName
+      },
+      // 标记点markers点击事件
+      makertap(e) {
+        console.log('makertap: ', e)
+        var markerId = e.markerId
+        // 将标记点改为活动状态
+        this.markerActive(markerId)
+        // 执行更新信息事件
+        this.infoChange(markerId)
+      },
+      // 将标记点改为活动状态
+      markerActive(id) {
+        // 遍历marker数组若每一项的id与传过来的参数id相等  那么将该项的图标变为活动状态
+        var a = this.markers.map((item, index) => {
+          return item.id === id ? {
+            id: item.id,
+            latitude: item.latitude,
+            longitude: item.longitude,
+            iconPath: this.avatarBase64,
+            width: item.width,
+            height: item.height
+          } : {
+            id: item.id,
+            latitude: item.latitude,
+            longitude: item.longitude,
+            iconPath: this.avatarBase64,
+            width: item.width,
+            height: item.height
+          }
+        })
+        this.setData({
+          markers: a
+        })
+      },
+      // 更新信息事件
+      infoChange(id) {
+        var current = this.markers.filter((item, index) => {
+          return item.id === id
+        })[0]
+        console.log('current:', current)
+        this.reserveAddr([current.longitude, current.latitude], 0)
+
+      },
+      // 地址逆解析
+      reserveAddr (markerObj, index) {
+        console.log('地址逆解析', markerObj)
+        // 调用amapFile.AMapWX构造函数创建myAmapFun实例
+        var myAmapFun = new amapFile.AMapWX({ key: key })
+        // 根据参数的坐标值,调用getRegeo方法逆解析地址
+        myAmapFun.getRegeo({
+          location: `${markerObj[0]},${markerObj[1]}`,
+          success: (data) => {
+            console.log('成功：', data)
+            // this.qianDaoList[index].qianDaoAddress = data[0].regeocodeData.formatted_address
+            // 调用成功则将相关数据存储至textData
+            this.setData({
+              textData: {
+                name: data[0].regeocodeData.formatted_address,
+                address: data[0].name,
+                latitude: data[0].latitude,
+                longitude: data[0].longitude
+              }
+            })
+          }
+        })
+      }
+    }
+  }
+</script>
+
+<style lang="less">
+
+  .nav_bar {
+    background: #fff;
+    .ui-icon {
+      color: #1890ff;
+    }
+    .nav_title {
+      color: #000;
+      font-size: 32rpx;
+      font-weight: bold;
+    }
+    .nav_right{
+      color: #1890ff;
+      font-size: 16px;
+    }
+  }
+
+  .map_container {
+    position: relative;
+    .map {
+      height: 110%;
+    }
+  }
+
+  .qiandaoCentent {
+    width: 100%;
+    position: absolute;
+    // left: 0;
+    background: #fff;
+  }
+
+  .left_icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #1890ff; 
+    text-align: center;
+    line-height: 50px;
+    color: #fff;
+    font-size: 24px;
+  }
+
+  .qiandao-info {
+    width: 278px;
+    height: 69px;
+    .qiandao-name {
+      font-size: 18px;
+      font-weight: bold;
+      line-height: 18px;
+    }
+    .qiandao-time {
+      margin: 10px 0px;
+      font-size: 16px;
+      line-height: 16px;
+    }
+    .qiandao-addr {
+      font-size: 14px;
+      line-height: 14px;
+      color: #8c8c8c;
+    }
+  }
+</style>

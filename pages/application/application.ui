@@ -197,7 +197,7 @@
                 <ui-icon type="yanshou1" color="#ff525d" size="30"></ui-icon>    
                 <ui-view class="app_text">工作台账</ui-view>           
             </ui-col>
-            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="">
+            <ui-col class="app_list" vertical-align="middle" align="center" bindtap="openMember">
                 <ui-icon type="daka2" color="#28aa91" size="30"></ui-icon>    
                 <ui-view class="app_text">成员动态</ui-view>       
             </ui-col>
@@ -348,6 +348,12 @@ export default {
     openAnnouncement () {
       ui.navigateTo({
         url: '/pages/application/announcement/announcement'
+      })
+    },
+    // 成员动态
+    openMember () {
+      ui.navigateTo({
+        url: '/pages/application/MemberDynamics/member'
       })
     },
     // 台账 
